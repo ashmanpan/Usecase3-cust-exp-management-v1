@@ -9,7 +9,7 @@
 
 - [x] Requirements gathering and clarification
 - [x] Technology research (CNC, PCA, A2A, LangGraph, SR-TE)
-- [x] Defined 8 agents and their responsibilities
+- [x] Defined 9 agents and their responsibilities (added Traffic Analytics Agent)
 - [x] Designed 7-phase workflow (SLA degradation → restoration)
 - [x] Selected orchestration pattern (Supervisor + Hybrid logic)
 - [x] Designed Redis state schema
@@ -21,7 +21,7 @@
 
 ## Tomorrow's Detailed Design Tasks
 
-For each of the 8 agents, we need to design:
+For each of the 9 agents, we need to design:
 
 ### 1. Orchestrator Agent
 - [ ] Define LangGraph nodes (state machine states)
@@ -93,7 +93,25 @@ For each of the 8 agents, we need to design:
   - MCP tool for weight adjustment (gradual cutover)
 - [ ] Determine if LLM is needed
 
-### 7. Notification Agent
+### 7. Traffic Analytics Agent (NEW - SRv6 Demand Matrix)
+- [ ] Define LangGraph nodes:
+  - Telemetry collection node
+  - Demand matrix computation node
+  - Congestion prediction node
+  - Proactive alert generation node
+- [ ] Define tools:
+  - SR-PM telemetry collector tool
+  - MDT/CDG telemetry tool
+  - NetFlow/IPFIX collector tool
+  - Demand matrix builder tool
+  - Congestion risk calculator tool
+- [ ] **KEY DISCUSSION: How to achieve traffic matrix for SR-MPLS and RSVP-TE?**
+  - SRv6: Native IPv6 flow labels, IOAM, uSID telemetry (well supported)
+  - SR-MPLS: What data sources? MPLS counters? Tunnel stats?
+  - RSVP-TE: Bandwidth reservations? FRR counters? CNC APIs?
+- [ ] Define proactive alert schema (PROACTIVE_ALERT vs reactive PCA alert)
+
+### 8. Notification Agent
 - [ ] Define LangGraph nodes:
   - Channel selection node
   - Message formatting node
@@ -104,7 +122,7 @@ For each of the 8 agents, we need to design:
   - Email tool
 - [ ] Define notification templates per event type
 
-### 8. Audit Agent
+### 9. Audit Agent
 - [ ] Define LangGraph nodes:
   - Event capture node
   - Log formatting node
@@ -137,6 +155,27 @@ For each of the 8 agents, we need to design:
 4. Where does LLM reasoning happen vs deterministic logic?
 5. Which nodes call external APIs (KG, MCP, PCA, CNC)?
 6. What is the A2A task schema between Orchestrator and each agent?
+
+### KEY DISCUSSION: Traffic Matrix for Non-SRv6 Technologies
+
+**The Challenge:**
+- SRv6 has native traffic visibility (IPv6 flow labels, IOAM, uSID)
+- SR-MPLS and RSVP-TE don't have these features
+
+**Questions to Research/Discuss:**
+1. How do we build demand matrix for SR-MPLS without IPv6 features?
+2. What telemetry is available for RSVP-TE tunnels?
+3. Can we use MPLS interface counters or tunnel bandwidth reservations?
+4. Does CNC/PCA provide per-tunnel/per-policy traffic statistics?
+5. Can the Knowledge Graph provide utilization data across all TE types?
+6. Is there a unified telemetry approach that works for all three?
+
+**Possible Data Sources to Investigate:**
+| TE Type | Potential Data Source |
+|---------|----------------------|
+| SRv6 | SR-PM, IOAM, uSID telemetry, NetFlow v9/IPFIX |
+| SR-MPLS | MPLS interface counters, SR-PM (color-aware), MDT |
+| RSVP-TE | Tunnel bandwidth reservation, FRR counters, RSVP stats |
 
 ---
 

@@ -30,7 +30,7 @@ LangGraph-based multi-agent system for automated traffic protection that:
 
 ---
 
-## Agent Architecture (8 Agents)
+## Agent Architecture (9 Agents)
 
 ```
                          ┌─────────────────────┐
@@ -39,12 +39,12 @@ LangGraph-based multi-agent system for automated traffic protection that:
                          │  Hybrid: Rules+LLM  │
                          └─────────┬───────────┘
                                    │
-    ┌──────────┬──────────┬────────┼────────┬──────────┬──────────┐
-    ▼          ▼          ▼        ▼        ▼          ▼          ▼
-┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐
-│ Event  │ │Service │ │  Path  │ │ Tunnel │ │Restore │ │ Notify │ │ Audit  │
-│Correlate│ │Impact │ │Compute │ │Provision│ │Monitor │ │        │ │        │
-└────────┘ └────────┘ └────────┘ └────────┘ └────────┘ └────────┘ └────────┘
+  ┌──────────┬──────────┬──────────┼──────────┬──────────┬──────────┬──────────┐
+  ▼          ▼          ▼          ▼          ▼          ▼          ▼          ▼
+┌────────┐┌────────┐┌────────┐┌────────┐┌────────┐┌────────┐┌────────┐┌────────┐
+│ Event  ││Service ││  Path  ││ Tunnel ││Restore ││Traffic ││ Notify ││ Audit  │
+│Correlate││Impact ││Compute ││Provision││Monitor ││Analytics││        ││        │
+└────────┘└────────┘└────────┘└────────┘└────────┘└────────┘└────────┘└────────┘
 ```
 
 | # | Agent | Container | Port | Responsibility |
@@ -55,8 +55,101 @@ LangGraph-based multi-agent system for automated traffic protection that:
 | 4 | Path Computation | path-computation:v1 | 8003 | Query KG for alternate paths with constraints |
 | 5 | Tunnel Provisioning | tunnel-provisioning:v1 | 8004 | Create tunnels via MCP→CNC, auto-detect TE type |
 | 6 | Restoration Monitor | restoration-monitor:v1 | 8005 | Monitor SLA recovery, manage hold timers, cutover |
-| 7 | Notification | notification:v1 | 8006 | Webex, ServiceNow, Email alerts |
-| 8 | Audit | audit:v1 | 8007 | Compliance logging, reports |
+| 7 | **Traffic Analytics** | traffic-analytics:v1 | 8006 | **SRv6 demand matrix, congestion prediction, proactive TE** |
+| 8 | Notification | notification:v1 | 8007 | Webex, ServiceNow, Email alerts |
+| 9 | Audit | audit:v1 | 8008 | Compliance logging, reports |
+
+---
+
+## Traffic Analytics Agent (SRv6 Demand Matrix)
+
+### Purpose
+Enable **proactive traffic engineering** by analyzing SRv6 traffic demands and predicting congestion BEFORE SLA degradation occurs.
+
+### Traffic Demand Matrix
+```
+        ┌──────────────────────────────────────────────────────┐
+        │           DESTINATION                                 │
+        │     PE1      PE2      PE3      PE4      PE5          │
+   ┌────┼──────────────────────────────────────────────────────┤
+   │PE1 │    -       10Gbps   5Gbps    2Gbps    8Gbps         │
+S  │PE2 │  8Gbps       -      12Gbps   3Gbps    1Gbps         │
+R  │PE3 │  4Gbps     7Gbps      -      6Gbps    9Gbps         │
+C  │PE4 │  2Gbps     3Gbps    4Gbps      -      5Gbps         │
+   │PE5 │  6Gbps     2Gbps    8Gbps    4Gbps      -           │
+   └────┴──────────────────────────────────────────────────────┘
+```
+
+### Why SRv6 Enables This
+| Feature | Benefit |
+|---------|---------|
+| IPv6 Flow Label | 20-bit field for flow identification |
+| SRv6 SID | Encodes destination, function, and arguments |
+| uSID (micro-SID) | Compact encoding allows more telemetry |
+| In-situ OAM (IOAM) | Embed telemetry directly in packet headers |
+| Alternate Marking | Precise traffic measurement per flow |
+
+### Data Sources
+| Source | Data Type | Purpose |
+|--------|-----------|---------|
+| SR-PM (Performance Measurement) | Delay, loss, jitter | Per-path SLA metrics |
+| MDT Telemetry (CDG) | Interface counters | Utilization per link |
+| NetFlow/IPFIX | Flow records with SRv6 SID | Traffic volume per flow |
+| IOAM (In-situ OAM) | Hop-by-hop telemetry | Path-level visibility |
+| CNC TE Dashboard | Traffic statistics | Tunnel utilization |
+
+### Capabilities
+1. **Build Demand Matrix**: Compute end-to-end traffic volumes between all PE pairs
+2. **Predict Congestion**: Identify links approaching capacity threshold
+3. **Proactive Alerting**: Trigger protection BEFORE SLA degrades
+4. **Traffic Optimization**: Recommend load balancing across paths
+5. **What-If Analysis**: Simulate impact of link failure on traffic distribution
+
+### Two Operating Modes
+
+**Mode 1: Reactive (Existing Flow)**
+```
+PCA Alert → SLA Already Degraded → Find Alternate → Provision Tunnel
+```
+
+**Mode 2: Proactive (Enhanced with Traffic Matrix)**
+```
+Traffic Matrix → Predict Congestion → Pre-provision Tunnel → Shift Traffic BEFORE SLA degrades
+```
+
+### Proactive Workflow (Phase 0 - NEW)
+```
+Phase 0: Proactive Detection (Traffic Analytics Agent)
+
+1. Continuously monitor:
+   - Link utilization (from KG/Telemetry)
+   - Traffic demand trends
+   - SRv6 flow volumes
+
+2. When utilization > threshold (e.g., 70%):
+   - Calculate risk of SLA violation
+   - Identify services on congested path
+   - Send PROACTIVE_ALERT to Orchestrator
+
+3. Orchestrator initiates protection workflow:
+   - Same as reactive, but BEFORE actual degradation
+   - Customer experience preserved proactively
+```
+
+### Traffic Matrix by TE Technology (TOMORROW'S DISCUSSION)
+
+| Technology | Traffic Visibility Method | Challenges |
+|------------|--------------------------|------------|
+| **SRv6** | Native IPv6 flow labels, IOAM, uSID telemetry | Best visibility - native support |
+| **SR-MPLS** | ? | Need to discuss data sources |
+| **RSVP-TE** | ? | Need to discuss data sources |
+
+**Key Questions for Tomorrow:**
+1. How do we build demand matrix for SR-MPLS without IPv6 features?
+2. What telemetry is available for RSVP-TE tunnels?
+3. Can we use MPLS FRR counters or tunnel bandwidth reservations?
+4. Are there CNC/PCA APIs that provide per-tunnel traffic stats?
+5. Can Knowledge Graph provide utilization data across all TE types?
 
 ---
 
@@ -212,6 +305,12 @@ customer-experience-management/
 │   │   │   ├── sla_monitor.py
 │   │   │   ├── hold_timer.py
 │   │   │   └── gradual_cutover.py
+│   │   ├── traffic_analytics/        # NEW - SRv6 Demand Matrix
+│   │   │   ├── agent.py
+│   │   │   ├── demand_matrix.py      # Build PE-to-PE traffic matrix
+│   │   │   ├── congestion_predictor.py
+│   │   │   ├── telemetry_collector.py # SR-PM, MDT, NetFlow
+│   │   │   └── agent_card.json
 │   │   ├── notification/
 │   │   │   ├── agent.py
 │   │   │   └── channels/ (webex.py, servicenow.py, email.py)
