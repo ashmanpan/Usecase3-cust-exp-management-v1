@@ -1,0 +1,78 @@
+# Audit Agent Configuration - Port 8008
+# From DESIGN.md: Captures workflow events, decisions, state changes for compliance
+
+agent:
+  name: "audit"
+  version: "1.0.0"
+  type: "audit"
+  description: "Captures all workflow events, decisions, and state changes for compliance logging and post-incident analysis"
+
+a2a:
+  host: "0.0.0.0"
+  port: 8008
+  capabilities:
+    - "log_event"
+    - "get_timeline"
+    - "generate_report"
+
+workflow:
+  max_iterations: 5
+  stages:
+    capture_event:
+      - "event_receiver"
+    format_log:
+      - "log_formatter"
+    store_db:
+      - "postgresql_client"
+    index_async:
+      - "elasticsearch_client"
+
+# PostgreSQL configuration
+postgresql:
+  host: "${POSTGRES_HOST:-localhost}"
+  port: "${POSTGRES_PORT:-5432}"
+  database: "${POSTGRES_DB:-audit_db}"
+  user: "${POSTGRES_USER:-audit}"
+  password: "${POSTGRES_PASSWORD}"
+  pool_size: 10
+  max_overflow: 20
+
+# Elasticsearch configuration (optional, for search)
+elasticsearch:
+  enabled: "${ES_ENABLED:-false}"
+  hosts:
+    - "${ES_HOST:-localhost:9200}"
+  index_prefix: "audit-events"
+  username: "${ES_USERNAME}"
+  password: "${ES_PASSWORD}"
+
+# Event types - From DESIGN.md
+event_types:
+  - "incident_created"
+  - "alert_correlated"
+  - "service_impact_assessed"
+  - "path_computed"
+  - "tunnel_provisioned"
+  - "traffic_steered"
+  - "sla_recovered"
+  - "restoration_complete"
+  - "escalation"
+  - "notification_sent"
+  - "error"
+  - "state_change"
+
+# Decision types for compliance
+decision_types:
+  - "rule_based"
+  - "llm_assisted"
+  - "human"
+
+# Retention policy
+retention:
+  events_days: 365
+  incidents_days: 730  # 2 years
+
+observability:
+  log_level: "INFO"
+  metrics_enabled: true
+  tracing_enabled: true

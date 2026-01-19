@@ -1,0 +1,89 @@
+# Orchestrator Agent Configuration
+
+agent:
+  name: "orchestrator"
+  type: "supervisor"
+  version: "1.0.0"
+  description: "Supervisor agent that coordinates the entire protection workflow using state machine with hybrid (rules + LLM) decision logic"
+
+a2a:
+  host: "0.0.0.0"
+  port: 8000
+  capabilities:
+    - "handle_alert"
+    - "get_incident_status"
+
+workflow:
+  max_iterations: 10
+  timeout_seconds: 300
+
+  # Retry configuration
+  max_retries: 3
+  retry_delay_seconds: 5
+
+  # Hold timer defaults by SLA tier (seconds)
+  hold_timers:
+    platinum: 60
+    gold: 120
+    silver: 300
+    bronze: 600
+
+  # Cutover mode: immediate or gradual
+  default_cutover_mode: "gradual"
+
+llm:
+  provider: "bedrock"
+  model: "anthropic.claude-3-sonnet-20240229-v1:0"
+  temperature: 0.0
+  max_tokens: 4096
+
+  # LLM is used only for edge cases
+  triggers:
+    - "no_alternate_path"
+    - "cascading_failure"
+    - "tunnel_provision_failed_3x"
+    - "conflicting_constraints"
+    - "unknown_te_type"
+
+mcp:
+  server_url: "${MCP_SERVER_URL:-http://mcp-server:5000/sse}"
+  timeout_seconds: 300
+  blocked_tools: []
+
+redis:
+  url: "${REDIS_URL:-redis://redis:6379}"
+  db: 0
+  key_prefix: "orchestrator:incident:"
+
+# Agent registry for A2A calls
+agents:
+  event_correlator:
+    url: "${EVENT_CORRELATOR_URL:-http://event-correlator:8001}"
+  service_impact:
+    url: "${SERVICE_IMPACT_URL:-http://service-impact:8002}"
+  path_computation:
+    url: "${PATH_COMPUTATION_URL:-http://path-computation:8003}"
+  tunnel_provisioning:
+    url: "${TUNNEL_PROVISIONING_URL:-http://tunnel-provisioning:8004}"
+  restoration_monitor:
+    url: "${RESTORATION_MONITOR_URL:-http://restoration-monitor:8005}"
+  traffic_analytics:
+    url: "${TRAFFIC_ANALYTICS_URL:-http://traffic-analytics:8006}"
+  notification:
+    url: "${NOTIFICATION_URL:-http://notification:8007}"
+  audit:
+    url: "${AUDIT_URL:-http://audit:8008}"
+
+observability:
+  log_level: "INFO"
+  log_format: "json"
+  otel:
+    enabled: true
+    endpoint: "${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}"
+    service_name: "orchestrator-agent"
+
+health:
+  enabled: true
+  port: 8000
+  path: "/health"
+  ready_path: "/ready"
