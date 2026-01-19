@@ -2813,6 +2813,267 @@ class GenerateReportOutput(BaseModel):
 
 ---
 
+## Agent Template Structure
+
+All agents are built from a common template with A2A protocol support. This ensures consistency and reusability across the system.
+
+### Template Directory Structure
+
+```
+agent_template/
+├── __init__.py              # Package exports (BaseWorkflow, run_agent)
+├── main.py                  # Entry point and AgentRunner
+├── workflow.py              # BaseWorkflow abstract class
+├── config_loader.py         # YAML config with env var substitution
+├── config.yaml              # Default configuration template
+├── Dockerfile               # Multi-stage container build
+├── pyproject.toml           # Dependencies (LangGraph, A2A, MCP, etc.)
+├── README.md                # Usage documentation
+│
+├── api/
+│   ├── __init__.py
+│   └── server.py            # A2A TaskServer (replaces Kafka consumer)
+│
+├── chains/
+│   ├── __init__.py
+│   ├── llm_factory.py       # Multi-provider LLM (Bedrock, OpenAI, Anthropic)
+│   └── prompts.py           # Reusable prompt templates
+│
+├── nodes/
+│   ├── __init__.py
+│   ├── base_nodes.py        # initialize, tool_execution, analysis, finalize
+│   └── checklist_nodes.py   # Checklist pattern for multi-step verification
+│
+├── schemas/
+│   ├── __init__.py
+│   ├── state.py             # WorkflowState TypedDict + agent extensions
+│   ├── tasks.py             # A2A TaskInput, TaskOutput, AgentCard
+│   └── models.py            # Domain models (ServiceInfo, PathInfo, etc.)
+│
+├── tools/
+│   ├── __init__.py
+│   ├── a2a_client/          # A2A TaskClient for inter-agent communication
+│   │   ├── __init__.py
+│   │   └── client.py        # send_task, get_agent_card, health_check
+│   └── mcp_client/          # MCP client for tool execution
+│       ├── __init__.py
+│       └── client.py        # get_tools, get_filtered_tools
+│
+└── tests/
+    ├── __init__.py
+    └── test_workflow.py     # Unit tests
+```
+
+### Core Components
+
+#### BaseWorkflow (workflow.py)
+
+Abstract base class that all agent workflows extend:
+
+```python
+class BaseWorkflow(ABC):
+    def __init__(
+        self,
+        agent_name: str,
+        agent_version: str,
+        mcp_client: MCPToolClient,
+        a2a_client: A2AClient,
+        max_iterations: int = 3,
+        stage_tools: dict[str, list[str]] = None,
+    ):
+        ...
+
+    @abstractmethod
+    def get_state_class(self) -> type:
+        """Return the TypedDict class for this workflow's state"""
+        pass
+
+    @abstractmethod
+    def build_graph(self, graph: StateGraph) -> None:
+        """Build the workflow graph - add nodes and edges"""
+        pass
+
+    async def execute(
+        self,
+        task_id: str,
+        task_type: str,
+        incident_id: Optional[str],
+        payload: dict,
+        correlation_id: Optional[str],
+    ) -> dict:
+        """Execute the workflow"""
+        pass
+```
+
+#### A2A TaskServer (api/server.py)
+
+Receives tasks from other agents (replaces Kafka consumer):
+
+```python
+class A2ATaskServer:
+    """
+    Endpoints:
+    - POST /a2a/tasks          # Synchronous task execution
+    - POST /a2a/tasks/async    # Async with callback
+    - GET /a2a/tasks/{id}/status
+    - GET /.well-known/agent.json  # Agent card for discovery
+    - GET /health, /ready
+    """
+
+    def __init__(
+        self,
+        agent_name: str,
+        agent_version: str,
+        workflow_executor: Callable,  # The workflow.execute method
+        supported_task_types: list[str],
+    ):
+        ...
+```
+
+#### A2A TaskClient (tools/a2a_client/client.py)
+
+Calls other agents:
+
+```python
+class A2AClient:
+    """
+    Features:
+    - Agent registry for service discovery
+    - Retry with exponential backoff (tenacity)
+    - Async task submission with callbacks
+    - Health checks
+    """
+
+    async def send_task(
+        self,
+        agent_name: str,
+        task_type: str,
+        payload: dict,
+        incident_id: Optional[str] = None,
+        priority: int = 5,
+    ) -> TaskOutput:
+        ...
+
+    async def get_agent_card(self, agent_name: str) -> AgentCard:
+        ...
+```
+
+#### WorkflowState (schemas/state.py)
+
+Base state that flows through LangGraph nodes:
+
+```python
+class WorkflowState(TypedDict, total=False):
+    # Task identification
+    task_id: str
+    incident_id: Optional[str]
+    correlation_id: Optional[str]
+
+    # Input/Output
+    input_payload: dict[str, Any]
+    result: dict[str, Any]
+    error: Optional[str]
+
+    # Execution tracking
+    iteration_count: int
+    max_iterations: int
+    current_node: str
+    nodes_executed: list[str]
+
+    # Checklist pattern
+    checklist: list[str]
+    remaining_checklist: list[str]
+    resolved_checklist: list[str]
+
+    # Tool/A2A results
+    tool_outputs: list[dict[str, Any]]
+    a2a_responses: dict[str, Any]
+
+# Agent-specific extensions:
+class OrchestratorState(WorkflowState, total=False):
+    workflow_phase: str
+    degraded_links: list[str]
+    affected_services: list[dict]
+    # ...
+```
+
+### Creating a New Agent
+
+1. **Copy template**: `cp -r agent_template agents/my_agent`
+
+2. **Define workflow**:
+```python
+from agent_template import BaseWorkflow
+from langgraph.graph import StateGraph, START, END
+
+class MyAgentWorkflow(BaseWorkflow):
+    def get_state_class(self):
+        return MyAgentState  # Extend WorkflowState
+
+    def build_graph(self, graph: StateGraph):
+        graph.add_node("process", self.process_node)
+        graph.add_node("analyze", self.analyze_node)
+
+        graph.add_edge(START, "process")
+        graph.add_edge("process", "analyze")
+        graph.add_edge("analyze", END)
+
+    async def process_node(self, state: dict) -> dict:
+        # Use MCP tools
+        tools = await self.mcp_client.get_filtered_tools(
+            allowed_tools=["get_link_metrics", "query_kg"]
+        )
+        # ... process with tools
+        return {"raw_result": result}
+
+    async def analyze_node(self, state: dict) -> dict:
+        # Use LLM for analysis
+        llm = get_llm()
+        # ... analyze results
+        return {"result": analysis}
+```
+
+3. **Configure** (`config.yaml`):
+```yaml
+agent:
+  name: "my_agent"
+  type: "custom"
+  version: "1.0.0"
+  description: "My custom agent"
+
+a2a:
+  host: "0.0.0.0"
+  port: 8010
+  capabilities:
+    - "my_task_type"
+
+workflow:
+  max_iterations: 3
+  stages:
+    process:
+      tools: ["get_link_metrics", "query_kg"]
+```
+
+4. **Run**:
+```bash
+python -m my_agent.main  # or via Docker
+```
+
+### Template Best Practices
+
+| Practice | Implementation |
+|----------|----------------|
+| **A2A over HTTP** | Use A2AClient.send_task() instead of httpx directly |
+| **Tool filtering** | Use stage_tools in config to limit tools per stage |
+| **Error handling** | Use error_handler_node and check_error() conditional |
+| **Iteration limits** | Use make_iteration_check() for bounded loops |
+| **Checklist pattern** | For multi-step verification tasks |
+| **Structured logging** | Use structlog with JSON output |
+| **Config injection** | Use ${ENV_VAR:-default} in YAML |
+| **Health checks** | /health (liveness) and /ready (readiness) |
+
+---
+
 ## Research Sources
 
 - [Cisco CNC DevNet](https://developer.cisco.com/docs/crosswork/)
