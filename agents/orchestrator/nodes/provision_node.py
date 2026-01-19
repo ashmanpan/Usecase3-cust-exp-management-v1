@@ -10,6 +10,7 @@ import structlog
 
 from ..tools.agent_caller import call_agent
 from ..tools.state_manager import update_incident
+from ..tools.io_notifier import notify_phase_change
 
 logger = structlog.get_logger(__name__)
 
@@ -109,6 +110,18 @@ async def provision_node(state: dict[str, Any]) -> dict[str, Any]:
                 incident_id=incident_id,
                 tunnel_id=tunnel_id,
                 binding_sid=binding_sid,
+            )
+            # Notify IO Agent
+            await notify_phase_change(
+                incident_id=incident_id,
+                status="provisioning",
+                message=f"Protection tunnel created ({result.get('te_type', te_type)}), steering traffic",
+                details={
+                    "tunnel_id": tunnel_id,
+                    "binding_sid": binding_sid,
+                    "te_type": result.get("te_type", te_type),
+                },
+                correlation_id=state.get("correlation_id"),
             )
         else:
             # Provision failed, check retry count

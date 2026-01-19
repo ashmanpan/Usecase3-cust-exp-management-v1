@@ -11,6 +11,7 @@ import structlog
 
 from ..tools.agent_caller import call_agent
 from ..tools.state_manager import update_incident
+from ..tools.io_notifier import notify_ticket_closed
 
 logger = structlog.get_logger(__name__)
 
@@ -134,6 +135,16 @@ async def close_node(state: dict[str, Any]) -> dict[str, Any]:
         incident_id=incident_id,
         final_status=final_status,
         duration_seconds=duration_seconds,
+    )
+
+    # Notify IO Agent that ticket is closed
+    await notify_ticket_closed(
+        incident_id=incident_id,
+        resolution=final_status,
+        duration_seconds=duration_seconds or 0,
+        summary=f"Incident {final_status}: {close_reason}",
+        details=summary,
+        correlation_id=state.get("correlation_id"),
     )
 
     return {
