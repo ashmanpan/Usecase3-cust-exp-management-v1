@@ -10,6 +10,7 @@ import structlog
 
 from ..tools.agent_caller import call_agent
 from ..tools.state_manager import update_incident
+from ..tools.io_notifier import notify_phase_change
 
 logger = structlog.get_logger(__name__)
 
@@ -122,6 +123,17 @@ async def compute_node(state: dict[str, Any]) -> dict[str, Any]:
                 incident_id=incident_id,
                 path_type=alternate_path.get("path_type") if alternate_path else None,
             )
+            # Notify IO Agent
+            await notify_phase_change(
+                incident_id=incident_id,
+                status="computing",
+                message=f"Alternate path found ({alternate_path.get('path_type', 'unknown')}), provisioning tunnel",
+                details={
+                    "path_type": alternate_path.get("path_type") if alternate_path else None,
+                    "hop_count": len(alternate_path.get("hops", [])) if alternate_path else 0,
+                },
+                correlation_id=state.get("correlation_id"),
+            )
         else:
             logger.warning(
                 "No alternate path found, escalating",
@@ -137,6 +149,13 @@ async def compute_node(state: dict[str, Any]) -> dict[str, Any]:
                     "escalate_reason": "no_alternate_path",
                 },
             )
+            # Notify IO Agent
+            await notify_phase_change(
+                incident_id=incident_id,
+                status="escalated",
+                message="No alternate path available - escalating to operator",
+                correlation_id=state.get("correlation_id"),
+            )
     else:
         logger.error(
             "Path Computation Agent call failed",
@@ -145,5 +164,12 @@ async def compute_node(state: dict[str, Any]) -> dict[str, Any]:
         )
         updates["error_message"] = compute_result.get("error")
         updates["status"] = "escalated"
+        # Notify IO Agent
+        await notify_phase_change(
+            incident_id=incident_id,
+            status="escalated",
+            message=f"Path computation failed: {compute_result.get('error')}",
+            correlation_id=state.get("correlation_id"),
+        )
 
     return updates

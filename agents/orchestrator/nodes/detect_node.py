@@ -9,6 +9,7 @@ from typing import Any
 import structlog
 
 from ..tools.state_manager import update_incident
+from ..tools.io_notifier import notify_phase_change
 
 logger = structlog.get_logger(__name__)
 
@@ -64,11 +65,27 @@ async def detect_node(state: dict[str, Any]) -> dict[str, Any]:
             alert_count=alert_count,
         )
         updates["status"] = "dampening"
+        # Notify IO Agent
+        await notify_phase_change(
+            incident_id=incident_id,
+            status="dampening",
+            message=f"Flap detected - dampening ({alert_count} alerts)",
+            details={"alert_count": alert_count},
+            correlation_id=state.get("correlation_id"),
+        )
     else:
         logger.info(
             "Link stable, proceeding to assess",
             incident_id=incident_id,
         )
         updates["status"] = "assessing"
+        # Notify IO Agent
+        await notify_phase_change(
+            incident_id=incident_id,
+            status="detecting",
+            message="SLA degradation confirmed, assessing impact",
+            details={"degraded_links": state.get("degraded_links", [])},
+            correlation_id=state.get("correlation_id"),
+        )
 
     return updates

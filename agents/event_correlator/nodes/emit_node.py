@@ -1,13 +1,18 @@
 """
 Emit Node
 
-Emit correlated incident to Orchestrator.
+Emit correlated incident to Orchestrator and notify IO Agent.
 From DESIGN.md: flap_detect -> emit (if not flapping)
 """
 
 from typing import Any
 from datetime import datetime
+import sys
+import os
 import structlog
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+from agent_template.tools.io_agent_client import get_io_client
 
 logger = structlog.get_logger(__name__)
 
@@ -69,6 +74,22 @@ async def emit_node(state: dict[str, Any]) -> dict[str, Any]:
         alert_type=incident_payload["alert_type"],
         severity=incident_payload["severity"],
     )
+
+    # Notify IO Agent of new ticket
+    try:
+        io_client = get_io_client()
+        await io_client.notify_new_ticket(
+            incident_id=incident_id,
+            severity=incident_payload["severity"],
+            summary=f"SLA degradation detected on {', '.join(degraded_links or ['unknown link'])}",
+            degraded_links=degraded_links,
+            affected_services=[],  # Will be populated by Service Impact Agent
+            source_agent="event_correlator",
+            correlation_id=state.get("correlation_id"),
+        )
+        logger.info("IO Agent notified of new ticket", incident_id=incident_id)
+    except Exception as e:
+        logger.warning("Failed to notify IO Agent", error=str(e))
 
     return {
         "current_node": "emit",

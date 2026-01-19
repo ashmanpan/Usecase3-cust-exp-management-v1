@@ -10,6 +10,7 @@ import structlog
 
 from ..tools.agent_caller import call_agent
 from ..tools.state_manager import update_incident
+from ..tools.io_notifier import notify_phase_change
 
 logger = structlog.get_logger(__name__)
 
@@ -98,6 +99,17 @@ async def assess_node(state: dict[str, Any]) -> dict[str, Any]:
                 services_by_tier=services_by_tier,
             )
             updates["status"] = "computing"
+            # Notify IO Agent
+            await notify_phase_change(
+                incident_id=incident_id,
+                status="assessing",
+                message=f"{total_affected} services affected, computing alternate path",
+                details={
+                    "total_affected": total_affected,
+                    "services_by_tier": services_by_tier,
+                },
+                correlation_id=state.get("correlation_id"),
+            )
         else:
             logger.info(
                 "No services affected, closing incident",
@@ -105,6 +117,13 @@ async def assess_node(state: dict[str, Any]) -> dict[str, Any]:
             )
             updates["status"] = "closed"
             updates["close_reason"] = "no_services_affected"
+            # Notify IO Agent
+            await notify_phase_change(
+                incident_id=incident_id,
+                status="closed",
+                message="No services affected - incident closed",
+                correlation_id=state.get("correlation_id"),
+            )
     else:
         logger.error(
             "Service Impact Agent call failed",
@@ -113,5 +132,12 @@ async def assess_node(state: dict[str, Any]) -> dict[str, Any]:
         )
         updates["error_message"] = impact_result.get("error")
         updates["status"] = "escalated"
+        # Notify IO Agent of error
+        await notify_phase_change(
+            incident_id=incident_id,
+            status="escalated",
+            message=f"Service Impact assessment failed: {impact_result.get('error')}",
+            correlation_id=state.get("correlation_id"),
+        )
 
     return updates
