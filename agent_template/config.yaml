@@ -1,0 +1,91 @@
+# Agent Configuration Template
+# Copy and modify for each agent
+
+agent:
+  # Agent identification
+  name: "template_agent"
+  type: "template"
+  version: "1.0.0"
+  description: "Template agent for customer experience management"
+
+  # A2A Server configuration
+  a2a:
+    host: "0.0.0.0"
+    port: 8080
+    # Agent capabilities exposed via A2A
+    capabilities:
+      - "process_task"
+      - "get_status"
+
+# Workflow configuration
+workflow:
+  max_iterations: 3
+  timeout_seconds: 300
+
+  # Tool subsets per stage (customize per agent)
+  stages:
+    first_stage:
+      tools: []
+    second_stage:
+      tools: []
+
+# LLM configuration
+llm:
+  provider: "bedrock"  # bedrock, openai, anthropic
+  model: "anthropic.claude-3-sonnet-20240229-v1:0"
+  temperature: 0.0
+  max_tokens: 4096
+
+# MCP Server configuration
+mcp:
+  server_url: "${MCP_SERVER_URL:-http://mcp-server:5000}"
+  timeout_seconds: 300
+  blocked_tools: []
+
+# Redis configuration (for state management)
+redis:
+  url: "${REDIS_URL:-redis://redis:6379}"
+  db: 0
+  key_prefix: "agent:template:"
+
+# External services
+services:
+  # Knowledge Graph
+  kg:
+    url: "${KG_SERVICE_URL:-http://kg-service:8080}"
+    timeout_seconds: 30
+
+  # RAG Service
+  rag:
+    url: "${RAG_SERVICE_URL:-http://rag-service:8080}"
+    timeout_seconds: 180
+    default_namespace: "default"
+    default_top_k: 3
+
+  # CNC (Crosswork Network Controller)
+  cnc:
+    url: "${CNC_URL:-https://cnc:30603}"
+    timeout_seconds: 60
+
+  # PCA (Path Computation Agent) - via A2A
+  pca:
+    a2a_url: "${PCA_A2A_URL:-http://pca-agent:8080}"
+
+# Observability
+observability:
+  # Logging
+  log_level: "INFO"
+  log_format: "json"  # json or text
+
+  # OpenTelemetry
+  otel:
+    enabled: true
+    endpoint: "${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}"
+    service_name: "template-agent"
+
+# Health check configuration
+health:
+  enabled: true
+  port: 8081
+  path: "/health"
+  ready_path: "/ready"
