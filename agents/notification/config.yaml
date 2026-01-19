@@ -1,0 +1,96 @@
+# Notification Agent Configuration - Port 8007
+# From DESIGN.md: Sends notifications to Webex, ServiceNow, Email based on SLA tier
+
+agent:
+  name: "notification"
+  version: "1.0.0"
+  type: "notification"
+  description: "Sends notifications to appropriate channels based on incident severity and service SLA tier"
+
+a2a:
+  host: "0.0.0.0"
+  port: 8007
+  capabilities:
+    - "send_notification"
+    - "send_webex"
+    - "send_servicenow"
+    - "send_email"
+
+workflow:
+  max_iterations: 5
+  stages:
+    select_channels:
+      - "channel_selector"
+    format_message:
+      - "message_formatter"
+    send_parallel:
+      - "webex_client"
+      - "servicenow_client"
+      - "email_client"
+    log_results:
+      - "notification_logger"
+
+# SLA tier channel configuration - From DESIGN.md
+sla_tiers:
+  platinum:
+    notification_channels:
+      - "webex"
+      - "servicenow"
+      - "email"
+    email_recipients:
+      - "noc-critical@example.com"
+      - "sre-oncall@example.com"
+    webex_space: "${WEBEX_SPACE_PLATINUM}"
+    servicenow_assignment: "Network Operations - Critical"
+  gold:
+    notification_channels:
+      - "webex"
+      - "servicenow"
+      - "email"
+    email_recipients:
+      - "noc@example.com"
+    webex_space: "${WEBEX_SPACE_GOLD}"
+    servicenow_assignment: "Network Operations"
+  silver:
+    notification_channels:
+      - "webex"
+      - "email"
+    email_recipients:
+      - "network-alerts@example.com"
+    webex_space: "${WEBEX_SPACE_SILVER}"
+    servicenow_assignment: "Network Operations"
+  bronze:
+    notification_channels:
+      - "email"
+    email_recipients:
+      - "network-alerts@example.com"
+    webex_space: ""
+    servicenow_assignment: ""
+
+# Webex configuration
+webex:
+  api_url: "https://webexapis.com/v1"
+  token: "${WEBEX_BOT_TOKEN}"
+  default_space: "${WEBEX_DEFAULT_SPACE}"
+
+# ServiceNow configuration
+servicenow:
+  instance_url: "${SNOW_INSTANCE_URL:-https://example.service-now.com}"
+  username: "${SNOW_USERNAME}"
+  password: "${SNOW_PASSWORD}"
+  default_category: "Network"
+  default_subcategory: "Traffic Engineering"
+
+# Email configuration
+email:
+  smtp_host: "${SMTP_HOST:-smtp.example.com}"
+  smtp_port: 587
+  use_tls: true
+  sender: "${EMAIL_SENDER:-noreply@example.com}"
+  username: "${SMTP_USERNAME}"
+  password: "${SMTP_PASSWORD}"
+
+observability:
+  log_level: "INFO"
+  metrics_enabled: true
+  tracing_enabled: true

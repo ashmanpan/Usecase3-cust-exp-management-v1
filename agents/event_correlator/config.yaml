@@ -1,0 +1,73 @@
+# Event Correlator Agent Configuration
+
+agent:
+  name: "event_correlator"
+  type: "correlator"
+  version: "1.0.0"
+  description: "Receives alerts from PCA and CNC, deduplicates, correlates related events, and detects link flapping"
+
+a2a:
+  host: "0.0.0.0"
+  port: 8001
+  capabilities:
+    - "correlate_alert"
+    - "get_correlation_status"
+
+workflow:
+  max_iterations: 3
+  timeout_seconds: 60
+
+  # Flap detection settings
+  flap_detection:
+    window_seconds: 300      # 5 minutes
+    threshold: 3             # 3 state changes = flapping
+    initial_dampen: 60       # 1 minute initial suppression
+    max_dampen: 3600         # 1 hour max suppression
+
+  # Deduplication settings
+  dedup:
+    window_seconds: 300      # 5 minute dedup window
+    hash_fields:
+      - "link_id"
+      - "severity"
+      - "violated_thresholds"
+
+  # Correlation rules
+  correlation:
+    same_link_window_seconds: 60
+    adjacent_link_window_seconds: 30
+    path_correlation_window_seconds: 120
+
+llm:
+  provider: "bedrock"
+  model: "anthropic.claude-3-sonnet-20240229-v1:0"
+  temperature: 0.0
+  max_tokens: 2048
+
+redis:
+  url: "${REDIS_URL:-redis://redis:6379}"
+  db: 0
+  key_prefix: "event_correlator:"
+
+# External alert sources
+alert_sources:
+  pca:
+    webhook_path: "/webhooks/pca"
+    api_url: "${PCA_API_URL:-https://pca:443}"
+  cnc:
+    webhook_path: "/webhooks/cnc"
+    api_url: "${CNC_URL:-https://cnc:30603}"
+
+observability:
+  log_level: "INFO"
+  log_format: "json"
+  otel:
+    enabled: true
+    endpoint: "${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}"
+    service_name: "event-correlator-agent"
+
+health:
+  enabled: true
+  port: 8001
+  path: "/health"
+  ready_path: "/ready"

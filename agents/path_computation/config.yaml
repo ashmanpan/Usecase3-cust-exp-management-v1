@@ -1,0 +1,89 @@
+# Path Computation Agent Configuration
+# From DESIGN.md: Query KG Dijkstra API for alternate paths with constraints
+# Port: 8003
+
+agent:
+  name: "path_computation"
+  version: "1.0.0"
+  description: "Path Computation Agent - Query Knowledge Graph for alternate paths"
+  type: "path_computation"
+
+# A2A Protocol settings
+a2a:
+  host: "0.0.0.0"
+  port: 8003
+  capabilities:
+    - "compute_path"
+    - "validate_path"
+    - "relax_constraints"
+  timeout_seconds: 60
+
+# MCP Client settings
+mcp:
+  server_url: "http://mcp-server:8080"
+  timeout_seconds: 60
+  blocked_tools: []
+
+# Workflow settings
+workflow:
+  max_iterations: 5
+  stages:
+    build:
+      - "constraint_builder"
+    query:
+      - "kg_dijkstra"
+    validate:
+      - "path_validator"
+
+# Knowledge Graph Dijkstra API
+knowledge_graph:
+  base_url: "https://kg.example.com/api/v1"
+  dijkstra_endpoint: "/dijkstra"
+  timeout_seconds: 30
+  retry_count: 3
+  retry_delay_seconds: 1
+
+# Path computation settings from DESIGN.md
+path_computation:
+  # Default constraints
+  default_max_hops: 10
+  default_metric: "delay"  # igp, te, delay, hop_count
+
+  # Relaxation settings
+  max_relaxation_levels: 4
+  hop_increase_per_level: 5
+
+  # Constraint relaxation order from DESIGN.md
+  relaxation_order:
+    - "avoid_srlgs"
+    - "max_hops"
+    - "optimization_metric"
+    - "avoid_nodes"
+
+  # Validation thresholds
+  max_delay_multiplier: 2.0  # Allow up to 2x original delay
+
+# TE type detection
+te_detection:
+  supported_types:
+    - "sr-mpls"
+    - "srv6"
+    - "rsvp-te"
+    - "igp"
+  default_type: "sr-mpls"
+
+# External services
+services:
+  orchestrator:
+    a2a_url: "http://orchestrator:8000"
+
+# Redis for caching
+redis:
+  url: "redis://redis:6379"
+  cache_ttl_seconds: 60
+
+# Observability
+observability:
+  log_level: "INFO"
+  enable_metrics: true
+  metrics_port: 9103

@@ -1,0 +1,103 @@
+# Restoration Monitor Agent Configuration - Port 8005
+# From DESIGN.md: Monitors SLA recovery, manages hold timers, verifies stability, orchestrates cutover
+
+agent:
+  name: "restoration-monitor"
+  version: "1.0.0"
+  type: "restoration"
+  description: "Monitors SLA recovery via PCA, manages hold timers, verifies stability, and orchestrates traffic cutover"
+
+a2a:
+  host: "0.0.0.0"
+  port: 8005
+  capabilities:
+    - "monitor_restoration"
+    - "check_hold_timer"
+    - "execute_cutover"
+
+workflow:
+  max_iterations: 100  # Higher for continuous monitoring
+  poll_interval_seconds: 30
+  stages:
+    poll_sla:
+      - "pca_sla_client"
+    check_recovery:
+      - "sla_comparator"
+    start_timer:
+      - "hold_timer_manager"
+    wait_timer:
+      - "hold_timer_manager"
+    verify_stability:
+      - "pca_sla_client"
+      - "stability_checker"
+    cutover_traffic:
+      - "gradual_cutover"
+      - "cnc_weight_updater"
+    cleanup_tunnel:
+      - "cnc_tunnel_deleter"
+      - "bsid_releaser"
+    return_restored:
+      - "a2a_client"
+
+# SLA tier configurations - From DESIGN.md
+sla_tiers:
+  platinum:
+    max_latency_ms: 10.0
+    max_jitter_ms: 2.0
+    max_loss_pct: 0.01
+    hold_timer_seconds: 60
+    stability_check_seconds: 30
+  gold:
+    max_latency_ms: 25.0
+    max_jitter_ms: 5.0
+    max_loss_pct: 0.1
+    hold_timer_seconds: 120
+    stability_check_seconds: 60
+  silver:
+    max_latency_ms: 50.0
+    max_jitter_ms: 10.0
+    max_loss_pct: 0.5
+    hold_timer_seconds: 180
+    stability_check_seconds: 90
+  bronze:
+    max_latency_ms: 100.0
+    max_jitter_ms: 20.0
+    max_loss_pct: 1.0
+    hold_timer_seconds: 300
+    stability_check_seconds: 120
+
+# Cutover configuration
+cutover:
+  gradual_stages:
+    - protection: 75
+      original: 25
+    - protection: 50
+      original: 50
+    - protection: 25
+      original: 75
+    - protection: 0
+      original: 100
+  stage_interval_seconds: 60
+  verification_retries: 3
+
+# External services
+pca:
+  base_url: "${PCA_API_URL:-http://pca-api:8080}"
+  metrics_window: "5m"
+  timeout_seconds: 10
+
+cnc:
+  base_url: "${CNC_API_URL:-https://cnc.example.com}"
+  auth_url: "${CNC_AUTH_URL:-https://cnc.example.com/auth/token}"
+  client_id: "${CNC_CLIENT_ID}"
+  client_secret: "${CNC_CLIENT_SECRET}"
+
+redis:
+  url: "${REDIS_URL:-redis://localhost:6379}"
+  timer_prefix: "restoration:timer:"
+  cutover_prefix: "restoration:cutover:"
+
+observability:
+  log_level: "INFO"
+  metrics_enabled: true
+  tracing_enabled: true

@@ -1,0 +1,73 @@
+# Tunnel Provisioning Agent Configuration
+# From DESIGN.md: Create protection tunnels via CNC PCE APIs
+# Port: 8004
+
+agent:
+  name: "tunnel_provisioning"
+  version: "1.0.0"
+  description: "Tunnel Provisioning Agent - Create SR-MPLS/SRv6/RSVP-TE tunnels via CNC"
+  type: "tunnel_provisioning"
+
+a2a:
+  host: "0.0.0.0"
+  port: 8004
+  capabilities:
+    - "provision_tunnel"
+    - "verify_tunnel"
+    - "delete_tunnel"
+    - "steer_traffic"
+  timeout_seconds: 120
+
+mcp:
+  server_url: "http://mcp-server:8080"
+  timeout_seconds: 120
+  blocked_tools: []
+
+workflow:
+  max_iterations: 5
+  stages:
+    detect:
+      - "te_detector"
+    build:
+      - "payload_builder"
+    create:
+      - "cnc_tunnel_creator"
+    verify:
+      - "tunnel_verifier"
+
+# CNC PCE API Configuration
+cnc:
+  base_url: "https://cnc.example.com:30603/crosswork/nbi/optimization/v3/restconf"
+  sr_policy_endpoint: "/operations/cisco-crosswork-optimization-engine-sr-policy-operations:sr-policy-create"
+  rsvp_te_endpoint: "/operations/cisco-crosswork-optimization-engine-rsvp-te-tunnel-operations:rsvp-te-tunnel-create"
+  auth_url: "https://cnc.example.com:30603/crosswork/sso/v1/tickets"
+  jwt_url: "https://cnc.example.com:30603/crosswork/sso/v2/tickets/jwt"
+  timeout_seconds: 60
+  retry_count: 3
+  retry_delay_seconds: 5
+
+# BSID Allocation from DESIGN.md
+bsid:
+  mpls_range_start: 24000
+  mpls_range_end: 24999
+  srv6_prefix: "fc00:0:ffff::"
+
+# TE Type Detection
+te_detection:
+  supported_types:
+    - "sr-mpls"
+    - "srv6"
+    - "rsvp-te"
+  default_type: "sr-mpls"
+
+services:
+  orchestrator:
+    a2a_url: "http://orchestrator:8000"
+
+redis:
+  url: "redis://redis:6379"
+
+observability:
+  log_level: "INFO"
+  enable_metrics: true
+  metrics_port: 9104

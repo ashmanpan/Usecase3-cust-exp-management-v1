@@ -1,0 +1,91 @@
+# Service Impact Agent Configuration
+# From DESIGN.md: Query CNC Service Health for affected L3VPN/L2VPN services
+# Port: 8002
+
+agent:
+  name: "service_impact"
+  version: "1.0.0"
+  description: "Service Impact Agent - Query CNC Service Health API for affected services"
+  type: "service_impact"
+
+# A2A Protocol settings
+a2a:
+  host: "0.0.0.0"
+  port: 8002
+  capabilities:
+    - "assess_impact"
+    - "query_services"
+    - "get_service_details"
+  timeout_seconds: 30
+
+# MCP Client settings (for calling CNC tools)
+mcp:
+  server_url: "http://mcp-server:8080"
+  timeout_seconds: 60
+  blocked_tools: []
+
+# Workflow settings
+workflow:
+  max_iterations: 3
+  stages:
+    query:
+      - "cnc_service_health_query"
+    analyze:
+      - "impact_analyzer"
+    enrich:
+      - "sla_enricher"
+
+# CNC Service Health API
+cnc:
+  service_health_url: "https://cnc.example.com:30603/crosswork/nbi/servicehealth/v1"
+  auth_url: "https://cnc.example.com:30603/crosswork/sso/v1/tickets"
+  jwt_url: "https://cnc.example.com:30603/crosswork/sso/v2/tickets/jwt"
+  timeout_seconds: 30
+  retry_count: 3
+  retry_delay_seconds: 1
+
+# SLA Tier Configuration from DESIGN.md
+sla_tiers:
+  platinum:
+    priority: 1
+    hold_timer_seconds: 60
+    notification_channels: ["webex", "servicenow", "email"]
+    auto_protect: true
+  gold:
+    priority: 2
+    hold_timer_seconds: 120
+    notification_channels: ["webex", "servicenow"]
+    auto_protect: true
+  silver:
+    priority: 3
+    hold_timer_seconds: 300
+    notification_channels: ["servicenow"]
+    auto_protect: true
+  bronze:
+    priority: 4
+    hold_timer_seconds: 600
+    notification_channels: ["email"]
+    auto_protect: false
+
+# Service types
+service_types:
+  - "l3vpn"
+  - "l2vpn"
+  - "evpn"
+  - "p2p"
+
+# External services
+services:
+  orchestrator:
+    a2a_url: "http://orchestrator:8000"
+
+# Redis for caching
+redis:
+  url: "redis://redis:6379"
+  cache_ttl_seconds: 300
+
+# Observability
+observability:
+  log_level: "INFO"
+  enable_metrics: true
+  metrics_port: 9102

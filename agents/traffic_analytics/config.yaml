@@ -1,0 +1,87 @@
+# Traffic Analytics Agent Configuration - Port 8006
+# From DESIGN.md: Builds demand matrices, predicts congestion, generates proactive alerts
+
+agent:
+  name: "traffic-analytics"
+  version: "1.0.0"
+  type: "analytics"
+  description: "Builds traffic demand matrices, predicts congestion, and generates proactive alerts BEFORE SLA degradation"
+
+a2a:
+  host: "0.0.0.0"
+  port: 8006
+  capabilities:
+    - "analyze_traffic"
+    - "build_demand_matrix"
+    - "predict_congestion"
+    - "proactive_alert"
+
+workflow:
+  max_iterations: 10
+  analysis_interval_seconds: 300  # 5 minutes
+  stages:
+    collect_telemetry:
+      - "telemetry_collector"
+      - "sr_pm_client"
+      - "mdt_client"
+      - "netflow_client"
+    build_matrix:
+      - "demand_matrix_builder"
+    predict_congestion:
+      - "congestion_predictor"
+    analyze_risk:
+      - "risk_analyzer"
+    emit_proactive_alert:
+      - "a2a_client"
+      - "alert_emitter"
+    store_metrics:
+      - "metrics_store"
+
+# Congestion thresholds - From DESIGN.md
+thresholds:
+  utilization_warning: 0.70   # 70% = warning
+  utilization_critical: 0.85  # 85% = proactive alert
+  time_to_congestion_minutes: 15
+
+# Telemetry sources
+telemetry:
+  sr_pm:
+    enabled: true
+    url: "${CNC_API_URL:-https://cnc.example.com}/crosswork/telemetry/v1/sr-pm/metrics"
+    window_minutes: 5
+  mdt:
+    enabled: true
+    grpc_endpoint: "${MDT_GRPC_ENDPOINT:-mdt-collector:57400}"
+    subscription: "interfaces"
+  netflow:
+    enabled: true
+    collector_url: "${NETFLOW_COLLECTOR_URL:-http://netflow-collector:8080}"
+    window_minutes: 5
+    include_srv6: true
+
+# CNC API configuration
+cnc:
+  base_url: "${CNC_API_URL:-https://cnc.example.com}"
+  auth_url: "${CNC_AUTH_URL:-https://cnc.example.com/auth/token}"
+  client_id: "${CNC_CLIENT_ID}"
+  client_secret: "${CNC_CLIENT_SECRET}"
+
+# Knowledge Graph for topology
+knowledge_graph:
+  base_url: "${KG_API_URL:-http://kg-api:8080}"
+
+# Redis for metrics storage
+redis:
+  url: "${REDIS_URL:-redis://localhost:6379}"
+  metrics_prefix: "traffic:metrics:"
+  matrix_prefix: "traffic:matrix:"
+  ttl_hours: 24
+
+# Orchestrator for proactive alerts
+orchestrator:
+  url: "${ORCHESTRATOR_URL:-http://orchestrator:8000}"
+
+observability:
+  log_level: "INFO"
+  metrics_enabled: true
+  tracing_enabled: true
