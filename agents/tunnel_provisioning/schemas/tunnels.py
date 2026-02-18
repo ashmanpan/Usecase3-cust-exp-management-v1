@@ -14,6 +14,9 @@ class TunnelConfig(BaseModel):
     protected: bool = True
     explicit_hops: Optional[List[dict]] = None
     segment_sids: Optional[List[int]] = None
+    bandwidth_gbps: Optional[float] = None
+    setup_priority: Optional[int] = None
+    hold_priority: Optional[int] = None
 
 class TunnelResult(BaseModel):
     success: bool

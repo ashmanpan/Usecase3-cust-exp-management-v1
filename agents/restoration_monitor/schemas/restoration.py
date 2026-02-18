@@ -91,6 +91,7 @@ class PollSLAOutput(BaseModel):
     """Output from SLA polling"""
     metrics: SLAMetrics
     meets_sla: bool
+    error: Optional[str] = None
 
 
 class CheckTimerInput(BaseModel):

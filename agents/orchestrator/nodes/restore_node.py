@@ -10,6 +10,7 @@ import structlog
 
 from ..tools.agent_caller import call_agent
 from ..tools.state_manager import update_incident
+from ..tools.io_notifier import notify_phase_change
 
 logger = structlog.get_logger(__name__)
 
@@ -40,6 +41,14 @@ async def restore_node(state: dict[str, Any]) -> dict[str, Any]:
         incident_id=incident_id,
         tunnel_id=tunnel_id,
         cutover_mode=cutover_mode,
+    )
+
+    # Notify IO Agent about restoration phase
+    await notify_phase_change(
+        incident_id=incident_id,
+        status="restoring",
+        message=f"Restoring original path ({cutover_mode} cutover)",
+        details={"tunnel_id": tunnel_id, "cutover_mode": cutover_mode},
     )
 
     # Track A2A calls

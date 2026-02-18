@@ -74,10 +74,11 @@ class WebexClient:
             )
 
         except httpx.HTTPError as e:
-            logger.warning("Webex API unavailable, simulating send", error=str(e))
+            logger.error("Webex API request failed", error=str(e), space_id=space_id)
             return SendWebexOutput(
-                success=True,
-                message_id=f"simulated-{space_id[:8]}",
+                success=False,
+                message_id=None,
+                error=f"Webex API error: {e}",
             )
 
     async def get_room_info(self, space_id: str) -> Optional[dict]:

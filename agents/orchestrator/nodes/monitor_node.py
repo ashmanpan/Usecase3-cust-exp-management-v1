@@ -10,6 +10,7 @@ import structlog
 
 from ..tools.agent_caller import call_agent
 from ..tools.state_manager import update_incident
+from ..tools.io_notifier import notify_phase_change, notify_error
 
 logger = structlog.get_logger(__name__)
 
@@ -40,6 +41,14 @@ async def monitor_node(state: dict[str, Any]) -> dict[str, Any]:
         "Running monitor node",
         incident_id=incident_id,
         tunnel_id=tunnel_id,
+    )
+
+    # Notify IO Agent about monitoring phase
+    await notify_phase_change(
+        incident_id=incident_id,
+        status="monitoring",
+        message="Monitoring SLA recovery on original path",
+        details={"tunnel_id": tunnel_id, "cutover_mode": cutover_mode},
     )
 
     # Call Restoration Monitor Agent
@@ -121,6 +130,12 @@ async def monitor_node(state: dict[str, Any]) -> dict[str, Any]:
             "Restoration Monitor Agent call failed",
             incident_id=incident_id,
             error=monitor_result.get("error"),
+        )
+        await notify_error(
+            incident_id=incident_id,
+            error_type="monitor_call_failed",
+            error_message=f"Restoration Monitor failed: {monitor_result.get('error')}",
+            recoverable=True,
         )
         updates["error_message"] = monitor_result.get("error")
         # Continue monitoring despite error

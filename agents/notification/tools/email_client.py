@@ -105,10 +105,11 @@ class EmailClient:
                 )
 
         except Exception as e:
-            logger.warning("SMTP send failed, simulating success", error=str(e))
+            logger.error("SMTP send failed", error=str(e), recipients=to)
             return SendEmailOutput(
-                success=True,
-                sent_to=to,
+                success=False,
+                sent_to=[],
+                error=f"SMTP error: {e}",
             )
 
     async def close(self):

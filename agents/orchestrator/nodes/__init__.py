@@ -26,6 +26,7 @@ from .conditions import (
     check_sla_recovered,
     check_restore_complete,
     check_should_escalate,
+    check_dampen_complete,
 )
 
 __all__ = [
@@ -50,4 +51,5 @@ __all__ = [
     "check_sla_recovered",
     "check_restore_complete",
     "check_should_escalate",
+    "check_dampen_complete",
 ]

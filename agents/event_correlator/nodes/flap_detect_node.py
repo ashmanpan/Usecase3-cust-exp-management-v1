@@ -60,13 +60,13 @@ async def flap_detect_node(state: dict[str, Any]) -> dict[str, Any]:
     detector = get_flap_detector()
 
     # Record state change
-    await detector.record_state_change(link_id)
+    await detector.record_event(link_id)
 
     # Check for flapping
     is_flapping, dampen_seconds = await detector.check_flapping(link_id)
 
     if is_flapping:
-        flap_count = await detector.get_flap_count(link_id)
+        flap_count = await detector.get_flap_count(link_id)  # uses Redis count key
         logger.warning(
             "Link is flapping, will suppress",
             alert_id=alert_id,

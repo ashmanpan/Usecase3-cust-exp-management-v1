@@ -13,6 +13,12 @@ from .nodes import (detect_te_type_node, build_payload_node, create_tunnel_node,
 
 logger = structlog.get_logger(__name__)
 
+
+async def _increment_retry_node(state: dict[str, Any]) -> dict[str, Any]:
+    """Increment retry count before checking if retry is allowed."""
+    return {"retry_count": state.get("retry_count", 0) + 1}
+
+
 class TunnelProvisioningWorkflow(BaseWorkflow):
     """Tunnel Provisioning Workflow - From DESIGN.md: DETECT_TE -> BUILD -> CREATE -> VERIFY -> STEER -> RETURN"""
 
@@ -44,8 +50,10 @@ class TunnelProvisioningWorkflow(BaseWorkflow):
         graph.add_edge(START, "detect_te_type")
         graph.add_edge("detect_te_type", "build_payload")
         graph.add_edge("build_payload", "create_tunnel")
-        graph.add_conditional_edges("create_tunnel", check_creation_success, {"verify": "verify_tunnel", "retry": "return_success"})
-        graph.add_conditional_edges("verify_tunnel", check_tunnel_verified, {"steer": "steer_traffic", "retry": "return_success"})
+        graph.add_conditional_edges("create_tunnel", check_creation_success, {"verify": "verify_tunnel", "retry": "retry_gate"})
+        graph.add_node("retry_gate", _increment_retry_node)
+        graph.add_conditional_edges("retry_gate", check_can_retry, {"create": "create_tunnel", "return": "return_success"})
+        graph.add_conditional_edges("verify_tunnel", check_tunnel_verified, {"steer": "steer_traffic", "retry": "retry_gate"})
         graph.add_edge("steer_traffic", "return_success")
         graph.add_edge("return_success", END)
         logger.info("Tunnel Provisioning workflow graph built")

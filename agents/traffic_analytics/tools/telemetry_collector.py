@@ -111,8 +111,11 @@ class TelemetryCollector:
             return [SRPMMetric(**m) for m in data.get("metrics", [])]
 
         except httpx.HTTPError as e:
-            logger.warning("SR-PM API unavailable, using simulated data", error=str(e))
-            return self._simulate_sr_pm()
+            if os.getenv("SIMULATE_MODE", "false").lower() == "true":
+                logger.warning("SR-PM API unavailable, using simulated data", error=str(e))
+                return self._simulate_sr_pm()
+            logger.error("SR-PM API unavailable", error=str(e))
+            return []
 
     async def collect_mdt(self) -> List[InterfaceCounter]:
         """
@@ -122,8 +125,10 @@ class TelemetryCollector:
         logger.debug("Collecting MDT telemetry")
 
         # In production, this would use gRPC streaming
-        # For now, simulate interface counters
-        return self._simulate_mdt()
+        if os.getenv("SIMULATE_MODE", "false").lower() == "true":
+            return self._simulate_mdt()
+        logger.warning("MDT gRPC collection not implemented, returning empty")
+        return []
 
     async def collect_netflow(self) -> List[FlowRecord]:
         """
@@ -147,8 +152,11 @@ class TelemetryCollector:
             return [FlowRecord(**f) for f in data.get("flows", [])]
 
         except httpx.HTTPError as e:
-            logger.warning("NetFlow API unavailable, using simulated data", error=str(e))
-            return self._simulate_netflow()
+            if os.getenv("SIMULATE_MODE", "false").lower() == "true":
+                logger.warning("NetFlow API unavailable, using simulated data", error=str(e))
+                return self._simulate_netflow()
+            logger.error("NetFlow API unavailable", error=str(e))
+            return []
 
     def _simulate_sr_pm(self) -> List[SRPMMetric]:
         """Simulate SR-PM metrics for demo"""

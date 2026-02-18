@@ -232,11 +232,16 @@ class GradualCutover:
             )
 
         except httpx.HTTPError as e:
-            logger.warning("CNC API unavailable, simulating weight update", error=str(e))
-            # Simulate success for demo
+            if os.getenv("SIMULATE_MODE", "false").lower() == "true":
+                logger.warning("CNC API unavailable, simulating weight update", error=str(e))
+                return UpdateWeightsOutput(
+                    success=True,
+                    message=f"[Simulated] Weights updated: protection={protection_weight}, original={original_weight}",
+                )
+            logger.error("CNC API unavailable — cannot update ECMP weights", error=str(e))
             return UpdateWeightsOutput(
-                success=True,
-                message=f"[Simulated] Weights updated: protection={protection_weight}, original={original_weight}",
+                success=False,
+                message=f"CNC API error: {e}",
             )
 
     async def _store_cutover_state(self, incident_id: str, state: dict):

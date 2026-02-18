@@ -67,9 +67,10 @@ class CNCServiceHealthClient:
     async def _get_client(self) -> httpx.AsyncClient:
         """Get or create HTTP client."""
         if self._client is None:
+            ca_cert = os.getenv("CA_CERT_PATH")
             self._client = httpx.AsyncClient(
                 timeout=self.timeout,
-                verify=False,  # For self-signed certs
+                verify=ca_cert if ca_cert else True,
             )
         return self._client
 

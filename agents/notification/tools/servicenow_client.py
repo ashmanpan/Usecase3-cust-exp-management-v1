@@ -107,10 +107,11 @@ class ServiceNowClient:
             )
 
         except httpx.HTTPError as e:
-            logger.warning("ServiceNow API unavailable, simulating create", error=str(e))
+            logger.error("ServiceNow API create failed", error=str(e))
             return CreateSNOWIncidentOutput(
-                success=True,
-                incident_number=f"INC{hash(short_description) % 1000000:07d}",
+                success=False,
+                incident_number=None,
+                error=f"ServiceNow API error: {e}",
             )
 
     async def update_incident(
@@ -167,8 +168,8 @@ class ServiceNowClient:
             return UpdateSNOWIncidentOutput(success=True)
 
         except httpx.HTTPError as e:
-            logger.warning("ServiceNow API unavailable, simulating update", error=str(e))
-            return UpdateSNOWIncidentOutput(success=True)
+            logger.error("ServiceNow API update failed", error=str(e))
+            return UpdateSNOWIncidentOutput(success=False, error=f"ServiceNow API error: {e}")
 
     async def resolve_incident(
         self,

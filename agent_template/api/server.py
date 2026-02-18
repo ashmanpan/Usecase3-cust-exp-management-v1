@@ -10,9 +10,11 @@ from typing import Any, Callable, Optional
 from datetime import datetime
 from contextlib import asynccontextmanager
 
+import os
 import structlog
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Depends, Request
 from fastapi.responses import JSONResponse
+from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 
 from ..schemas.tasks import TaskInput, TaskOutput, TaskStatus, AgentCard
@@ -70,13 +72,17 @@ class A2ATaskServer:
         self.capabilities = capabilities or []
         self.tags = tags or []
 
-        # Task tracking
+        # Task tracking (bounded to prevent memory leaks)
+        self._max_stored_tasks = 1000
         self._tasks: dict[str, TaskOutput] = {}
         self._pending_tasks: dict[str, TaskInput] = {}
 
         # Health state
         self._ready = False
         self._started_at = datetime.utcnow()
+
+        # Auth configuration
+        self._a2a_secret = os.getenv("A2A_SHARED_SECRET", "")
 
         # Create FastAPI app
         self.app = self._create_app()
@@ -108,8 +114,17 @@ class A2ATaskServer:
         self._register_routes(app)
         return app
 
+    async def _verify_a2a_token(self, request: Request) -> None:
+        """Verify A2A shared secret if configured."""
+        if not self._a2a_secret:
+            return  # Auth not configured — skip (dev mode)
+        token = request.headers.get("X-Agent-Token", "")
+        if token != self._a2a_secret:
+            raise HTTPException(status_code=401, detail="Invalid or missing A2A token")
+
     def _register_routes(self, app: FastAPI) -> None:
         """Register all API routes"""
+        server = self  # capture for closures
 
         # ============== Health Endpoints ==============
 
@@ -149,7 +164,8 @@ class A2ATaskServer:
         # ============== A2A Task Endpoints ==============
 
         @app.post("/a2a/tasks", response_model=TaskOutput)
-        async def execute_task(task: TaskInput):
+        async def execute_task(task: TaskInput, request: Request):
+            await server._verify_a2a_token(request)
             """
             Execute a task synchronously.
 
@@ -203,7 +219,8 @@ class A2ATaskServer:
                     duration_ms=duration_ms,
                 )
 
-                # Store for status queries
+                # Store for status queries (with eviction)
+                self._evict_old_tasks()
                 self._tasks[task.task_id] = output
                 logger.info(
                     "Task completed",
@@ -252,7 +269,9 @@ class A2ATaskServer:
         async def execute_task_async(
             task: TaskInput,
             background_tasks: BackgroundTasks,
+            request: Request,
         ):
+            await server._verify_a2a_token(request)
             """
             Execute a task asynchronously.
 
@@ -367,6 +386,18 @@ class A2ATaskServer:
         finally:
             # Clean up pending
             self._pending_tasks.pop(task.task_id, None)
+
+    def _evict_old_tasks(self) -> None:
+        """Evict oldest completed tasks when storage limit is reached."""
+        if len(self._tasks) < self._max_stored_tasks:
+            return
+        completed = sorted(
+            ((k, v) for k, v in self._tasks.items() if v.status.state in ("completed", "failed")),
+            key=lambda x: x[1].completed_at or datetime.min,
+        )
+        to_remove = len(self._tasks) - self._max_stored_tasks + 100  # free 100 slots
+        for task_id, _ in completed[:to_remove]:
+            del self._tasks[task_id]
 
     async def _send_callback(self, url: str, output: TaskOutput) -> None:
         """Send task result to callback URL"""

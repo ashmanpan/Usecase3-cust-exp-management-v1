@@ -13,6 +13,7 @@ from langchain_core.messages import HumanMessage
 
 from ..tools.agent_caller import call_agent
 from ..tools.state_manager import update_incident
+from ..tools.io_notifier import notify_phase_change, notify_error
 
 logger = structlog.get_logger(__name__)
 
@@ -80,6 +81,14 @@ async def escalate_node(state: dict[str, Any]) -> dict[str, Any]:
         "Running escalate node",
         incident_id=incident_id,
         escalate_reason=escalate_reason,
+    )
+
+    # Notify IO Agent about escalation
+    await notify_phase_change(
+        incident_id=incident_id,
+        status="escalated",
+        message=f"Incident escalated: {escalate_reason}",
+        details={"escalate_reason": escalate_reason, "error_message": error_message},
     )
 
     # Check if this is an LLM trigger

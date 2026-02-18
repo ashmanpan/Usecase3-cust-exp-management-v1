@@ -23,8 +23,14 @@ COPY agent_template/ ./agent_template/
 # Copy this agent
 COPY agents/path_computation/ ./agents/path_computation/
 
+# Create non-root user
+RUN groupadd -r agent && useradd -r -g agent -d /app -s /sbin/nologin agent && \
+    chown -R agent:agent /app
+
 # Set Python path
 ENV PYTHONPATH=/app
+
+USER agent
 
 # Expose A2A port
 EXPOSE 8003

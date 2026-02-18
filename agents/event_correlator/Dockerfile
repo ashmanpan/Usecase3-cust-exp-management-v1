@@ -23,8 +23,14 @@ COPY agent_template/ ./agent_template/
 # Copy this agent
 COPY agents/event_correlator/ ./agents/event_correlator/
 
+# Create non-root user
+RUN groupadd -r agent && useradd -r -g agent -d /app -s /sbin/nologin agent && \
+    chown -R agent:agent /app
+
 # Set Python path
 ENV PYTHONPATH=/app
+
+USER agent
 
 # Expose A2A port
 EXPOSE 8001

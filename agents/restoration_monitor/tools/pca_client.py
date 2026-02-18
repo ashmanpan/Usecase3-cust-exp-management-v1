@@ -93,8 +93,15 @@ class PCASLAClient:
             return PollSLAOutput(metrics=metrics, meets_sla=meets_sla)
 
         except httpx.HTTPError as e:
-            logger.warning("PCA API unavailable, using simulated metrics", error=str(e))
-            return await self._simulate_sla_metrics(src, dst, sla_tier)
+            if os.getenv("SIMULATE_MODE", "false").lower() == "true":
+                logger.warning("PCA API unavailable, using simulated metrics", error=str(e))
+                return await self._simulate_sla_metrics(src, dst, sla_tier)
+            logger.error("PCA API unavailable", error=str(e), source=src, dest=dst)
+            return PollSLAOutput(
+                metrics=SLAMetrics(latency_ms=0, jitter_ms=0, packet_loss_pct=0, measurement_time=datetime.now()),
+                meets_sla=False,
+                error=f"PCA API unavailable: {e}",
+            )
 
     async def _simulate_sla_metrics(
         self,

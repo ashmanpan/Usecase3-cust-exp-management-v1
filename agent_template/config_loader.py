@@ -89,6 +89,8 @@ class RedisConfig(BaseModel):
 
 class ServiceEndpoints(BaseModel):
     """External service endpoints"""
+    model_config = {"extra": "allow"}
+
     kg: dict = Field(default_factory=dict)
     rag: dict = Field(default_factory=dict)
     cnc: dict = Field(default_factory=dict)
@@ -121,6 +123,7 @@ class Config(BaseModel):
     services: ServiceEndpoints = Field(default_factory=lambda: ServiceEndpoints())
     observability: ObservabilityConfig = Field(default_factory=lambda: ObservabilityConfig())
     health: HealthConfig = Field(default_factory=lambda: HealthConfig())
+    agents: dict[str, dict] = Field(default_factory=dict, description="Agent registry URLs for orchestrator")
 
 
 def load_config(config_path: Optional[str] = None) -> Config:

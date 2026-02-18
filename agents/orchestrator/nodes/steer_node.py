@@ -10,6 +10,7 @@ import structlog
 
 from ..tools.agent_caller import call_agent
 from ..tools.state_manager import update_incident
+from ..tools.io_notifier import notify_phase_change, notify_error
 
 logger = structlog.get_logger(__name__)
 
@@ -42,16 +43,23 @@ async def steer_node(state: dict[str, Any]) -> dict[str, Any]:
         binding_sid=binding_sid,
     )
 
-    # In a real implementation, this would:
-    # 1. Verify tunnel operational status via CNC
-    # 2. Activate traffic steering (BGP Color advertisement)
-    # 3. Verify traffic is flowing through protection path
+    # Notify IO Agent about steering phase
+    await notify_phase_change(
+        incident_id=incident_id,
+        status="steering",
+        message=f"Steering traffic to protection tunnel {tunnel_id}",
+        details={"tunnel_id": tunnel_id, "binding_sid": binding_sid},
+    )
 
-    # For now, we'll mark steering as successful if tunnel exists
     if not tunnel_id:
         logger.error(
             "No tunnel_id available for steering",
             incident_id=incident_id,
+        )
+        await notify_error(
+            incident_id=incident_id,
+            error_type="steering_failed",
+            error_message="No tunnel available for steering",
         )
         return {
             "current_node": "steer",

@@ -132,6 +132,21 @@ class FlapDetector:
 
         logger.debug("Recorded flap event", link_id=link_id)
 
+    async def get_flap_count(self, link_id: str) -> int:
+        """
+        Get current flap count for a link.
+
+        Args:
+            link_id: Link identifier
+
+        Returns:
+            Current flap count (0 if not set)
+        """
+        client = await self._get_client()
+        count_key = f"{self.key_prefix}count:{link_id}"
+        count = await client.get(count_key)
+        return int(count) if count else 0
+
     async def reset_flap_count(self, link_id: str) -> None:
         """
         Reset flap counter for a link.

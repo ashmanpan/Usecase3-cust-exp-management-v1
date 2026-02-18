@@ -47,9 +47,10 @@ class KGDijkstraClient:
     async def _get_client(self) -> httpx.AsyncClient:
         """Get or create HTTP client."""
         if self._client is None:
+            ca_cert = os.getenv("CA_CERT_PATH")
             self._client = httpx.AsyncClient(
                 timeout=self.timeout,
-                verify=False,  # For self-signed certs
+                verify=ca_cert if ca_cert else True,
             )
         return self._client
 
@@ -152,8 +153,11 @@ class KGDijkstraClient:
                 destination=destination,
                 error=str(e),
             )
-            # Return simulated path for demo/testing
-            return self._simulate_path(source, destination, constraints)
+            # Only simulate when SIMULATE_MODE is explicitly enabled
+            if os.getenv("SIMULATE_MODE", "false").lower() == "true":
+                logger.warning("SIMULATE_MODE enabled, returning synthetic path")
+                return self._simulate_path(source, destination, constraints)
+            return None
 
     def _simulate_path(
         self,

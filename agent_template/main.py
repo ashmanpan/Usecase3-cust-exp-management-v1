@@ -92,8 +92,12 @@ class AgentRunner:
 
         # Initialize A2A client for calling other agents
         agent_registry = {}
-        if hasattr(self.config.services, "pca") and self.config.services.pca:
-            agent_registry["path_computation_agent"] = self.config.services.pca.get("a2a_url", "")
+        # Build registry from config agents section (orchestrator uses this)
+        for agent_name, agent_conf in self.config.agents.items():
+            if isinstance(agent_conf, dict) and "url" in agent_conf:
+                agent_registry[agent_name] = agent_conf["url"]
+            elif isinstance(agent_conf, str):
+                agent_registry[agent_name] = agent_conf
 
         self._a2a_client = configure_a2a_client(
             agent_registry=agent_registry,
@@ -160,14 +164,25 @@ class AgentRunner:
         return self._server
 
     def run(self) -> None:
-        """Run the agent server"""
-        # Initialize asynchronously
-        asyncio.run(self.initialize())
+        """Run the agent server using FastAPI lifespan for proper async init."""
+        from contextlib import asynccontextmanager
 
-        # Create server
+        runner = self  # capture for closure
+
+        @asynccontextmanager
+        async def lifespan(app):
+            """Initialize agent components in the same event loop as uvicorn."""
+            await runner.initialize()
+            yield
+            # Cleanup on shutdown
+            if runner._mcp_client:
+                await runner._mcp_client.close()
+
+        # Create server (before lifespan attaches)
         server = self.create_server()
+        server.app.router.lifespan_context = lifespan
 
-        # Run with uvicorn
+        # Run with uvicorn — initialization happens inside lifespan
         logger.info(
             "Starting A2A server",
             host=self.config.a2a.host,

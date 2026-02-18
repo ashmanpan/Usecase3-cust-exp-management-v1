@@ -17,15 +17,16 @@ logger = structlog.get_logger(__name__)
 # Phase mapping for UI display
 PHASE_MAP = {
     "detecting": ("1", "Detecting SLA Degradation"),
-    "dampening": ("1", "Flap Detection - Dampening"),
+    "dampening": ("1b", "Flap Detection - Dampening"),
     "assessing": ("2", "Assessing Service Impact"),
     "computing": ("3", "Computing Alternate Path"),
     "provisioning": ("4", "Provisioning Protection Tunnel"),
-    "steering": ("5", "Steering Traffic"),
+    "steering": ("5", "Steering Traffic to Protection Tunnel"),
     "monitoring": ("6", "Monitoring SLA Recovery"),
     "restoring": ("7", "Restoring Original Path"),
     "escalated": ("E", "Escalated to Operator"),
     "closed": ("C", "Incident Closed"),
+    "error": ("!", "Error Occurred"),
 }
 
 
