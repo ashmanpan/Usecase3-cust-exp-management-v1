@@ -51,10 +51,11 @@ class EmailClient:
         )
 
         if not self.username or not self.password:
-            logger.warning("SMTP credentials not configured, simulating send")
+            logger.warning("SMTP credentials not configured — cannot send email")
             return SendEmailOutput(
-                success=True,
-                sent_to=to,
+                success=False,
+                sent_to=[],
+                error="SMTP credentials not configured",
             )
 
         try:

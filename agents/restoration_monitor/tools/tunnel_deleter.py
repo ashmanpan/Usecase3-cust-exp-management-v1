@@ -99,13 +99,17 @@ class TunnelDeleter:
             )
 
         except httpx.HTTPError as e:
-            logger.warning("CNC API unavailable, simulating tunnel deletion", error=str(e))
-            # Simulate success for demo
-            # Generate a simulated BSID release
-            bsid_released = 24000 + hash(tunnel_id) % 999
+            if os.getenv("SIMULATE_MODE", "false").lower() == "true":
+                logger.warning("CNC API unavailable, simulating tunnel deletion", error=str(e))
+                bsid_released = 24000 + hash(tunnel_id) % 999
+                return DeleteTunnelOutput(
+                    success=True,
+                    bsid_released=bsid_released,
+                )
+            logger.error("CNC API unavailable — cannot delete tunnel", error=str(e))
             return DeleteTunnelOutput(
-                success=True,
-                bsid_released=bsid_released,
+                success=False,
+                bsid_released=None,
             )
 
     async def _release_bsid(self, bsid: int) -> bool:

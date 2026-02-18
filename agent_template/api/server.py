@@ -6,9 +6,12 @@ Replaces Kafka consumer with direct A2A protocol.
 """
 
 import asyncio
+import hmac
+import ipaddress
 from typing import Any, Callable, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from contextlib import asynccontextmanager
+from urllib.parse import urlparse
 
 import os
 import structlog
@@ -79,7 +82,7 @@ class A2ATaskServer:
 
         # Health state
         self._ready = False
-        self._started_at = datetime.utcnow()
+        self._started_at = datetime.now(timezone.utc)
 
         # Auth configuration
         self._a2a_secret = os.getenv("A2A_SHARED_SECRET", "")
@@ -119,7 +122,7 @@ class A2ATaskServer:
         if not self._a2a_secret:
             return  # Auth not configured — skip (dev mode)
         token = request.headers.get("X-Agent-Token", "")
-        if token != self._a2a_secret:
+        if not hmac.compare_digest(token, self._a2a_secret):
             raise HTTPException(status_code=401, detail="Invalid or missing A2A token")
 
     def _register_routes(self, app: FastAPI) -> None:
@@ -135,7 +138,7 @@ class A2ATaskServer:
                 status="healthy",
                 agent_name=self.agent_name,
                 version=self.agent_version,
-                timestamp=datetime.utcnow().isoformat(),
+                timestamp=datetime.now(timezone.utc).isoformat(),
             )
 
         @app.get("/ready")
@@ -156,7 +159,7 @@ class A2ATaskServer:
                 description=self.agent_description,
                 url="",  # Will be filled by client based on request
                 protocol="a2a",
-                capabilities=[],
+                capabilities=self.capabilities,
                 supported_task_types=self.supported_task_types,
                 tags=self.tags,
             )
@@ -165,12 +168,8 @@ class A2ATaskServer:
 
         @app.post("/a2a/tasks", response_model=TaskOutput)
         async def execute_task(task: TaskInput, request: Request):
+            """Execute a task synchronously. Blocks until complete."""
             await server._verify_a2a_token(request)
-            """
-            Execute a task synchronously.
-
-            Blocks until the task completes and returns the result.
-            """
             logger.info(
                 "Received A2A task",
                 task_id=task.task_id,
@@ -187,7 +186,7 @@ class A2ATaskServer:
                 )
 
             # Execute workflow
-            started_at = datetime.utcnow()
+            started_at = datetime.now(timezone.utc)
             try:
                 result = await asyncio.wait_for(
                     self.workflow_executor(
@@ -200,7 +199,7 @@ class A2ATaskServer:
                     timeout=task.timeout_seconds,
                 )
 
-                completed_at = datetime.utcnow()
+                completed_at = datetime.now(timezone.utc)
                 duration_ms = int((completed_at - started_at).total_seconds() * 1000)
 
                 output = TaskOutput(
@@ -242,7 +241,7 @@ class A2ATaskServer:
                     agent_name=self.agent_name,
                     agent_version=self.agent_version,
                     started_at=started_at,
-                    completed_at=datetime.utcnow(),
+                    completed_at=datetime.now(timezone.utc),
                 )
                 self._tasks[task.task_id] = output
                 raise HTTPException(status_code=504, detail="Task timed out")
@@ -260,10 +259,10 @@ class A2ATaskServer:
                     agent_name=self.agent_name,
                     agent_version=self.agent_version,
                     started_at=started_at,
-                    completed_at=datetime.utcnow(),
+                    completed_at=datetime.now(timezone.utc),
                 )
                 self._tasks[task.task_id] = output
-                raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=500, detail="Internal task execution error")
 
         @app.post("/a2a/tasks/async")
         async def execute_task_async(
@@ -271,13 +270,8 @@ class A2ATaskServer:
             background_tasks: BackgroundTasks,
             request: Request,
         ):
+            """Execute a task asynchronously. Returns immediately with task_id."""
             await server._verify_a2a_token(request)
-            """
-            Execute a task asynchronously.
-
-            Returns immediately with task_id. Use callback_url or
-            GET /a2a/tasks/{task_id}/status to get results.
-            """
             logger.info(
                 "Received async A2A task",
                 task_id=task.task_id,
@@ -299,8 +293,8 @@ class A2ATaskServer:
                 status=TaskStatus(state="pending"),
                 agent_name=self.agent_name,
                 agent_version=self.agent_version,
-                started_at=datetime.utcnow(),
-                completed_at=datetime.utcnow(),
+                started_at=datetime.now(timezone.utc),
+                completed_at=datetime.now(timezone.utc),
             )
 
             # Schedule background execution
@@ -309,22 +303,24 @@ class A2ATaskServer:
             return {"task_id": task.task_id, "status": "accepted"}
 
         @app.get("/a2a/tasks/{task_id}/status", response_model=TaskStatus)
-        async def get_task_status(task_id: str):
+        async def get_task_status(task_id: str, request: Request):
             """Get status of a task"""
+            await server._verify_a2a_token(request)
             if task_id not in self._tasks:
                 raise HTTPException(status_code=404, detail="Task not found")
             return self._tasks[task_id].status
 
         @app.get("/a2a/tasks/{task_id}", response_model=TaskOutput)
-        async def get_task_result(task_id: str):
+        async def get_task_result(task_id: str, request: Request):
             """Get full task result"""
+            await server._verify_a2a_token(request)
             if task_id not in self._tasks:
                 raise HTTPException(status_code=404, detail="Task not found")
             return self._tasks[task_id]
 
     async def _execute_async_task(self, task: TaskInput) -> None:
         """Execute task in background and handle callback"""
-        started_at = datetime.utcnow()
+        started_at = datetime.now(timezone.utc)
 
         # Update status to running
         self._tasks[task.task_id] = TaskOutput(
@@ -334,7 +330,7 @@ class A2ATaskServer:
             agent_name=self.agent_name,
             agent_version=self.agent_version,
             started_at=started_at,
-            completed_at=datetime.utcnow(),
+            completed_at=datetime.now(timezone.utc),
         )
 
         try:
@@ -346,7 +342,7 @@ class A2ATaskServer:
                 correlation_id=task.correlation_id,
             )
 
-            completed_at = datetime.utcnow()
+            completed_at = datetime.now(timezone.utc)
             duration_ms = int((completed_at - started_at).total_seconds() * 1000)
 
             output = TaskOutput(
@@ -376,7 +372,7 @@ class A2ATaskServer:
                 agent_name=self.agent_name,
                 agent_version=self.agent_version,
                 started_at=started_at,
-                completed_at=datetime.utcnow(),
+                completed_at=datetime.now(timezone.utc),
             )
             self._tasks[task.task_id] = output
 
@@ -399,13 +395,47 @@ class A2ATaskServer:
         for task_id, _ in completed[:to_remove]:
             del self._tasks[task_id]
 
+    def _validate_callback_url(self, url: str) -> bool:
+        """Validate callback URL to prevent SSRF attacks."""
+        try:
+            parsed = urlparse(url)
+            # Only allow HTTPS (or HTTP in dev mode)
+            if parsed.scheme not in ("https", "http"):
+                return False
+            hostname = parsed.hostname
+            if not hostname:
+                return False
+            # Block internal/metadata IPs
+            try:
+                addr = ipaddress.ip_address(hostname)
+                if addr.is_private or addr.is_loopback or addr.is_link_local:
+                    # Allow private IPs only for inter-agent communication
+                    allowed_prefixes = os.getenv("CALLBACK_ALLOWED_PRIVATE_NETS", "10.,172.,192.168.")
+                    if not any(hostname.startswith(p) for p in allowed_prefixes.split(",")):
+                        return False
+                # Always block link-local/metadata
+                if addr.is_link_local or hostname.startswith("169.254."):
+                    return False
+            except ValueError:
+                pass  # hostname is a DNS name, not an IP — allowed
+            return True
+        except Exception:
+            return False
+
     async def _send_callback(self, url: str, output: TaskOutput) -> None:
-        """Send task result to callback URL"""
+        """Send task result to callback URL with SSRF protection."""
+        if not self._validate_callback_url(url):
+            logger.warning("Blocked callback to disallowed URL", url=url, task_id=output.task_id)
+            return
+
         import httpx
 
         try:
+            headers = {}
+            if self._a2a_secret:
+                headers["X-Agent-Token"] = self._a2a_secret
             async with httpx.AsyncClient() as client:
-                await client.post(url, json=output.model_dump(mode="json"))
+                await client.post(url, json=output.model_dump(mode="json"), headers=headers)
                 logger.info("Sent callback", url=url, task_id=output.task_id)
         except Exception as e:
             logger.error("Failed to send callback", url=url, error=str(e))

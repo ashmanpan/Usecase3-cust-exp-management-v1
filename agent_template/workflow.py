@@ -9,7 +9,7 @@ Customize by:
 """
 
 from typing import Any, Optional, Callable, TypeVar
-from datetime import datetime
+from datetime import datetime, timezone
 from abc import ABC, abstractmethod
 
 import structlog
@@ -100,7 +100,7 @@ class BaseWorkflow(ABC):
             "iteration_count": 0,
             "max_iterations": self.max_iterations,
             "current_node": "start",
-            "started_at": datetime.utcnow().isoformat(),
+            "started_at": datetime.now(timezone.utc).isoformat(),
             "nodes_executed": [],
             "tool_outputs": [],
             "mcp_tools_used": [],

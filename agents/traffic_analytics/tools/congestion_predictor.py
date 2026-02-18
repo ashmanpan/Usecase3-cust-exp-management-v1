@@ -124,8 +124,11 @@ class CongestionPredictor:
             return self._topology
 
         except httpx.HTTPError as e:
-            logger.warning("KG API unavailable, using simulated topology", error=str(e))
-            return self._simulate_topology()
+            if os.getenv("SIMULATE_MODE", "false").lower() == "true":
+                logger.warning("KG API unavailable, using simulated topology", error=str(e))
+                return self._simulate_topology()
+            logger.error("KG API unavailable — cannot get topology", error=str(e))
+            return {"links": [], "paths": {}}
 
     def _simulate_topology(self) -> dict:
         """Simulate network topology for demo"""

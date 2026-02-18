@@ -43,10 +43,13 @@ class ServiceNowClient:
         """Get or create HTTP client"""
         if self._client is None or self._client.is_closed:
             auth = (self.username, self.password) if self.username and self.password else None
+            ca_cert = os.getenv("CA_CERT_PATH")
+            verify = ca_cert if ca_cert else True
             self._client = httpx.AsyncClient(
                 base_url=self.instance_url,
                 timeout=30,
                 auth=auth,
+                verify=verify,
             )
         return self._client
 
@@ -68,10 +71,11 @@ class ServiceNowClient:
         )
 
         if not self.username or not self.password:
-            logger.warning("ServiceNow credentials not configured, simulating create")
+            logger.warning("ServiceNow credentials not configured — cannot create incident")
             return CreateSNOWIncidentOutput(
-                success=True,
-                incident_number="INC0012345",
+                success=False,
+                incident_number=None,
+                error="ServiceNow credentials not configured",
             )
 
         try:
@@ -131,8 +135,8 @@ class ServiceNowClient:
         )
 
         if not self.username or not self.password:
-            logger.warning("ServiceNow credentials not configured, simulating update")
-            return UpdateSNOWIncidentOutput(success=True)
+            logger.warning("ServiceNow credentials not configured — cannot update incident")
+            return UpdateSNOWIncidentOutput(success=False, error="ServiceNow credentials not configured")
 
         try:
             client = await self._get_client()

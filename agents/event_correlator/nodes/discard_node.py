@@ -6,7 +6,7 @@ From DESIGN.md: dedup -> discard (if duplicate)
 """
 
 from typing import Any
-from datetime import datetime
+from datetime import datetime, timezone
 import structlog
 
 logger = structlog.get_logger(__name__)
@@ -40,7 +40,7 @@ async def discard_node(state: dict[str, Any]) -> dict[str, Any]:
     # Build discard record
     discard_record = {
         "alert_id": alert_id,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "reason": "duplicate",
         "duplicate_of": duplicate_of,
         "link_id": normalized_alert.get("link_id"),

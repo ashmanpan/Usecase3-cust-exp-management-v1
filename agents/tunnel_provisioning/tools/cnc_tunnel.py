@@ -1,7 +1,7 @@
 """CNC Tunnel Client - From DESIGN.md CNC API Integration"""
 import os
 from typing import Optional, Dict, Any
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import structlog
 import httpx
 
@@ -31,7 +31,7 @@ class CNCTunnelClient:
         return self._client
 
     async def _get_jwt_token(self) -> str:
-        if self._jwt_token and self._jwt_expires_at and datetime.utcnow() < self._jwt_expires_at - timedelta(minutes=5):
+        if self._jwt_token and self._jwt_expires_at and datetime.now(timezone.utc) < self._jwt_expires_at - timedelta(minutes=5):
             return self._jwt_token
 
         client = await self._get_client()
@@ -55,7 +55,7 @@ class CNCTunnelClient:
         )
         jwt_response.raise_for_status()
         self._jwt_token = jwt_response.text.strip()
-        self._jwt_expires_at = datetime.utcnow() + timedelta(hours=8)
+        self._jwt_expires_at = datetime.now(timezone.utc) + timedelta(hours=8)
         logger.info("JWT token obtained successfully")
         return self._jwt_token
 

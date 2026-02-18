@@ -4,9 +4,10 @@ Alert Correlator
 Based on DESIGN.md - Correlation Rules for grouping related alerts.
 """
 
+import json
 import os
 from typing import List, Optional, Dict, Any
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
 import structlog
@@ -96,7 +97,7 @@ class AlertCorrelator:
                 return result
 
         # No correlation found - create new incident
-        incident_id = f"INC-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}-{uuid4().hex[:6]}"
+        incident_id = f"INC-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}-{uuid4().hex[:6]}"
 
         # Store alert for future correlation
         await self._store_alert(client, alert, incident_id)
@@ -146,7 +147,7 @@ class AlertCorrelator:
         correlation_key = f"{self.key_prefix}{rule_name}:{group_key}"
 
         # Get existing alerts in window
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         window_start = (now - timedelta(seconds=window_seconds)).timestamp()
 
         # Get alerts in time window using sorted set
@@ -168,7 +169,6 @@ class AlertCorrelator:
 
             for item, score in existing:
                 try:
-                    import json
                     stored = json.loads(item)
                     correlated_alerts.append(stored.get("alert_id"))
                     if stored.get("incident_id"):
@@ -179,7 +179,7 @@ class AlertCorrelator:
                     pass
 
             if not incident_id:
-                incident_id = f"INC-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}-{uuid4().hex[:6]}"
+                incident_id = f"INC-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}-{uuid4().hex[:6]}"
 
             # Store current alert
             await self._store_alert(client, alert, incident_id, rule_name)
@@ -213,10 +213,8 @@ class AlertCorrelator:
             incident_id: Associated incident ID
             rule_name: Correlation rule (if any)
         """
-        import json
-
         link_id = alert.get("link_id")
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         score = now.timestamp()
 
         # Store under each correlation rule key

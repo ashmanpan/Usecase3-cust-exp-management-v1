@@ -7,7 +7,7 @@ From DESIGN.md: CNCServiceHealthClient for affected services.
 
 import os
 from typing import List, Optional, Dict, Any
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import structlog
 import httpx
@@ -82,7 +82,7 @@ class CNCServiceHealthClient:
         """
         # Check if token is still valid
         if self._jwt_token and self._jwt_expires_at:
-            if datetime.utcnow() < self._jwt_expires_at - timedelta(minutes=5):
+            if datetime.now(timezone.utc) < self._jwt_expires_at - timedelta(minutes=5):
                 return self._jwt_token
 
         client = await self._get_client()
@@ -113,7 +113,7 @@ class CNCServiceHealthClient:
             )
             jwt_response.raise_for_status()
             self._jwt_token = jwt_response.text.strip()
-            self._jwt_expires_at = datetime.utcnow() + timedelta(hours=8)
+            self._jwt_expires_at = datetime.now(timezone.utc) + timedelta(hours=8)
 
             logger.info("JWT token obtained successfully")
             return self._jwt_token

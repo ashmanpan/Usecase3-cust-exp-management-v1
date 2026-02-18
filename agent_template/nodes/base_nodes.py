@@ -5,7 +5,7 @@ Common nodes that most agents will use.
 """
 
 from typing import Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 import structlog
 from langchain_core.messages import HumanMessage, AIMessage
@@ -31,7 +31,7 @@ async def initialize_node(state: dict) -> dict:
     return {
         "current_node": "initialize",
         "nodes_executed": state.get("nodes_executed", []) + ["initialize"],
-        "started_at": state.get("started_at") or datetime.utcnow().isoformat(),
+        "started_at": state.get("started_at") or datetime.now(timezone.utc).isoformat(),
         "status": "running",
     }
 

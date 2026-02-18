@@ -6,7 +6,7 @@ From DESIGN.md: flap_detect -> emit (if not flapping)
 """
 
 from typing import Any
-from datetime import datetime
+from datetime import datetime, timezone
 import sys
 import os
 import structlog
@@ -50,7 +50,7 @@ async def emit_node(state: dict[str, Any]) -> dict[str, Any]:
     # Build incident payload for Orchestrator
     incident_payload = {
         "incident_id": incident_id,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "source_alert": alert_id,
         "alert_type": _determine_alert_type(normalized_alert),
         "severity": normalized_alert.get("severity", "warning"),

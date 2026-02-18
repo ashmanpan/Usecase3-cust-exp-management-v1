@@ -27,10 +27,13 @@ class WebexClient:
     async def _get_client(self) -> httpx.AsyncClient:
         """Get or create HTTP client"""
         if self._client is None or self._client.is_closed:
+            ca_cert = os.getenv("CA_CERT_PATH")
+            verify = ca_cert if ca_cert else True
             self._client = httpx.AsyncClient(
                 base_url=self.api_url,
                 timeout=30,
                 headers={"Authorization": f"Bearer {self.token}"} if self.token else {},
+                verify=verify,
             )
         return self._client
 
@@ -47,10 +50,11 @@ class WebexClient:
         logger.info("Sending Webex message", space_id=space_id, markdown=markdown)
 
         if not self.token:
-            logger.warning("Webex token not configured, simulating send")
+            logger.warning("Webex token not configured — cannot send message")
             return SendWebexOutput(
-                success=True,
-                message_id="simulated-msg-001",
+                success=False,
+                message_id=None,
+                error="Webex token not configured",
             )
 
         try:

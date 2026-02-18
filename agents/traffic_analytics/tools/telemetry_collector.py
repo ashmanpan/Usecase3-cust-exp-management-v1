@@ -40,7 +40,9 @@ class TelemetryCollector:
     async def _get_client(self) -> httpx.AsyncClient:
         """Get or create HTTP client"""
         if self._client is None or self._client.is_closed:
-            self._client = httpx.AsyncClient(timeout=30)
+            ca_cert = os.getenv("CA_CERT_PATH")
+            verify = ca_cert if ca_cert else True
+            self._client = httpx.AsyncClient(timeout=30, verify=verify)
         return self._client
 
     async def collect_all(self, sources: List[str] = None) -> TelemetryData:

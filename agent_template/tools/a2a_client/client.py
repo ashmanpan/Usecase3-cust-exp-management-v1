@@ -6,6 +6,7 @@ Supports both direct HTTP/A2A and gRPC transports.
 """
 
 import asyncio
+import os
 from typing import Any, Optional
 from datetime import datetime
 from uuid import uuid4
@@ -65,10 +66,18 @@ class A2AClient:
         self.max_retries = max_retries
         self._client: Optional[httpx.AsyncClient] = None
         self._agent_cards: dict[str, AgentCard] = {}
+        # A2A auth token for inter-agent communication
+        self._a2a_secret = os.getenv("A2A_SHARED_SECRET", "")
+
+    def _auth_headers(self) -> dict[str, str]:
+        """Build auth headers for A2A requests."""
+        if self._a2a_secret:
+            return {"X-Agent-Token": self._a2a_secret}
+        return {}
 
     async def __aenter__(self) -> "A2AClient":
         """Async context manager entry"""
-        self._client = httpx.AsyncClient(timeout=self.default_timeout)
+        self._client = httpx.AsyncClient(timeout=self.default_timeout, headers=self._auth_headers())
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
@@ -80,7 +89,7 @@ class A2AClient:
     def _get_client(self) -> httpx.AsyncClient:
         """Get or create HTTP client"""
         if self._client is None:
-            self._client = httpx.AsyncClient(timeout=self.default_timeout)
+            self._client = httpx.AsyncClient(timeout=self.default_timeout, headers=self._auth_headers())
         return self._client
 
     def register_agent(self, agent_name: str, base_url: str) -> None:
@@ -292,7 +301,7 @@ class A2AClient:
         try:
             response = await client.get(f"{base_url}/health", timeout=5.0)
             return response.status_code == 200
-        except Exception:
+        except (httpx.HTTPError, OSError):
             return False
 
     async def discover_agents(self, registry_url: str) -> dict[str, str]:

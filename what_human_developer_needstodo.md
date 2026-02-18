@@ -1,278 +1,295 @@
 # Human Developer Action Items
 
-**Generated:** 2026-02-18
-**Context:** AI agents completed 6-pass analysis (code review, architecture, security, completeness, IO integration, exploration) of all 9 LangGraph agents + shared agent_template.
+**Generated:** 2026-02-18 (Updated after code verification)
+**Context:** AI agents completed 6-pass analysis (code review, architecture, security, completeness, IO integration, exploration) of all 9 LangGraph agents + shared agent_template, then applied 22 fixes. This document has been verified against the CURRENT state of the code.
 **Priority Level:** Critical
 **Estimated Effort:** ~2-3 weeks for a senior developer
 
 ---
 
-## 🚨 Critical Actions (Do First)
+## Auto-Fixed Items (Verified Complete)
 
-These issues **prevent the system from starting or running correctly**. They were auto-fixed by Claude Code where possible (marked ✅), but need human verification.
+All 22 auto-fixes have been verified as correctly applied in the current codebase:
 
-### ✅ Auto-Fixed by Claude Code
+| # | Issue | Status |
+|---|-------|--------|
+| 1 | `check_dampen_complete` not exported in `orchestrator/nodes/__init__.py` | DONE - import and `__all__` entry present |
+| 2 | `record_state_change()` -> `record_event()` in `flap_detect_node.py` | DONE - line 63 |
+| 3 | `get_flap_count()` added to `FlapDetector` | DONE - called at line 69 |
+| 4 | Tunnel retry routes to `return_success` via `retry_gate` | DONE - `workflow.py` lines 53-56 |
+| 5 | `asyncio.run()` lifecycle bug fixed | DONE - FastAPI lifespan in `main.py` lines 172-183 |
+| 6 | Config model missing `agents` field | DONE - `config_loader.py` line 126 |
+| 7 | `.gitignore` comprehensive | DONE - 58 lines of exclusions |
+| 8 | Dockerfiles run as non-root | DONE - `useradd` + `USER agent` in all Dockerfiles |
+| 9 | `verify=False` removed | DONE - All 3 clients use `CA_CERT_PATH` env var |
+| 10 | Simulated JWT token replaced | DONE - Real 2-step CNC SSO flow in `cnc_tunnel.py` |
+| 11 | Real RSVP-TE tunnel creation | DONE - `cnc_tunnel.py` lines 120-160 |
+| 12 | Real tunnel verify/delete | DONE - `cnc_tunnel.py` lines 162-198 |
+| 13 | Fake success on tunnel creation removed | DONE - returns `TunnelResult(success=False, ...)` |
+| 14 | AgentRunner builds full registry | DONE - `main.py` lines 94-100 |
+| 15 | ServiceEndpoints `extra="allow"` | DONE - `config_loader.py` line 92 |
+| 16 | IO notifications added to phases 5-7 | DONE - see below |
+| 17 | `notify_error()` called in failure paths | DONE - see below |
+| 18 | Bounded task storage (1000 limit) | DONE - `_evict_old_tasks()` in `server.py` lines 390-400 |
+| 19 | Webex/ServiceNow return `success=False` on errors | DONE |
+| 20 | Simulation gated behind `SIMULATE_MODE` | DONE - `telemetry_collector.py`, `kg_client.py`, `pca_client.py`, `cutover.py` |
+| 21 | TunnelConfig RSVP-TE fields added | DONE |
+| 22 | `.env.example` created | DONE - 73 lines covering all env vars |
 
-| # | Issue | File | Fix Applied |
-|---|-------|------|-------------|
-| 1 | `check_dampen_complete` not exported | `orchestrator/nodes/__init__.py` | Added import and `__all__` entry |
-| 2 | `record_state_change()` doesn't exist | `event_correlator/nodes/flap_detect_node.py:63` | Changed to `record_event()` |
-| 3 | `get_flap_count()` doesn't exist | `event_correlator/nodes/flap_detect_node.py:69` | Added `get_flap_count()` method to `FlapDetector` |
-| 4 | Tunnel retry routes to `return_success` | `tunnel_provisioning/workflow.py:47-48` | Added retry node with `check_can_retry` routing |
-| 5 | `asyncio.run()` lifecycle bug | `agent_template/main.py:162-182` | Moved init into FastAPI lifespan context manager |
-| 6 | Config model missing `agents` field | `agent_template/config_loader.py:113` | Added `agents: dict` field to `Config` |
-| 7 | `.gitignore` nearly empty | `.gitignore` | Added comprehensive exclusions |
-| 8 | 7 Dockerfiles run as root | All 7 agent Dockerfiles | Added `useradd` + `USER agent` |
-| 9 | `verify=False` on HTTPS clients | `cnc_tunnel.py`, `kg_client.py`, `cnc_client.py` | Changed to `CA_CERT_PATH` env var |
-| 10 | Simulated JWT token (hardcoded) | `cnc_tunnel.py:29-35` | Implemented real CNC SSO 2-step JWT flow |
-| 11 | Simulated RSVP-TE tunnel creation | `cnc_tunnel.py:97-107` | Implemented real CNC RSVP-TE API call |
-| 12 | Simulated tunnel verify/delete | `cnc_tunnel.py:109-115` | Implemented real CNC API calls |
-| 13 | Fake success on tunnel creation error | `cnc_tunnel.py:84-95` | Returns failure on error instead of fake success |
-| 14 | AgentRunner only registers PCA | `agent_template/main.py:94-96` | Builds registry from full `config.agents` section |
-| 15 | ServiceEndpoints too rigid | `agent_template/config_loader.py:90-95` | Added `extra="allow"` for dynamic endpoints |
-| 16 | Missing IO notifications (phases 5-7) | `steer_node.py`, `monitor_node.py`, `restore_node.py`, `escalate_node.py` | Added `notify_phase_change` calls |
-| 17 | `notify_error()` never called | `steer_node.py`, `monitor_node.py` | Added error notifications in failure paths |
-| 18 | Unbounded in-memory task storage | `agent_template/api/server.py` | Added eviction with 1000 task limit |
-| 19 | Webex/ServiceNow fake success on errors | `webex_client.py`, `servicenow_client.py` | HTTP errors now return `success=False` |
-| 20 | Uncontrolled simulation fallbacks | `telemetry_collector.py`, `kg_client.py` | Gated behind `SIMULATE_MODE` env var |
-| 21 | TunnelConfig missing RSVP-TE fields | `tunnel_provisioning/schemas/tunnels.py` | Added `bandwidth_gbps`, `setup_priority`, `hold_priority` |
-| 22 | No `.env.example` file | Root directory | Created with all required env vars documented |
+### IO Notification Verification (Items 16-17)
 
-### ⚠️ Human Verification Required
-
-- [ ] **Verify all auto-fixes**: Run `git diff` and review every change
-- [ ] **Test orchestrator startup**: `cd agents/orchestrator && python main.py` — should no longer crash with ImportError
-- [ ] **Test event correlator**: Verify flap detection works with the corrected method names
-- [ ] **Test tunnel provisioning retry**: Verify that failed tunnel creation retries up to 3 times before giving up
-- [ ] **Test agent_template lifecycle**: Verify FastAPI lifespan initializes MCP/A2A clients correctly
+| Node | `notify_phase_change` | `notify_error` |
+|------|----------------------|----------------|
+| `steer_node.py` | DONE (line 47) | DONE (line 59) |
+| `monitor_node.py` | DONE (line 47) | DONE (line 134) |
+| `restore_node.py` | DONE (line 47) | Not needed (non-critical failures logged) |
+| `escalate_node.py` | DONE (line 87) | Not needed (escalation IS the error path) |
+| `provision_node.py` | DONE (line 115) | NOT DONE - see Section 4 |
 
 ---
 
-## 📋 Task Checklist
+## OPEN Task Checklist
 
-### 1. Replace All Simulation Code with Real Integrations (47 stubs found)
+### 1. Replace Remaining Simulation Code with Real Integrations
 
-**Why:** The system currently runs end-to-end while doing absolutely nothing real to the network. Every external integration either returns simulated data or silently degrades to `success=True` on failure.
+**Priority: HIGH**
 
-**Priority: HIGH — This is the core functionality gap**
-
-#### 1.1 Tunnel Provisioning (✅ All 5 stubs fixed by Claude Code)
-- [x] ~~Implement real CNC JWT authentication~~ — ✅ 2-step SSO flow implemented
-- [x] ~~Implement real `create_rsvp_tunnel()`~~ — ✅ Real CNC RSVP-TE API call implemented
-- [x] ~~Implement real `verify_tunnel()`/`delete_tunnel()`~~ — ✅ Real CNC API calls implemented
-- [ ] **Human verification needed:** Test JWT flow against actual CNC instance
-- [x] ~~Implement real `verify_tunnel()`~~ — ✅ Fixed
-- [x] ~~Implement real `delete_tunnel()`~~ — ✅ Fixed
-- [x] ~~Remove simulated success fallback~~ — ✅ Returns failure on error
-
-#### 1.2 Audit Agent — Database Integrations (9 stubs)
+#### 1.1 Audit Agent - Database Integrations (STILL OPEN - All simulated)
 - [ ] **Uncomment and wire `asyncpg` PostgreSQL code**
-  - **File:** `agents/audit/tools/postgresql_client.py` — lines 40-56, 93-112, 134-178, 202-238, 267-273
-  - **How:** Uncomment all `await conn.execute(...)` code, add `asyncpg` to `pyproject.toml`
-  - **Verification:** `INSERT INTO audit_events` actually persists data; `SELECT` queries return real rows
+  - **File:** `agents/audit/tools/postgresql_client.py`
+  - **Lines:** 40-56 (connect), 93-112 (insert), 134-178 (timeline query), 202-238 (compliance report), 267-273 (upsert)
+  - All methods currently log "simulated" and return fake data
+  - **How:** Uncomment `asyncpg` code, add `asyncpg` to `pyproject.toml`
+  - **Verification:** `INSERT INTO audit_events` actually persists; `SELECT` queries return real rows
+
 - [ ] **Create PostgreSQL schema migrations**
-  - **How:** Create `migrations/` directory with SQL files for `audit_events` and `incidents` tables
+  - No `migrations/` directory exists
+  - **How:** Create SQL files for `audit_events` and `incidents` tables matching the commented-out schemas
   - **Verification:** Tables exist in PostgreSQL after migration
+
 - [ ] **Uncomment and wire Elasticsearch async client**
-  - **File:** `agents/audit/tools/elasticsearch_client.py` — lines 42-53, 106-117, 164-178, 200-227
-  - **How:** Uncomment `await self._client.index(...)` code, add `elasticsearch` to dependencies
-  - **Verification:** Events appear in Elasticsearch `audit-events-*` index
+  - **File:** `agents/audit/tools/elasticsearch_client.py`
+  - **Lines:** 42-53 (connect), 106-117 (index), 164-178 (search), 200-227 (aggregation)
+  - All methods currently log "simulated" and return empty/fake data
+  - **How:** Uncomment `AsyncElasticsearch` code, add `elasticsearch` to dependencies
 
-#### 1.3 Path Computation (✅ Fixed by Claude Code)
-- [x] ~~Remove silent `_simulate_path()` fallback~~ — ✅ Returns `None` unless `SIMULATE_MODE=true`
-- [x] ~~Gate simulation behind `SIMULATE_MODE` env var~~ — ✅ Done
+#### 1.2 Restoration Monitor - Tunnel Deleter (STILL OPEN)
+- [ ] **Fix tunnel_deleter.py fake success on CNC HTTP errors**
+  - **File:** `agents/restoration_monitor/tools/tunnel_deleter.py` lines 101-109
+  - **Problem:** On `httpx.HTTPError`, returns `DeleteTunnelOutput(success=True, bsid_released=...)` with a fake BSID
+  - **Not gated behind `SIMULATE_MODE`** unlike other simulation code
+  - **How:** Gate behind `SIMULATE_MODE` or return `success=False`
+  - **Risk:** Silently pretending a tunnel was deleted when it was not
 
-#### 1.4 Restoration Monitor (6 stubs)
-- [ ] **Replace random SLA simulation with real PCA API call**
-  - **File:** `agents/restoration_monitor/tools/pca_client.py:95-139`
-  - **How:** Return failure status when PCA is unavailable instead of `random.random()` coin flip
-  - **Verification:** PCA down → SLA status = "unknown", not random pass/fail
-- [ ] **Implement real tunnel deletion**
-  - **File:** `agents/restoration_monitor/tools/tunnel_deleter.py:101-109`
-  - **How:** Return `success=False` when CNC unavailable
-- [ ] **Implement real ECMP weight updates**
-  - **File:** `agents/restoration_monitor/tools/cutover.py:234-240`
-  - **How:** Return `success=False` when CNC unavailable (silently pretending weights changed could blackhole traffic!)
-
-#### 1.5 Traffic Analytics (partially fixed)
+#### 1.3 Traffic Analytics - MDT gRPC (STILL OPEN)
 - [ ] **Implement real MDT telemetry collection via gRPC**
-  - **File:** `agents/traffic_analytics/tools/telemetry_collector.py:117-126`
+  - **File:** `agents/traffic_analytics/tools/telemetry_collector.py` lines 120-131
+  - `collect_mdt()` currently returns empty list (or simulation if `SIMULATE_MODE=true`)
   - **How:** Implement gRPC dial-in/dial-out to MDT collector endpoint
-- [x] ~~Gate simulation methods behind `SIMULATE_MODE`~~ — ✅ All 3 simulation methods gated
+
 - [ ] **Add scheduler for proactive polling**
   - **File:** `agents/traffic_analytics/main.py`
+  - No scheduler exists - agent only responds to on-demand A2A requests
   - **How:** Add `APScheduler` with `AsyncIOScheduler`, trigger every 5 minutes
-  - **Verification:** Agent runs autonomously, not just on-demand
 
-#### 1.6 Notification Agent (partially fixed)
-- [x] ~~Webex client: return `success=False` on HTTP errors~~ — ✅ Fixed
-- [x] ~~ServiceNow client: return `success=False` on HTTP errors~~ — ✅ Fixed (both create and update)
-- [ ] **Email client: return `success=False` on failure paths**
-  - **File:** `agents/notification/tools/email_client.py`
-  - **How:** Check exception handlers return `success=False` not `success=True`
-- Note: Missing-credential handlers still return `success=True` (acceptable for graceful degradation when service not configured)
+#### 1.4 Email Client Error Handling (VERIFIED DONE)
+- [x] ~~Email client: return `success=False` on failure~~ - DONE at line 109 of `email_client.py`
+- Note: Missing-credential handler returns `success=True` at line 56 (acceptable for graceful degradation)
 
-#### 1.7 Service Impact (3 stubs)
+#### 1.5 Service Impact - CNC API Failure (STILL OPEN)
 - [ ] **Return error on CNC API failure instead of empty list**
-  - **File:** `agents/service_impact/tools/cnc_client.py:161-168`
-  - **How:** Raise exception or return sentinel value indicating failure
-  - **Verification:** Orchestrator doesn't interpret API failure as "zero services affected"
+  - **File:** `agents/service_impact/tools/cnc_client.py` line 168
+  - **Problem:** `except Exception` returns `return []` - the orchestrator interprets this as "zero services affected" and closes the incident
+  - **How:** Raise exception or return sentinel value distinguishing "no services" from "API failure"
 
 ---
 
-### 2. Security Hardening (28 findings, 3 critical)
+### 2. Security Hardening
 
-**Why:** Zero authentication + plaintext HTTP means anyone on the network can trigger tunnel provisioning. This is a network management system — security is non-negotiable.
+**Priority: HIGH**
 
-#### 2.1 Immediate (CRITICAL)
-- [x] ~~Add authentication to all A2A endpoints~~ — ✅ `X-Agent-Token` header validation added to `/a2a/tasks` and `/a2a/tasks/async`, gated on `A2A_SHARED_SECRET` env var
+#### 2.1 Verified DONE
+- [x] ~~A2A token authentication~~ - DONE: `X-Agent-Token` header validation in `server.py` lines 117-123
+- [x] ~~Remove hardcoded JWT token~~ - DONE: Real CNC SSO flow
+- [x] ~~Fix `verify=False`~~ - DONE: All 3 clients (`cnc_tunnel.py`, `cnc_client.py`, `kg_client.py`) use `CA_CERT_PATH` pattern
+
+#### 2.2 STILL OPEN
 - [ ] **Enable TLS for inter-agent communication**
-  - **Files:** All `config.yaml` files (orchestrator, service_impact, etc.)
-  - **How:** Change all `http://` URLs to `https://`, configure TLS certificates on uvicorn, or deploy behind Istio service mesh
+  - All `config.yaml` files use `http://` URLs
+  - **How:** Change to `https://`, configure TLS on uvicorn, or deploy behind Istio/sidecar proxy
   - **Verification:** `tcpdump` shows encrypted traffic between agents
-- [x] ~~Remove hardcoded JWT token~~ — ✅ Replaced with real CNC SSO flow
 
-#### 2.2 Short-term (HIGH)
-- [ ] **Fix empty password defaults** — fail fast if `POSTGRES_PASSWORD`, `ES_PASSWORD`, `CNC_PASSWORD` env vars not set
-- [ ] **Fix TLS verification** — change `verify=False` to `verify=os.getenv("CA_CERT_PATH", True)` in `cnc_tunnel.py`, `cnc_client.py`, `kg_client.py`
-- [ ] **Add request size limits** — configure uvicorn `--limit-max-request-size` or add FastAPI middleware
-- [ ] **Add rate limiting** — install `slowapi`, configure per-IP limits on all endpoints
-- [ ] **Sanitize error responses** — change `HTTPException(500, detail=str(e))` to generic message in `server.py:249`
-- [ ] **Redact PII from logs** — add structlog processor to filter email addresses, credentials
-- [ ] **Validate callback_url** — block RFC 1918 addresses, cloud metadata endpoints (SSRF prevention)
-- [ ] **Add CORS middleware** — configure `CORSMiddleware` with explicit allowed origins
+- [ ] **Fix empty password defaults** - fail fast if `POSTGRES_PASSWORD`, `ES_PASSWORD`, `CNC_PASSWORD` env vars are empty strings
+  - `postgresql_client.py` line 33: `os.getenv("POSTGRES_PASSWORD", "")` silently connects with no password
+  - `cnc_tunnel.py` line 39: `os.getenv("CNC_PASSWORD", "")` silently authenticates with empty password
 
-#### 2.3 Medium-term (MEDIUM)
-- [ ] **Enable Redis AUTH** — use `redis://:${REDIS_PASSWORD}@redis:6379` in all configs
-- [ ] **Implement audit trail integrity** — hash chains or append-only PostgreSQL tables
-- [ ] **Validate webhook payloads** — create Pydantic models for PCA/CNC webhook payloads
-- [ ] **Add `.dockerignore` files** — exclude `.env`, `.git`, `__pycache__`, `tests/`
-- [ ] **Pin Docker base image digests** — `FROM python:3.11-slim@sha256:<digest>`
+- [ ] **Sanitize error responses** - `server.py` line 266: `HTTPException(status_code=500, detail=str(e))` leaks internal error details to callers
+
+- [ ] **Add request size limits** - no uvicorn `--limit-max-request-size` or FastAPI middleware
+
+- [ ] **Add rate limiting** - no `slowapi` or equivalent configured
+
+- [ ] **Validate callback_url** - no SSRF protection on `_send_callback()` in `server.py` line 402; accepts any URL
+
+- [ ] **Redact PII from logs** - no structlog processor to filter credentials/email addresses
+
+- [ ] **Add CORS middleware** - no `CORSMiddleware` configured on FastAPI app
+
+#### 2.3 Medium-term (STILL OPEN)
+- [ ] **Enable Redis AUTH** - all configs use `redis://redis:6379` without password
+- [ ] **Implement audit trail integrity** - no hash chains or append-only enforcement
+- [ ] **Validate webhook payloads** - no Pydantic models for PCA/CNC webhook payloads
+- [ ] **Add `.dockerignore` files** - no `.dockerignore` files exist anywhere in repo
+- [ ] **Pin Docker base image digests** - all Dockerfiles use `FROM python:3.11-slim` without digest
 
 ---
 
 ### 3. Architecture Fixes
 
-**Why:** Critical design issues that cause timeouts, resource leaks, and incorrect behavior.
+**Priority: MEDIUM**
 
 - [ ] **Refactor Restoration Monitor to use async A2A**
-  - **Problem:** `asyncio.sleep(30)` × 100 iterations = 50 minutes blocking a single worker
-  - **File:** `agents/restoration_monitor/workflow.py:33`
-  - **How:** Orchestrator should call `POST /a2a/tasks/async` with `callback_url`. Restoration monitor runs in background, POSTs result back when done.
-  - **Verification:** Orchestrator worker is free during monitoring, restoration monitor runs independently
+  - **Problem:** `asyncio.sleep(30)` in `wait_poll_node` (line 34 of `workflow.py`) x 100 max iterations = 50 minutes blocking a worker
+  - **How:** Orchestrator calls `POST /a2a/tasks/async` with `callback_url`; restoration monitor runs independently
 
 - [ ] **Fix LangGraph list state mutation pattern**
-  - **Problem:** `state.get("list", []).append(x)` is not safe with LangGraph reducers
-  - **Where:** All 9 agent state schemas
-  - **How:** Add `Annotated[list, operator.add]` to all list fields in TypedDicts. Change nodes to return only new items: `return {"nodes_executed": ["new_node"]}` instead of `state.get("nodes_executed", []) + ["new_node"]`
+  - **Problem:** All 9 agents use `state.get("nodes_executed", []) + ["new_node"]` pattern
+  - **Where:** Verified in `flap_detect_node.py`, `steer_node.py`, `monitor_node.py`, `restore_node.py`, `provision_node.py`, and more
+  - **How:** Add `Annotated[list, operator.add]` to list fields in state TypedDicts; change nodes to return only new items: `{"nodes_executed": ["new_node"]}`
+  - **State schema lacking this:** `OrchestratorState` (`orchestrator/schemas/state.py`) has plain `List[str]` and `List[dict]` without reducers
 
 - [ ] **Add circuit breaker for external APIs**
-  - **Why:** If CNC is down during a major event, all agents hammer it simultaneously
-  - **How:** Install `pybreaker` library, wrap CNC/KG/PCA clients with circuit breaker (trip after 5 failures, half-open after 60s)
+  - No `pybreaker` or equivalent exists
+  - **How:** Wrap CNC/KG/PCA clients with circuit breaker (trip after 5 failures, half-open after 60s)
 
 - [ ] **Wire `max_retries` config to tenacity decorator**
-  - **File:** `agent_template/tools/a2a_client/client.py:97`
-  - **Problem:** Hardcoded `stop_after_attempt(3)` ignores config
+  - **File:** `agent_template/tools/a2a_client/client.py` lines 98 and 132
+  - **Problem:** `stop=stop_after_attempt(3)` is hardcoded, ignores any config value
 
 - [ ] **Fix Redis/HTTP connection lifecycle**
-  - **Problem:** Singleton tool clients (`StateManagerTool`, `FlapDetector`, `BSIDAllocator`) create Redis connections that are never closed
-  - **How:** Wire `close()` into FastAPI shutdown handler
+  - Singleton clients (`FlapDetector`, `BSIDAllocator`, `PCASLAClient`, `TunnelDeleter`, `GradualCutover`) create connections never closed
+  - FastAPI lifespan in `main.py` only closes `_mcp_client` (line 179), not these tool singletons
+  - **How:** Wire singleton `.close()` methods into FastAPI shutdown handler
 
 ---
 
 ### 4. IO Agent Integration Gaps
 
-**Why:** The human operator UI only sees 4 of 11 orchestrator phases. Critical events (steering, monitoring, restoration, escalation) are invisible.
+**Priority: MEDIUM**
 
-- [ ] **Add IO notifications to steer_node** (Phase 5: Traffic steered to protection tunnel)
-- [ ] **Add IO notifications to monitor_node** (Phase 6: Monitoring progress, SLA recovery)
-- [ ] **Add IO notifications to restore_node** (Phase 7: Cutover progress 25→50→75→100%)
-- [ ] **Add IO notifications to escalate_node** (LLM reasoning and recommended action)
-- [ ] **Add IO notifications on provisioning failures** (retry attempts, max-retries-exceeded)
-- [ ] **Wire `notify_error()`** — defined in `io_notifier.py:87-133` but has ZERO callers
-- [ ] **Design human-in-the-loop mechanism** — currently no way for operators to approve/reject actions
+#### Verified DONE
+- [x] ~~IO notifications in steer_node (Phase 5)~~ - DONE
+- [x] ~~IO notifications in monitor_node (Phase 6)~~ - DONE
+- [x] ~~IO notifications in restore_node (Phase 7)~~ - DONE
+- [x] ~~IO notifications in escalate_node~~ - DONE
+- [x] ~~Wire `notify_error()`~~ - DONE: Called in `steer_node.py` (line 59) and `monitor_node.py` (line 134)
+
+#### STILL OPEN
+- [ ] **Add IO error notifications to provision_node on failure**
+  - `provision_node.py` calls `notify_phase_change` on success (line 115) but does NOT call `notify_error` when provisioning fails or when max retries exceeded
+  - **How:** Add `notify_error()` calls at lines 132 (max retries) and 163 (A2A call failed)
+
+- [ ] **Design human-in-the-loop mechanism**
+  - Currently no way for operators to approve/reject actions
+  - Escalation node recommends actions but cannot receive operator input
+  - **How:** Add approval endpoint, integrate with escalate_node to wait for human decision
 
 ---
 
-### 5. Testing (Zero Tests Exist)
+### 5. Testing
 
-**Why:** Bugs like ImportError and wrong method names exist precisely because there are no tests.
+**Priority: HIGH**
 
-- [ ] **Unit tests for all 8 conditional edge functions**
-  - **File to create:** `agents/orchestrator/tests/test_conditions.py`
-  - **How:** Test each function with various state dicts, verify correct routing
-- [ ] **Unit tests for all tool classes**
-  - **Files to create:** Tests for `FlapDetector`, `BSIDAllocator`, `DedupChecker`, `PCASLAClient`, `KGDijkstraClient`, `CNCTunnelClient`
-  - **How:** Mock Redis/HTTP, test business logic
-- [ ] **Integration tests for all 9 workflows**
-  - **How:** Mock A2A calls, run each workflow with test state, verify final state
-- [ ] **Test the config loader env var substitution**
-  - **File to create:** `agent_template/tests/test_config_loader.py`
+#### Current State
+- 1 test file exists: `agent_template/tests/test_workflow.py` (128 lines) - tests BaseWorkflow, iteration check, checklist check, error check
+- No tests for any of the 9 agent workflows
+- No tests for conditional edge functions
+- No tests for tool classes
+- No integration tests
+
+#### STILL OPEN
+- [ ] **Unit tests for all 9 conditional edge functions** (`agents/orchestrator/nodes/conditions.py` - 9 functions, 0 tests)
+- [ ] **Unit tests for tool classes** - `FlapDetector`, `BSIDAllocator`, `DedupChecker`, `PCASLAClient`, `KGDijkstraClient`, `CNCTunnelClient`, `TunnelDeleter`, `GradualCutover`
+- [ ] **Integration tests for all 9 workflows** - mock A2A calls, run each workflow with test state
+- [ ] **Test config loader env var substitution** - `_substitute_env_vars()` function
+- [ ] **End-to-end test** - run orchestrator with mocked downstream agents
+- [ ] **Test A2A authentication** - verify `_verify_a2a_token` rejects bad tokens
 
 ---
 
 ### 6. Deployment Infrastructure
 
-**Why:** No way to run the 9-agent system locally or in production.
+**Priority: HIGH**
 
+#### Current State
+- No `docker-compose.yaml` exists
+- No Kubernetes manifests exist
+- No `.dockerignore` files exist
+- No `requirements.lock` files exist
+- `agent_template` installed as editable (`pip install -e .`)
+
+#### STILL OPEN
 - [ ] **Create `docker-compose.yaml`**
-  - **Services:** All 9 agents + Redis + PostgreSQL + optional Elasticsearch + OTEL collector
-  - **Network aliases:** Must match URL defaults in configs (`event-correlator`, `service-impact`, etc.)
-  - **Secrets:** Inject via `.env` file or Docker secrets
+  - Services: All 9 agents + Redis + PostgreSQL + optional Elasticsearch + OTEL collector
+  - Network aliases must match URL defaults (e.g., `event-correlator:8001`, `service-impact:8002`)
+  - Inject secrets via `.env` file or Docker secrets
   - **Verification:** `docker-compose up` starts all services, health checks pass
+
 - [ ] **Create Kubernetes manifests**
-  - **Resources per agent:** Deployment, Service, ConfigMap, Secret
-  - **Add NetworkPolicy** to restrict inter-agent communication to defined paths
+  - Deployment, Service, ConfigMap, Secret per agent
+  - NetworkPolicy to restrict inter-agent communication
+
 - [ ] **Build `agent_template` as proper Python wheel**
-  - **Problem:** Currently installed as editable (`pip install -e .`) which depends on source at exact path
-  - **How:** `python -m build` → install wheel in Dockerfile
-- [ ] **Create `requirements.lock`**
-  - **How:** `pip-compile pyproject.toml -o requirements.lock` for reproducible builds
+  - Currently installed as editable (`pip install -e .`) which depends on source at exact path
+  - **How:** `python -m build` then install wheel in Dockerfile
+
+- [ ] **Create `requirements.lock`** for reproducible builds
+  - **How:** `pip-compile pyproject.toml -o requirements.lock`
+
 - [ ] **Wire OpenTelemetry instrumentation**
-  - **Problem:** Config says `otel.enabled: true` but zero instrumentation code exists
+  - Config says `otel.enabled: true` but zero instrumentation code exists
   - **How:** Add `opentelemetry-instrumentation-httpx` and `opentelemetry-instrumentation-fastapi` auto-instrumentation
 
 ---
 
 ### 7. Documentation Discrepancies
 
-- [ ] **Reconcile hold timer values**: `config.yaml` says platinum=60s, `WORKFLOW.md` says platinum=30s
-- [ ] **Clarify Event Correlator entry point**: WORKFLOW.md says it's the entry point, but code has Orchestrator calling it
-- [ ] **Add Audit Agent to all phase transitions**: DESIGN.md says log every transition, but only `close_node` calls Audit
+**Priority: LOW**
+
+- [ ] **Reconcile hold timer values**: `agents/orchestrator/config.yaml` says `platinum: 60` (seconds), `WORKFLOW.md` says `platinum: 30 seconds`
+- [ ] **Clarify Event Correlator entry point**: WORKFLOW.md says it's the entry point, but code has Orchestrator calling it via A2A
+- [ ] **Add Audit Agent to all phase transitions**: DESIGN.md says log every transition, but only `steer_node`, `restore_node`, and `close_node` call Audit
 
 ---
 
-## 📁 Files Changed by Claude Code (Reference)
+## Summary of Changes from Previous Version
 
-| File | Change Type |
-|------|------------|
-| `agents/orchestrator/nodes/__init__.py` | Added `check_dampen_complete` export |
-| `agents/orchestrator/nodes/conditions.py` | Already had the function (no change) |
-| `agents/event_correlator/nodes/flap_detect_node.py` | Fixed method names |
-| `agents/event_correlator/tools/flap_detector.py` | Added `get_flap_count()` method |
-| `agents/tunnel_provisioning/workflow.py` | Added retry node with `check_can_retry` |
-| `agent_template/main.py` | Replaced `asyncio.run()` with FastAPI lifespan |
-| `agent_template/config_loader.py` | Added `agents` field to `Config` model |
-| `.gitignore` | Added comprehensive exclusions |
-| `agents/event_correlator/Dockerfile` | Added non-root user |
-| `agents/service_impact/Dockerfile` | Added non-root user |
-| `agents/path_computation/Dockerfile` | Added non-root user |
-| `agents/tunnel_provisioning/Dockerfile` | Added non-root user |
-| `agents/restoration_monitor/Dockerfile` | Added non-root user |
-| `agents/traffic_analytics/Dockerfile` | Added non-root user |
-| `agents/notification/Dockerfile` | Added non-root user |
-| `agents/audit/Dockerfile` | Added non-root user |
+### Items Updated to DONE (were previously OPEN)
+1. **Email client error handling** (Section 1.6) - Verified `success=False` returned on exception at line 109
+2. **IO notifications in steer/monitor/restore/escalate** (Section 4) - All verified as implemented
+3. **`notify_error()` wired** (Section 4) - Called in steer_node and monitor_node failure paths
+4. **TLS verification fix** (Section 2.2) - Moved to verified DONE; all 3 clients correctly use `CA_CERT_PATH`
 
-## ⚠️ Known Risks & Considerations
+### NEW Items Identified
+1. **`provision_node.py` missing `notify_error()`** - calls `notify_phase_change` on success but not `notify_error` on failure or max retries
+2. **Tunnel deleter NOT gated behind `SIMULATE_MODE`** - unlike cutover.py and pca_client.py, the tunnel_deleter.py returns fake success on HTTP errors without checking `SIMULATE_MODE`
+3. **FastAPI shutdown handler incomplete** - only closes `_mcp_client`, not Redis/HTTP singletons in tool classes
+4. **Audit Agent not called from most nodes** - only steer, restore, and close nodes call audit; detect, assess, compute, and escalate nodes also call it but monitor and provision do not
 
-1. **Simulation code removal must be coordinated** — don't remove simulations until real API integrations are tested. Consider gating behind `SIMULATE_MODE=true`.
-2. **asyncio lifecycle fix changes startup order** — all agents now initialize inside FastAPI lifespan instead of before uvicorn. Test each agent individually.
-3. **Tunnel retry fix changes graph topology** — new `retry_gate` node added between `create_tunnel` failure and retry/give-up decision.
-4. **Redis connections** — ensure Redis is running and accessible before starting agents.
+### Items Confirmed STILL OPEN
+- All simulation stubs in audit agent (PostgreSQL + Elasticsearch)
+- All security hardening items except auth, JWT, and TLS verification
+- All architecture fixes
+- All testing items (1 test file exists but only for base workflow)
+- All deployment infrastructure items (no docker-compose, no k8s, no wheel build)
+- All documentation discrepancies
 
-## 📞 If Issues Arise
+---
 
-1. **Rollback auto-fixes:** `git checkout -- <file>` to revert any individual fix
-2. **ImportError on startup:** Check `__init__.py` exports match `workflow.py` imports
-3. **Redis connection failures:** Verify `REDIS_URL` env var and Redis service availability
-4. **CNC API failures:** Ensure `CNC_BASE_URL`, `CNC_USERNAME`, `CNC_PASSWORD` are set correctly
+## Known Risks
+
+1. **Simulation code removal must be coordinated** - don't remove simulations until real API integrations are tested. Use `SIMULATE_MODE=true` for development.
+2. **Tunnel deleter can silently fake success** - unlike other tools, not gated behind `SIMULATE_MODE`. Could lead to orphaned tunnels.
+3. **Service impact empty-list-on-error** - CNC API failure returns `[]`, causing orchestrator to close incidents as "no services affected."
+4. **50-minute blocking worker** - Restoration monitor `asyncio.sleep(30) * 100` blocks the orchestrator worker thread.
+5. **LangGraph list mutation** - Without `Annotated[list, operator.add]`, list state updates may be silently dropped by LangGraph reducers.

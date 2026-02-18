@@ -6,7 +6,7 @@ From DESIGN.md: close -> END
 """
 
 from typing import Any
-from datetime import datetime
+from datetime import datetime, timezone
 import structlog
 
 from ..tools.agent_caller import call_agent
@@ -47,7 +47,7 @@ async def close_node(state: dict[str, Any]) -> dict[str, Any]:
     if started_at:
         try:
             start_time = datetime.fromisoformat(started_at)
-            duration_seconds = int((datetime.utcnow() - start_time).total_seconds())
+            duration_seconds = int((datetime.now(timezone.utc) - start_time).total_seconds())
         except Exception:
             pass
 
@@ -125,7 +125,7 @@ async def close_node(state: dict[str, Any]) -> dict[str, Any]:
             "status": "closed",
             "final_status": final_status,
             "close_reason": close_reason,
-            "closed_at": datetime.utcnow().isoformat(),
+            "closed_at": datetime.now(timezone.utc).isoformat(),
             "duration_seconds": duration_seconds,
         },
     )

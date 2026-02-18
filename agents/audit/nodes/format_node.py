@@ -1,5 +1,5 @@
 """Format Log Node - From DESIGN.md"""
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
 import structlog
@@ -33,7 +33,7 @@ async def format_log_node(state: dict[str, Any]) -> dict[str, Any]:
 
     # Generate event ID and timestamp
     event_id = str(uuid4())
-    timestamp = datetime.utcnow()
+    timestamp = datetime.now(timezone.utc)
 
     # Build formatted log following AuditEvent schema from DESIGN.md
     formatted_log = {

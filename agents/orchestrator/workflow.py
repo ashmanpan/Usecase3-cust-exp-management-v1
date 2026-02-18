@@ -6,7 +6,7 @@ Based on DESIGN.md state machine diagram.
 """
 
 from typing import Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 import structlog
 from langgraph.graph import StateGraph, START, END
@@ -221,7 +221,7 @@ class OrchestratorWorkflow(BaseWorkflow):
 
         return create_initial_state(
             task_id=task_id,
-            incident_id=incident_id or f"INC-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}",
+            incident_id=incident_id or f"INC-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}",
             alert_type=payload.get("alert_type", "pca_sla"),
             degraded_links=payload.get("degraded_links", []),
             severity=payload.get("severity", "major"),

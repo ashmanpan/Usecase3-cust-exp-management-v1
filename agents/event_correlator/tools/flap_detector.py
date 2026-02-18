@@ -6,7 +6,7 @@ Based on DESIGN.md - FlapDetector class with exponential backoff.
 
 import os
 from typing import Tuple, Optional
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import structlog
 import redis.asyncio as redis
@@ -71,7 +71,7 @@ class FlapDetector:
         history = await client.lrange(history_key, 0, -1)
 
         # Filter to recent events within window
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         window_start = now - timedelta(seconds=self.FLAP_WINDOW)
         recent = []
         for h in history:
@@ -121,7 +121,7 @@ class FlapDetector:
         history_key = f"{self.key_prefix}history:{link_id}"
 
         # Add current timestamp to history
-        now = datetime.utcnow().isoformat()
+        now = datetime.now(timezone.utc).isoformat()
         await client.lpush(history_key, now)
 
         # Trim to keep only recent history
@@ -189,7 +189,7 @@ class FlapDetector:
         client = await self._get_client()
         dampen_key = f"{self.key_prefix}dampen:{link_id}"
 
-        dampen_until = (datetime.utcnow() + timedelta(seconds=seconds)).isoformat()
+        dampen_until = (datetime.now(timezone.utc) + timedelta(seconds=seconds)).isoformat()
         await client.setex(dampen_key, seconds, dampen_until)
 
         logger.info(

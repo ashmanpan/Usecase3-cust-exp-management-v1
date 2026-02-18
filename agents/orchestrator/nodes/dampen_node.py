@@ -7,7 +7,7 @@ From DESIGN.md: dampen -> detect (after delay)
 
 import asyncio
 from typing import Any
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import structlog
 
 from ..tools.state_manager import update_incident
@@ -53,7 +53,7 @@ async def dampen_node(state: dict[str, Any]) -> dict[str, Any]:
     )
 
     # Update Redis with dampen info
-    dampen_until = datetime.utcnow() + timedelta(seconds=delay_seconds)
+    dampen_until = datetime.now(timezone.utc) + timedelta(seconds=delay_seconds)
     await update_incident(
         incident_id=incident_id,
         updates={

@@ -107,7 +107,7 @@ def create_initial_state(
     Returns:
         Initial OrchestratorState
     """
-    from datetime import datetime
+    from datetime import datetime, timezone
 
     return OrchestratorState(
         # Task identification
@@ -139,7 +139,7 @@ def create_initial_state(
         # Execution tracking
         current_node="start",
         nodes_executed=[],
-        started_at=datetime.utcnow().isoformat(),
+        started_at=datetime.now(timezone.utc).isoformat(),
         # A2A communication
         a2a_tasks_sent=[],
         a2a_responses={},

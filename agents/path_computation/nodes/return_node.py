@@ -6,7 +6,7 @@ From DESIGN.md: validate_path -> return_path -> END
 """
 
 from typing import Any
-from datetime import datetime
+from datetime import datetime, timezone
 import structlog
 
 logger = structlog.get_logger(__name__)
@@ -48,7 +48,7 @@ async def return_path_node(state: dict[str, Any]) -> dict[str, Any]:
             "path": computed_path,
             "constraints_relaxed": relaxation_level > 0,
             "relaxation_level": relaxation_level,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
         status = "success"
 
@@ -69,7 +69,7 @@ async def return_path_node(state: dict[str, Any]) -> dict[str, Any]:
             "validation_violations": validation_violations,
             "constraints_relaxed": relaxation_level > 0,
             "relaxation_level": relaxation_level,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
         status = "success"  # Workflow succeeded, path quality is info for Orchestrator
 
@@ -87,7 +87,7 @@ async def return_path_node(state: dict[str, Any]) -> dict[str, Any]:
             "path": None,
             "relaxation_level": relaxation_level,
             "query_errors": state.get("query_errors", []),
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
         status = "no_path"
 
@@ -102,5 +102,5 @@ async def return_path_node(state: dict[str, Any]) -> dict[str, Any]:
         "nodes_executed": state.get("nodes_executed", []) + ["return_path"],
         "result": result,
         "status": status,
-        "completed_at": datetime.utcnow().isoformat(),
+        "completed_at": datetime.now(timezone.utc).isoformat(),
     }

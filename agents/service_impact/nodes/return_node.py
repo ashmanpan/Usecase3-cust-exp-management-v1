@@ -6,7 +6,7 @@ From DESIGN.md: enrich_sla -> return_affected -> END
 """
 
 from typing import Any
-from datetime import datetime
+from datetime import datetime, timezone
 import structlog
 
 logger = structlog.get_logger(__name__)
@@ -49,7 +49,7 @@ async def return_affected_node(state: dict[str, Any]) -> dict[str, Any]:
         "affected_services": affected_services,
         "highest_priority_tier": highest_priority_tier,
         "auto_protect_required": auto_protect_required,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
     logger.info(
@@ -65,5 +65,5 @@ async def return_affected_node(state: dict[str, Any]) -> dict[str, Any]:
         "nodes_executed": state.get("nodes_executed", []) + ["return_affected"],
         "result": result,
         "status": "success",
-        "completed_at": datetime.utcnow().isoformat(),
+        "completed_at": datetime.now(timezone.utc).isoformat(),
     }

@@ -1,5 +1,5 @@
 """Store DB Node - From DESIGN.md"""
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 import structlog
 
@@ -60,11 +60,11 @@ async def store_db_node(state: dict[str, Any]) -> dict[str, Any]:
 
         # Parse dates
         try:
-            start_date = datetime.fromisoformat(start_date_str) if start_date_str else datetime.utcnow().replace(day=1)
-            end_date = datetime.fromisoformat(end_date_str) if end_date_str else datetime.utcnow()
+            start_date = datetime.fromisoformat(start_date_str) if start_date_str else datetime.now(timezone.utc).replace(day=1)
+            end_date = datetime.fromisoformat(end_date_str) if end_date_str else datetime.now(timezone.utc)
         except ValueError:
-            start_date = datetime.utcnow().replace(day=1)
-            end_date = datetime.utcnow()
+            start_date = datetime.now(timezone.utc).replace(day=1)
+            end_date = datetime.now(timezone.utc)
 
         report_data = await pg_client.generate_compliance_report(
             start_date=start_date,
@@ -99,9 +99,9 @@ async def store_db_node(state: dict[str, Any]) -> dict[str, Any]:
         # Parse timestamp
         timestamp_str = formatted_log.get("timestamp")
         try:
-            timestamp = datetime.fromisoformat(timestamp_str) if timestamp_str else datetime.utcnow()
+            timestamp = datetime.fromisoformat(timestamp_str) if timestamp_str else datetime.now(timezone.utc)
         except ValueError:
-            timestamp = datetime.utcnow()
+            timestamp = datetime.now(timezone.utc)
 
         stored = await pg_client.insert_audit_event(
             event_id=formatted_log.get("event_id", state.get("event_id")),

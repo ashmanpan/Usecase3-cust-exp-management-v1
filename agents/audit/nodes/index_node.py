@@ -1,6 +1,6 @@
 """Index Async Node - From DESIGN.md"""
 import asyncio
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 import structlog
 
@@ -61,9 +61,9 @@ async def index_async_node(state: dict[str, Any]) -> dict[str, Any]:
     # Parse timestamp
     timestamp_str = formatted_log.get("timestamp", state.get("timestamp"))
     try:
-        timestamp = datetime.fromisoformat(timestamp_str) if timestamp_str else datetime.utcnow()
+        timestamp = datetime.fromisoformat(timestamp_str) if timestamp_str else datetime.now(timezone.utc)
     except ValueError:
-        timestamp = datetime.utcnow()
+        timestamp = datetime.now(timezone.utc)
 
     # Index asynchronously (fire and forget in production)
     # Here we await for demo purposes

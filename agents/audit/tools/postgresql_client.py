@@ -1,6 +1,6 @@
 """PostgreSQL Client for Audit Storage - From DESIGN.md"""
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional, Any
 from uuid import uuid4
 import structlog
@@ -149,7 +149,7 @@ class PostgreSQLClient:
             return [
                 {
                     "event_id": str(uuid4()),
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "incident_id": incident_id,
                     "agent_name": "orchestrator",
                     "node_name": "create_incident",
@@ -163,7 +163,7 @@ class PostgreSQLClient:
                 },
                 {
                     "event_id": str(uuid4()),
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "incident_id": incident_id,
                     "agent_name": "event_correlator",
                     "node_name": "correlate_alerts",

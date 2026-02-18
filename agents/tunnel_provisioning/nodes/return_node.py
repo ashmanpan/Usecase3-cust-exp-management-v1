@@ -1,6 +1,6 @@
 """Return Success Node - From DESIGN.md"""
 from typing import Any
-from datetime import datetime
+from datetime import datetime, timezone
 import structlog
 
 logger = structlog.get_logger(__name__)
@@ -23,7 +23,7 @@ async def return_success_node(state: dict[str, Any]) -> dict[str, Any]:
             "te_type": te_type,
             "operational_status": operational_status,
             "traffic_steered": state.get("traffic_steered", False),
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
         status = "success"
         logger.info("Tunnel provisioning successful", incident_id=incident_id, tunnel_id=tunnel_id)
@@ -33,7 +33,7 @@ async def return_success_node(state: dict[str, Any]) -> dict[str, Any]:
             "success": False,
             "error": state.get("creation_error", "Unknown error"),
             "retry_count": state.get("retry_count", 0),
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
         status = "failed"
         logger.error("Tunnel provisioning failed", incident_id=incident_id)
@@ -43,5 +43,5 @@ async def return_success_node(state: dict[str, Any]) -> dict[str, Any]:
         "nodes_executed": state.get("nodes_executed", []) + ["return_success"],
         "result": result,
         "status": status,
-        "completed_at": datetime.utcnow().isoformat(),
+        "completed_at": datetime.now(timezone.utc).isoformat(),
     }

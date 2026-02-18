@@ -9,7 +9,7 @@ Provides interface for agents to send:
 
 import os
 from typing import Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 import structlog
 
 from .a2a_client import A2AClient, get_a2a_client, A2AClientError
@@ -91,7 +91,7 @@ class IOAgentClient:
             "degraded_links": degraded_links or [],
             "affected_services": affected_services or [],
             "source_agent": source_agent,
-            "created_at": datetime.utcnow().isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
             "status": "new",
         }
 
@@ -154,7 +154,7 @@ class IOAgentClient:
             "message": message,
             "details": details or {},
             "source_agent": source_agent,
-            "updated_at": datetime.utcnow().isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
         }
 
         try:
@@ -217,7 +217,7 @@ class IOAgentClient:
             "summary": summary,
             "details": details or {},
             "source_agent": source_agent,
-            "closed_at": datetime.utcnow().isoformat(),
+            "closed_at": datetime.now(timezone.utc).isoformat(),
             "status": "closed",
         }
 
@@ -276,7 +276,7 @@ class IOAgentClient:
             "error_message": error_message,
             "source_agent": source_agent,
             "recoverable": recoverable,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
         try:

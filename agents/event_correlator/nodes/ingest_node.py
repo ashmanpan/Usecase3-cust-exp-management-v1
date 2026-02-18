@@ -6,7 +6,7 @@ From DESIGN.md: ingest -> dedup
 """
 
 from typing import Any
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import uuid4
 
 import structlog
@@ -90,7 +90,7 @@ def _normalize_pca_alert(alert_id: str, raw: dict) -> dict:
     return {
         "alert_id": alert_id,
         "source": "pca",
-        "timestamp": raw.get("timestamp") or datetime.utcnow().isoformat(),
+        "timestamp": raw.get("timestamp") or datetime.now(timezone.utc).isoformat(),
         "link_id": link_id,
         "interface_a": raw.get("interface_a", f"{raw.get('source_ip', 'unknown')}:unknown"),
         "interface_z": raw.get("interface_z", f"{raw.get('dest_ip', 'unknown')}:unknown"),
@@ -116,7 +116,7 @@ def _normalize_cnc_alert(alert_id: str, raw: dict) -> dict:
     return {
         "alert_id": alert_id,
         "source": "cnc",
-        "timestamp": raw.get("timestamp") or datetime.utcnow().isoformat(),
+        "timestamp": raw.get("timestamp") or datetime.now(timezone.utc).isoformat(),
         "link_id": raw.get("resource_id", "unknown"),
         "interface_a": raw.get("interface_a", "unknown"),
         "interface_z": raw.get("interface_z", "unknown"),
@@ -134,7 +134,7 @@ def _normalize_proactive_alert(alert_id: str, raw: dict) -> dict:
     return {
         "alert_id": alert_id,
         "source": "proactive",
-        "timestamp": raw.get("timestamp") or datetime.utcnow().isoformat(),
+        "timestamp": raw.get("timestamp") or datetime.now(timezone.utc).isoformat(),
         "link_id": raw.get("link_id", "unknown"),
         "interface_a": raw.get("interface_a", "unknown"),
         "interface_z": raw.get("interface_z", "unknown"),
@@ -152,7 +152,7 @@ def _normalize_generic_alert(alert_id: str, raw: dict) -> dict:
     return {
         "alert_id": alert_id,
         "source": "unknown",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "link_id": raw.get("link_id", "unknown"),
         "interface_a": raw.get("interface_a", "unknown"),
         "interface_z": raw.get("interface_z", "unknown"),

@@ -10,7 +10,7 @@ import structlog
 
 from ..tools.agent_caller import call_agent
 from ..tools.state_manager import update_incident
-from ..tools.io_notifier import notify_phase_change
+from ..tools.io_notifier import notify_phase_change, notify_error
 
 logger = structlog.get_logger(__name__)
 
@@ -145,6 +145,12 @@ async def provision_node(state: dict[str, Any]) -> dict[str, Any]:
                         "escalate_reason": "tunnel_provision_failed_3x",
                     },
                 )
+                await notify_error(
+                    incident_id=incident_id,
+                    error_message=f"Tunnel provisioning failed after {new_retry_count} retries: {result.get('error')}",
+                    node_name="provision",
+                    correlation_id=state.get("correlation_id"),
+                )
             else:
                 logger.warning(
                     "Tunnel provision failed, will retry",
@@ -169,6 +175,12 @@ async def provision_node(state: dict[str, Any]) -> dict[str, Any]:
         if new_retry_count >= max_retries:
             updates["status"] = "escalated"
             updates["escalate_reason"] = "tunnel_provision_failed_3x"
+            await notify_error(
+                incident_id=incident_id,
+                error_message=f"Tunnel Provisioning Agent unreachable after {new_retry_count} attempts: {provision_result.get('error')}",
+                node_name="provision",
+                correlation_id=state.get("correlation_id"),
+            )
         else:
             updates["status"] = "provisioning"
 

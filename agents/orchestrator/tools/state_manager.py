@@ -8,7 +8,7 @@ Based on DESIGN.md - Tool 2: Redis State Management
 import os
 import json
 from typing import Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 import structlog
 import redis.asyncio as redis
@@ -97,11 +97,11 @@ class StateManagerTool:
             # Get existing state
             existing = await self.get_incident(incident_id)
             if existing is None:
-                existing = {"incident_id": incident_id, "created_at": datetime.utcnow().isoformat()}
+                existing = {"incident_id": incident_id, "created_at": datetime.now(timezone.utc).isoformat()}
 
             # Merge updates
             existing.update(updates)
-            existing["updated_at"] = datetime.utcnow().isoformat()
+            existing["updated_at"] = datetime.now(timezone.utc).isoformat()
 
             # Save back
             await client.setex(key, ttl_seconds, json.dumps(existing))
@@ -140,8 +140,8 @@ class StateManagerTool:
 
         state = {
             "incident_id": incident_id,
-            "created_at": datetime.utcnow().isoformat(),
-            "updated_at": datetime.utcnow().isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
             **initial_state,
         }
 
