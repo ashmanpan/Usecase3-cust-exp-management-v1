@@ -17,6 +17,11 @@ class TunnelConfig(BaseModel):
     bandwidth_gbps: Optional[float] = None
     setup_priority: Optional[int] = None
     hold_priority: Optional[int] = None
+    # Provisioning mode — overrides TUNNEL_PROVISIONING_MODE env var when set.
+    # "nso" = PCC-initiated (NSO pushes config to router, config visible on device)
+    # "pce" = PCE-initiated (COE REST → PCEP, no config on router)
+    # None  = use TUNNEL_PROVISIONING_MODE env var (default "nso")
+    provisioning_mode: Optional[Literal["nso", "pce"]] = None
 
 class TunnelResult(BaseModel):
     success: bool

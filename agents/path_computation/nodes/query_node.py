@@ -9,6 +9,8 @@ from typing import Any
 import structlog
 
 from ..tools.kg_client import get_kg_client
+from ..tools.cnc_topology_client import get_cnc_topology_client
+from ..tools.srpm_client import get_srpm_client
 from ..schemas.paths import PathConstraints
 
 logger = structlog.get_logger(__name__)
@@ -60,6 +62,53 @@ async def query_kg_node(state: dict[str, Any]) -> dict[str, Any]:
         # Convert dict to PathConstraints
         constraints = PathConstraints(**constraints_dict)
 
+        # Step 1: Get live topology path hint from CNC
+        topology_path_hint = []
+        try:
+            topo_client = get_cnc_topology_client()
+            topology_path_hint = await topo_client.get_igp_path(source_pe, destination_pe)
+            logger.info(
+                "Topology path hint retrieved",
+                incident_id=incident_id,
+                hops=len(topology_path_hint),
+            )
+        except Exception as e:
+            logger.warning(
+                "Topology enrichment failed, continuing with KG only",
+                incident_id=incident_id,
+                error=str(e),
+            )
+
+        # Step 2: Get SR-PM path metrics for current path (if available)
+        # Build segment_list from topology_path_hint link IDs when available
+        srpm_metrics = {}
+        try:
+            srpm = get_srpm_client()
+            segment_list = [
+                hop["link_id"]
+                for hop in topology_path_hint
+                if hop.get("link_id")
+            ]
+            if segment_list:
+                per_hop = await srpm.get_path_metrics(segment_list)
+                srpm_metrics = {
+                    "available": True,
+                    "per_hop": per_hop,
+                    "source_pe": source_pe,
+                    "destination_pe": destination_pe,
+                }
+            else:
+                logger.info(
+                    "No segment_list available for SR-PM — skipping path metrics",
+                    incident_id=incident_id,
+                )
+        except Exception as e:
+            logger.warning(
+                "SR-PM metrics unavailable",
+                incident_id=incident_id,
+                error=str(e),
+            )
+
         client = get_kg_client()
 
         # Compute path
@@ -89,6 +138,8 @@ async def query_kg_node(state: dict[str, Any]) -> dict[str, Any]:
                 "path_found": True,
                 "computed_path": path.model_dump(),
                 "query_attempts": query_attempts,
+                "topology_path_hint": topology_path_hint,
+                "srpm_metrics": srpm_metrics,
             }
         else:
             logger.warning(

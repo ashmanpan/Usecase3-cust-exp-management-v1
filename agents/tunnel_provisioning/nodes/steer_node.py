@@ -4,6 +4,7 @@ from typing import Any, Tuple
 
 import httpx
 import structlog
+from ..tools.cnc_srte_config_client import get_srte_config_client
 
 logger = structlog.get_logger(__name__)
 
@@ -103,7 +104,8 @@ async def steer_traffic_node(state: dict[str, Any]) -> dict[str, Any]:
     }
 
     # ------------------------------------------------------------------
-    # SR-MPLS / SRv6: ODN / color-based steering is automatic
+    # SR-MPLS / SRv6: ODN / color-based steering is automatic.
+    # Add a lightweight CAT verification to confirm the policy exists.
     # ------------------------------------------------------------------
     if detected_te_type in ("sr-mpls", "srv6"):
         logger.info(
@@ -112,9 +114,46 @@ async def steer_traffic_node(state: dict[str, Any]) -> dict[str, Any]:
             tunnel_id=tunnel_id,
             te_type=detected_te_type,
         )
+
+        head_end = state.get("head_end")
+        color = state.get("color", 0)
+        end_point = state.get("end_point")
+
+        policy_verified = False
+        try:
+            srte = get_srte_config_client()
+            policy = await srte.get_sr_policy(head_end, color, end_point)
+            if policy:
+                policy_verified = True
+                logger.info(
+                    "SR-TE policy confirmed on CAT",
+                    incident_id=incident_id,
+                    head_end=head_end,
+                    color=color,
+                    end_point=end_point,
+                )
+            else:
+                logger.warning(
+                    "SR-TE policy not found on CAT — ODN steering still active",
+                    incident_id=incident_id,
+                    head_end=head_end,
+                    color=color,
+                    end_point=end_point,
+                )
+        except Exception as e:
+            logger.warning(
+                "SR-TE CAT policy verification failed — ODN steering still active",
+                incident_id=incident_id,
+                head_end=head_end,
+                color=color,
+                end_point=end_point,
+                error=str(e),
+            )
+
         return {
             **base_update,
             "traffic_steered": True,
+            "policy_verified": policy_verified,
         }
 
     # ------------------------------------------------------------------

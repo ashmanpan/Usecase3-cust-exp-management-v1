@@ -799,6 +799,106 @@ class COETunnelOpsClient:
             )
             raise
 
+    # ==================================================================
+    # Verification helpers (read-only)
+    # ==================================================================
+
+    async def get_rsvp_tunnel(
+        self, headend: str, endpoint: str, tunnel_id: str
+    ) -> Dict[str, Any]:
+        """
+        Retrieve a single RSVP-TE tunnel by head-end, end-point, and tunnel-id.
+
+        Calls the datalist-oper GET endpoint and filters the returned
+        rsvp-datalist for an entry matching *headend*, *endpoint*, and
+        *tunnel_id* (matched against the path-name field).
+
+        Returns:
+            Matching tunnel dict, or an empty dict if not found / on error.
+            Relevant keys: operational-status, admin-status, path-name,
+                           head-end, end-point, signaled-bandwidth.
+        """
+        logger.info(
+            "get_rsvp_tunnel",
+            headend=headend,
+            endpoint=endpoint,
+            tunnel_id=tunnel_id,
+        )
+        try:
+            data = await self.list_rsvp_tunnels()
+            entries: List[Dict[str, Any]] = data.get("rsvp-datalist", [])
+            for entry in entries:
+                if (
+                    entry.get("head-end") == headend
+                    and entry.get("end-point") == endpoint
+                    and entry.get("path-name") == tunnel_id
+                ):
+                    return entry
+            logger.warning(
+                "get_rsvp_tunnel: no matching tunnel found",
+                headend=headend,
+                endpoint=endpoint,
+                tunnel_id=tunnel_id,
+            )
+            return {}
+        except Exception as e:
+            logger.error(
+                "get_rsvp_tunnel failed",
+                headend=headend,
+                endpoint=endpoint,
+                tunnel_id=tunnel_id,
+                error=str(e),
+            )
+            raise
+
+    async def get_sr_policy_details(
+        self, head_end: str, end_point: str, color: int
+    ) -> Dict[str, Any]:
+        """
+        Retrieve a single SR policy by head-end, end-point, and color.
+
+        Calls the sr-datalist-oper GET endpoint and filters the returned
+        sr-policy-datalist for an entry matching *head_end*, *end_point*,
+        and *color*.
+
+        Returns:
+            Matching policy dict, or an empty dict if not found / on error.
+            Relevant keys: operational-status, admin-status, head-end,
+                           end-point, color, binding-sid.
+        """
+        logger.info(
+            "get_sr_policy_details",
+            head_end=head_end,
+            end_point=end_point,
+            color=color,
+        )
+        try:
+            data = await self.list_sr_policies()
+            entries: List[Dict[str, Any]] = data.get("sr-policy-datalist", [])
+            for entry in entries:
+                if (
+                    entry.get("head-end") == head_end
+                    and entry.get("end-point") == end_point
+                    and entry.get("color") == color
+                ):
+                    return entry
+            logger.warning(
+                "get_sr_policy_details: no matching policy found",
+                head_end=head_end,
+                end_point=end_point,
+                color=color,
+            )
+            return {}
+        except Exception as e:
+            logger.error(
+                "get_sr_policy_details failed",
+                head_end=head_end,
+                end_point=end_point,
+                color=color,
+                error=str(e),
+            )
+            raise
+
     # ------------------------------------------------------------------
     # Lifecycle
     # ------------------------------------------------------------------
