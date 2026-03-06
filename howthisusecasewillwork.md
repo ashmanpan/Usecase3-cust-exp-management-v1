@@ -18,6 +18,10 @@ Additionally, the **Traffic Analytics** agent runs continuously and **proactivel
 
 ## 2. System Architecture — 9 Agents
 
+![Figure 1: Multi-Agent System Architecture](docs/diagrams/fig1_system_architecture.png)
+
+*Figure 1: 9 containerized LangGraph agents coordinated by the Orchestrator via A2A protocol, integrating with Cisco Crosswork Network Controller and external notification systems.*
+
 ```
                             ┌──────────────────────┐
     CNC SSE Stream ─────────►                      │
@@ -68,6 +72,10 @@ Both paths converge at the Orchestrator and trigger the same downstream flow.
 ---
 
 ## 4. End-to-End Workflow — Step by Step
+
+![Figure 2: Reactive End-to-End Workflow](docs/diagrams/fig2_reactive_workflow.png)
+
+*Figure 2: Five-phase reactive workflow — from SLA alert ingestion through event correlation, service impact assessment, path computation, tunnel provisioning, and continuous restoration monitoring.*
 
 ### PHASE 1: Alert Ingestion and Correlation
 
@@ -320,6 +328,10 @@ If verify fails → retry create (up to 3 times).
 
 ---
 
+![Figure 3: PCE-Initiated vs PCC-Initiated Tunnel Provisioning](docs/diagrams/fig3_pce_vs_pcc.png)
+
+*Figure 3: Side-by-side comparison of the two provisioning models. PCC-initiated (NSO): config pushed to router, visible via CLI. PCE-initiated (COE/PCEP): zero router config, tunnel exists only as a PCEP-delegated LSP.*
+
 ### PHASE 5: Restoration Monitoring
 
 #### Agent: Restoration Monitor (port 8005)
@@ -396,6 +408,10 @@ Captures every state transition to Elasticsearch.
 ---
 
 ## 5. Traffic Analytics — Proactive Path (Parallel Workflow)
+
+![Figure 4: Proactive Traffic Analytics Workflow](docs/diagrams/fig4_traffic_analytics.png)
+
+*Figure 4: The Traffic Analytics agent runs on a 5-minute schedule, collecting telemetry from streaming, COE metrics, and SNMP sources, building a traffic matrix, and predicting congestion before SLA breach occurs.*
 
 This agent runs independently on a schedule (every 5 minutes). If it detects congestion risk, it alerts the Orchestrator which can pre-provision tunnels before SLA breach occurs.
 
