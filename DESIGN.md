@@ -15,9 +15,13 @@ LangGraph-based multi-agent system for automated traffic protection that:
 
 | Requirement | Decision |
 |-------------|----------|
-| Trigger Sources | PCA + CNC Alarms |
-| TE Handling | Auto-detect and match existing service technology |
-| Knowledge Graph | Exists with Dijkstra API (link/node avoidance) |
+| Trigger Sources | CNC SSE Notification Stream + DPM Kafka TCA + PCA alerts |
+| TE Handling | Dual-mode: RSVP-TE (today) + SR-MPLS/SRv6 (tomorrow) — auto-detect per account |
+| RSVP-TE Provisioning | NSO-initiated (PCC) — not PCE-initiated (PCE HTTP blocked by security) |
+| Topology Source | CNC Topology API (live IGP) — not internal KG (stale during optical reroutes) |
+| Knowledge Graph | Exists with Dijkstra API (link/node avoidance), 350K devices |
+| SLA Thresholds | Platinum: 30ms, Gold: 60ms (per Jio/Geo agreement 2026-03-05) |
+| Remediation Scope | Platinum + Gold tiers only — Silver/Bronze: notify, no auto-action |
 | Deployment | Microservices (each agent = separate container) |
 | Agent Communication | A2A Protocol (HTTP/gRPC native) |
 | State Store | Redis (primary) + PostgreSQL (durability) |
@@ -27,6 +31,7 @@ LangGraph-based multi-agent system for automated traffic protection that:
 | Restoration | Configurable: Immediate OR Gradual cutover |
 | Hold Timer | Configurable per service tier |
 | Notifications | Multiple channels (Webex, ServiceNow, Email) by severity |
+| Escalation | Webex + Email to optical/CNC teams by failure type |
 
 ---
 
@@ -153,72 +158,125 @@ Phase 0: Proactive Detection (Traffic Analytics Agent)
 
 ---
 
-## Workflow (7 Phases)
+## Workflow (8 Phases)
 
-### Phase 1: SLA Degradation Detection
+> **Updated 2026-03-05**: Phase 0 (Event Ingestion) and Phase 2b (Hop-by-Hop Diagnosis) added.
+> Tunnel provisioning switched to NSO-initiated (not PCE). SLA thresholds aligned to Jio/Geo agreement.
+
+### Phase 0: Event Ingestion (NEW)
 ```
-PCA Alert ─┐
-           ├──► Event Correlator ──► Orchestrator
-CNC Alarm ─┘    (dedup, correlate)   (start incident)
+CNC SSE Notification ──► cnc_notification_subscriber ──┐
+DPM Kafka TCA alert  ──► dpm_client                    ├──► Event Correlator
+PCA probe alert      ──► pca_session_mapper (IP→link)  ┘    (dedup, flap filter)
+```
+- CNC Notification Event Stream (SSE) fires on service health degradation
+- DPM (Device Performance Monitoring) streams interface TCA via Kafka
+- PCA session IPs resolved to CNC link_id (5-min cache, Topology API fallback)
+- All events normalized: `{link_id, pe_source, pe_destination, severity, timestamp}`
+
+### Phase 1: SLA Degradation Correlation
+```
+Event Correlator ──► Orchestrator (start_incident)
 ```
 - PCA detects: latency/jitter/packet loss exceeds threshold
 - Link is UP but underperforming (NOT a failure)
 - Flap detection: exponential backoff (suppress rapid oscillations)
+- SLA thresholds: **Platinum 30ms / Gold 60ms / Silver 100ms / Bronze 150ms**
 
-### Phase 2: Service Impact Assessment
+### Phase 2: Premium Service Impact Assessment
 ```
-Orchestrator ──► Service Impact Agent ──► CNC Service Health API
-                                              │
-                                              ▼
-                                    affected_services[]
-                                    (L3VPN, L2VPN, endpoints, SLA tier)
+Orchestrator ──► assess_node ──► CNC Service Health API
+                                      │
+                                      ▼
+                             all_affected_services[]
+                                      │
+                             Filter: platinum + gold only
+                                      │
+                             premium_affected_services[]
 ```
+- Only platinum/gold tier services trigger automated remediation
+- Silver/bronze: log, notify, no automated action
+
+### Phase 2b: Hop-by-Hop P-to-P Diagnosis (NEW)
+```
+Orchestrator ──► diagnose_node ──► CNCTopologyClient.get_igp_path(pe_a, pe_b)
+                                         │
+                                         ▼
+                               Enumerate P-router hops
+                                         │
+                                         ▼
+                               candidate_links[] (degraded hop identified)
+```
+- Uses **live CNC Topology API** — not internal KG (which can be stale during optical reroute)
+- Pinpoints exact P-to-P underlay hop causing the degradation
+- Skipped if link already known from CNC SSE alert
 
 ### Phase 3: Alternate Path Computation
 ```
-Orchestrator ──► Path Computation Agent ──► Knowledge Graph API
+Orchestrator ──► Path Computation Agent ──► Knowledge Graph API (Dijkstra)
                                                │
-                                               ▼
-                                    alternate_path (avoiding degraded links)
-                                    Constraints: link avoidance, node avoidance
+                           RSVP-TE: [{address, hop-type: strict}] hops
+                           SR-MPLS: [{node-ipv4-address, SID}] segments
 ```
+- Knowledge Graph (350K devices) with link/node avoidance constraints
+- CNC Topology API as fallback for real-time data
+- SRPM (SR Performance Monitoring) for SR phase link metrics
 
 ### Phase 4: Protection Tunnel Creation
 ```
-Orchestrator ──► Tunnel Provisioning Agent ──► MCP Server ──► CNC PCE
-                                                    │
-                                                    ▼
-                                         Protection tunnel created
-                                         (RSVP-TE / SR-MPLS / SRv6)
+Orchestrator ──► Tunnel Provisioning Agent
+                        │
+              RSVP-TE: NSO RPC (PCC-initiated)
+                        │  POST /api/operations/mpls-te:create-tunnel
+                        │  Async: poll job-id (3s, 30s max)
+                        │
+              SR-MPLS:  CNC PCE SR Policy
+                        │  POST /pce/sr-policies
+                        │
+                        ▼
+               Protection tunnel created
 ```
-- ONE shared tunnel per affected path
-- Auto-detect TE type from existing service configuration
-- Retry with exponential backoff on failure
+- RSVP-TE uses **NSO-initiated (PCC)** — not PCE-initiated (PCE HTTP blocked by security)
+- NSO async job polling handles queue congestion
+- Auto-detect TE type: `DEFAULT_TE_TYPE` env var or device capabilities
 
 ### Phase 5: Traffic Steering
 ```
-Tunnel Provisioning Agent ──► Steer traffic to protection tunnel
-                              (original path still exists)
+RSVP-TE: NSO REST ──► POST /devices/device/{head-end}/config/vrf-steering
+                       {vrf, next-hop: tunnel_endpoint_ip, tunnel-id}
+
+SR-MPLS: ODN auto-steering via colour-community (no explicit config needed)
+SRv6:    ODN auto-steering (same)
 ```
 
 ### Phase 6: Continuous Monitoring
 ```
 Restoration Monitor Agent ──► Poll PCA for SLA recovery
                               │
-                              ├── SLA normal? Start hold timer
-                              ├── Hold time elapsed? Verify stability
-                              └── Stable? Trigger Phase 7
+                              ├── SLA still degraded? Continue protecting
+                              ├── Recovered? Start hold timer
+                              ├── Hold elapsed? Verify stability
+                              └── Stable? ──► Phase 7
 ```
 
-### Phase 7: Restoration
+### Phase 7: Restoration + Cleanup
 ```
 1. Cutover traffic (configurable):
    - Immediate: All traffic back to original path
    - Gradual:   75/25 → 50/50 → 25/75 → 0/100 (weighted ECMP)
 
-2. Verify SLA on original path
-3. Remove protection tunnel
-4. Close incident, notify, audit
+2. Delete protection tunnel:
+   - RSVP-TE: NSO DELETE /mpls-te/tunnels/{name}
+   - SR-MPLS: CNC PCE SR policy delete
+
+3. Close incident, notify, audit
+```
+
+### Escalation (parallel path)
+```
+No path found      ──► Webex: optical team + Email thread
+Provision failed   ──► Webex: CNC product team
+Steer failed       ──► Webex: CNC product team
 ```
 
 ---
