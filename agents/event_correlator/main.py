@@ -23,6 +23,7 @@ from agent_template.tools.mcp_client import MCPToolClient
 from agent_template.tools.a2a_client import A2AClient, configure_a2a_client
 
 from .workflow import EventCorrelatorWorkflow
+from .tools.cnc_notification_subscriber import CNCNotificationSubscriber
 
 # Load environment variables
 load_dotenv()
@@ -161,7 +162,7 @@ class EventCorrelatorRunner:
         return self._server
 
     def run(self) -> None:
-        """Run the agent server"""
+        """Run the agent server alongside the CNC notification subscriber."""
         # Initialize asynchronously
         asyncio.run(self.initialize())
 
@@ -174,6 +175,23 @@ class EventCorrelatorRunner:
             host=self.config.a2a.host,
             port=self.config.a2a.port,
         )
+
+        # Attach the CNC notification subscriber as a FastAPI startup handler.
+        # When uvicorn brings the app online the subscriber starts in the
+        # background event loop, so it runs concurrently with request handling.
+        # The subscriber's own reconnect loop keeps it alive for the process
+        # lifetime; uvicorn shutdown will cancel it naturally.
+        _subscriber = CNCNotificationSubscriber()
+
+        @server.app.on_event("startup")
+        async def _start_cnc_subscriber() -> None:
+            logger.info("Launching CNC notification subscriber as background task")
+            asyncio.get_event_loop().create_task(_subscriber.start())
+
+        @server.app.on_event("shutdown")
+        async def _stop_cnc_subscriber() -> None:
+            logger.info("Closing CNC notification subscriber")
+            await _subscriber.close()
 
         uvicorn.run(
             server.app,

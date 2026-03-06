@@ -8,7 +8,8 @@ logger = structlog.get_logger(__name__)
 class TETypeDetector:
     """Auto-detect appropriate TE technology based on service config - From DESIGN.md"""
     SUPPORTED_TYPES = ["sr-mpls", "srv6", "rsvp-te"]
-    DEFAULT_TYPE = "sr-mpls"
+    # Env: DEFAULT_TE_TYPE — set to "sr-mpls" for SR accounts, "rsvp-te" for legacy MPLS accounts
+    DEFAULT_TYPE = os.getenv("DEFAULT_TE_TYPE", "rsvp-te")
 
     def detect(self, service_te_type: Optional[str], path: dict, device_capabilities: Dict[str, Any] = None) -> str:
         """Detection priority: 1. Match existing service TE type, 2. Check capabilities, 3. Default to SR-MPLS"""

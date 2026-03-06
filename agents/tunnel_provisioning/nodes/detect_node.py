@@ -10,11 +10,13 @@ async def detect_te_type_node(state: dict[str, Any]) -> dict[str, Any]:
     incident_id = state.get("incident_id")
     requested_te_type = state.get("requested_te_type")
     computed_path = state.get("computed_path", {})
+    device_capabilities = state.get("device_capabilities")
 
     logger.info("Detecting TE type", incident_id=incident_id)
     detector = get_te_detector()
-    te_type = detector.detect(requested_te_type, computed_path)
+    te_type = detector.detect(requested_te_type, computed_path, device_capabilities)
 
+    logger.info("TE type detected", te_type=te_type, capabilities_available=device_capabilities is not None)
     logger.info("TE type detected", incident_id=incident_id, te_type=te_type)
     return {
         "current_node": "detect_te_type",

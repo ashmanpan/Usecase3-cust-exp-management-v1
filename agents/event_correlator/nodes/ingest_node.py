@@ -86,6 +86,9 @@ def _normalize_pca_alert(alert_id: str, raw: dict) -> dict:
 
     # Build link_id from source/dest IPs (in real impl, would lookup in KG)
     link_id = raw.get("link_id") or f"link-{raw.get('source_ip', 'unknown')}-{raw.get('dest_ip', 'unknown')}"
+    # TODO: This helper is sync; real mapping happens in a post-processing step.
+    # Downstream nodes (e.g. topology_node) should call PCASessionMapper.resolve_link_id()
+    # using pe_source_ip / pe_dest_ip to obtain the authoritative CNC topology link_id.
 
     return {
         "alert_id": alert_id,
@@ -99,6 +102,11 @@ def _normalize_pca_alert(alert_id: str, raw: dict) -> dict:
         "packet_loss_pct": raw.get("current_value") if metric_type == "loss" else None,
         "violated_thresholds": [metric_type],
         "severity": severity,
+        # Source and destination PE/P loopback IPs from the PCA session report.
+        # Retained so downstream async nodes can call PCASessionMapper.resolve_link_id()
+        # to replace the synthesised link_id above with the real CNC topology link_id.
+        "pe_source_ip": raw.get("source_ip"),
+        "pe_dest_ip": raw.get("dest_ip"),
         "raw_payload": raw,
     }
 

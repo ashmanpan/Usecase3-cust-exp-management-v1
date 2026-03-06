@@ -30,6 +30,9 @@ class TunnelProvisioningState(TypedDict, total=False):
     operational_status: str
     # Steering
     traffic_steered: bool
+    steer_error: Optional[str]
+    affected_vrfs: Optional[List[str]]
+    tunnel_endpoint_ip: Optional[str]
     # Workflow
     current_node: str
     nodes_executed: List[str]

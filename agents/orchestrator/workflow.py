@@ -18,6 +18,7 @@ from .schemas.state import OrchestratorState, create_initial_state
 from .nodes import (
     start_node,
     detect_node,
+    diagnose_node,
     assess_node,
     compute_node,
     provision_node,
@@ -94,6 +95,7 @@ class OrchestratorWorkflow(BaseWorkflow):
         # Add all nodes
         graph.add_node("start", start_node)
         graph.add_node("detect", detect_node)
+        graph.add_node("diagnose", diagnose_node)
         graph.add_node("assess", assess_node)
         graph.add_node("compute", compute_node)
         graph.add_node("provision", provision_node)
@@ -110,15 +112,20 @@ class OrchestratorWorkflow(BaseWorkflow):
         # start -> detect
         graph.add_edge("start", "detect")
 
-        # detect -> assess | dampen
+        # detect -> diagnose | dampen
+        # (non-flapping path goes to diagnose to pinpoint the degraded P-to-P link
+        #  before assess; flapping path still goes straight to dampen)
         graph.add_conditional_edges(
             "detect",
             check_flapping,
             {
-                "assess": "assess",
+                "assess": "diagnose",
                 "dampen": "dampen",
             },
         )
+
+        # diagnose -> assess (always; no branching needed at this stage)
+        graph.add_edge("diagnose", "assess")
 
         # assess -> compute | close
         graph.add_conditional_edges(

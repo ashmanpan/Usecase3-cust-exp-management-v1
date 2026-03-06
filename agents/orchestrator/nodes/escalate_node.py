@@ -5,6 +5,7 @@ LLM-based analysis for edge cases and escalation.
 From DESIGN.md: escalate -> close | manual intervention
 """
 
+import os
 from typing import Any
 import structlog
 
@@ -14,6 +15,16 @@ from langchain_core.messages import HumanMessage
 from ..tools.agent_caller import call_agent
 from ..tools.state_manager import update_incident
 from ..tools.io_notifier import notify_phase_change, notify_error
+
+# Import notification clients for direct team escalation (GAP 13)
+# These live in the notification agent; use lazy import to avoid circular deps
+def _get_webex_client():
+    from agents.notification.tools.webex_client import get_webex_client
+    return get_webex_client()
+
+def _get_email_client():
+    from agents.notification.tools.email_client import get_email_client
+    return get_email_client()
 
 logger = structlog.get_logger(__name__)
 
@@ -55,6 +66,177 @@ DECISION: <option>
 REASONING: <your reasoning>
 CONFIDENCE: <level>
 """
+
+
+async def _route_escalation_to_teams(state: dict[str, Any]) -> tuple[bool, list[str]]:
+    """
+    GAP 13: Route escalation to the correct specialist team based on escalation_reason.
+
+    - "no_path_found"          -> Optical team (Webex room + email)
+    - "provision_failed" /
+      "steer_failed"           -> CNC product team (Webex room)
+
+    Returns:
+        (escalation_sent, escalation_channels)
+    """
+    escalation_reason = state.get("escalation_reason", state.get("escalate_reason", "unknown"))
+    incident_id = state.get("incident_id", "unknown")
+    degraded_links = state.get("degraded_links", [])
+    te_type = state.get("te_type", "unknown")
+    affected_vrfs = state.get("affected_vrfs", state.get("affected_services", []))
+    premium_services = state.get("premium_affected_services", [])
+
+    escalation_channels: list[str] = []
+    escalation_sent = False
+
+    if escalation_reason == "no_path_found":
+        # --- Optical team escalation ---
+        optical_room = os.getenv("OPTICAL_TEAM_WEBEX_ROOM", "")
+        optical_email = os.getenv("OPTICAL_TEAM_EMAIL", "")
+
+        webex_msg = (
+            f"\U0001f534 No alternate path found for incident {incident_id}. "
+            f"Degraded links: {degraded_links}. "
+            f"Optical team action required: check optical path health and consider rerouting. "
+            f"Impacted premium VRFs: {affected_vrfs}"
+        )
+
+        if optical_room:
+            try:
+                webex = _get_webex_client()
+                result = await webex.send_message(space_id=optical_room, message=webex_msg)
+                if result.success:
+                    escalation_channels.append("optical_webex")
+                    escalation_sent = True
+                    logger.info(
+                        "Optical team Webex escalation sent",
+                        incident_id=incident_id,
+                        room=optical_room,
+                    )
+                else:
+                    logger.error(
+                        "Optical team Webex send failed",
+                        incident_id=incident_id,
+                        error=result.error,
+                    )
+            except Exception:
+                logger.exception(
+                    "Unexpected error sending optical Webex escalation",
+                    incident_id=incident_id,
+                )
+        else:
+            logger.warning(
+                "Escalation Webex room not configured",
+                team="optical",
+                env_var="OPTICAL_TEAM_WEBEX_ROOM",
+                incident_id=incident_id,
+            )
+            logger.info(
+                "Optical escalation details (Webex skipped)",
+                incident_id=incident_id,
+                escalation_reason=escalation_reason,
+                degraded_links=degraded_links,
+                affected_vrfs=affected_vrfs,
+            )
+
+        if optical_email:
+            try:
+                email = _get_email_client()
+                email_result = await email.send_email(
+                    to=[optical_email],
+                    subject=f"[ACTION REQUIRED] No alternate path for incident {incident_id}",
+                    body=(
+                        f"No alternate path found for incident {incident_id}.\n\n"
+                        f"Degraded links: {degraded_links}\n"
+                        f"Impacted premium VRFs: {affected_vrfs}\n"
+                        f"Premium affected services: {premium_services}\n\n"
+                        f"Please check optical path health and consider rerouting."
+                    ),
+                )
+                if email_result.success:
+                    escalation_channels.append("email")
+                    escalation_sent = True
+                    logger.info(
+                        "Optical team email escalation sent",
+                        incident_id=incident_id,
+                        email=optical_email,
+                    )
+                else:
+                    logger.error(
+                        "Optical team email send failed",
+                        incident_id=incident_id,
+                        error=email_result.error,
+                    )
+            except Exception:
+                logger.exception(
+                    "Unexpected error sending optical email escalation",
+                    incident_id=incident_id,
+                )
+        else:
+            logger.warning(
+                "Optical team email not configured",
+                env_var="OPTICAL_TEAM_EMAIL",
+                incident_id=incident_id,
+            )
+
+    elif escalation_reason in ("provision_failed", "steer_failed"):
+        # --- CNC product team escalation ---
+        cnc_room = os.getenv("CNC_TEAM_WEBEX_ROOM", "")
+
+        webex_msg = (
+            f"\u26a0\ufe0f CNC API issue for incident {incident_id}. "
+            f"Reason: {escalation_reason}. "
+            f"Please check CNC/NSO tunnel provisioning. "
+            f"Incident details: degraded={degraded_links}, te_type={te_type}"
+        )
+
+        if cnc_room:
+            try:
+                webex = _get_webex_client()
+                result = await webex.send_message(space_id=cnc_room, message=webex_msg)
+                if result.success:
+                    escalation_channels.append("cnc_webex")
+                    escalation_sent = True
+                    logger.info(
+                        "CNC product team Webex escalation sent",
+                        incident_id=incident_id,
+                        room=cnc_room,
+                        escalation_reason=escalation_reason,
+                    )
+                else:
+                    logger.error(
+                        "CNC product team Webex send failed",
+                        incident_id=incident_id,
+                        error=result.error,
+                    )
+            except Exception:
+                logger.exception(
+                    "Unexpected error sending CNC Webex escalation",
+                    incident_id=incident_id,
+                )
+        else:
+            logger.warning(
+                "Escalation Webex room not configured",
+                team="cnc_product",
+                env_var="CNC_TEAM_WEBEX_ROOM",
+                incident_id=incident_id,
+            )
+            logger.info(
+                "CNC escalation details (Webex skipped)",
+                incident_id=incident_id,
+                escalation_reason=escalation_reason,
+                degraded_links=degraded_links,
+                te_type=te_type,
+            )
+
+    else:
+        logger.info(
+            "No specialist team routing for escalation_reason",
+            incident_id=incident_id,
+            escalation_reason=escalation_reason,
+        )
+
+    return escalation_sent, escalation_channels
 
 
 async def escalate_node(state: dict[str, Any]) -> dict[str, Any]:
@@ -139,6 +321,9 @@ async def escalate_node(state: dict[str, Any]) -> dict[str, Any]:
             )
             llm_reasoning = f"LLM analysis failed: {str(e)}"
 
+    # GAP 13: Route escalation to optical team or CNC product team
+    escalation_sent, escalation_channels = await _route_escalation_to_teams(state)
+
     # Notify about escalation
     notify_result = await call_agent(
         agent_name="notification",
@@ -215,4 +400,7 @@ async def escalate_node(state: dict[str, Any]) -> dict[str, Any]:
         "llm_reasoning": llm_reasoning,
         "confidence": confidence,
         "a2a_tasks_sent": a2a_tasks,
+        # GAP 13: specialist team escalation tracking
+        "escalation_sent": escalation_sent,
+        "escalation_channels": escalation_channels,
     }

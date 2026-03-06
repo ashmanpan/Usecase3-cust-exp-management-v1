@@ -10,12 +10,12 @@ from ..schemas.restoration import SLAMetrics, PollSLAInput, PollSLAOutput
 
 logger = structlog.get_logger(__name__)
 
-# SLA tier thresholds - From DESIGN.md
+# SLA tiers aligned with Jio/Geo agreed values: platinum=30ms, gold=60ms
 SLA_TIER_THRESHOLDS = {
-    "platinum": {"max_latency_ms": 10.0, "max_jitter_ms": 2.0, "max_loss_pct": 0.01},
-    "gold": {"max_latency_ms": 25.0, "max_jitter_ms": 5.0, "max_loss_pct": 0.1},
-    "silver": {"max_latency_ms": 50.0, "max_jitter_ms": 10.0, "max_loss_pct": 0.5},
-    "bronze": {"max_latency_ms": 100.0, "max_jitter_ms": 20.0, "max_loss_pct": 1.0},
+    "platinum": {"max_latency_ms": 30.0, "max_jitter_ms": 5.0,  "max_loss_pct": 0.01},
+    "gold":     {"max_latency_ms": 60.0, "max_jitter_ms": 10.0, "max_loss_pct": 0.1},
+    "silver":   {"max_latency_ms": 100.0,"max_jitter_ms": 20.0, "max_loss_pct": 0.5},
+    "bronze":   {"max_latency_ms": 150.0,"max_jitter_ms": 30.0, "max_loss_pct": 1.0},
 }
 
 

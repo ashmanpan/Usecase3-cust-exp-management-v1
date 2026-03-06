@@ -7,6 +7,7 @@ Based on DESIGN.md node definitions.
 
 from .start_node import start_node
 from .detect_node import detect_node
+from .diagnose_node import diagnose_node
 from .assess_node import assess_node
 from .compute_node import compute_node
 from .provision_node import provision_node
@@ -33,6 +34,7 @@ __all__ = [
     # Nodes
     "start_node",
     "detect_node",
+    "diagnose_node",
     "assess_node",
     "compute_node",
     "provision_node",

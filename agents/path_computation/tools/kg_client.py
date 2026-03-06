@@ -156,7 +156,7 @@ class KGDijkstraClient:
             # Only simulate when SIMULATE_MODE is explicitly enabled
             if os.getenv("SIMULATE_MODE", "false").lower() == "true":
                 logger.warning("SIMULATE_MODE enabled, returning synthetic path")
-                return self._simulate_path(source, destination, constraints)
+                return self._simulate_path(source, destination, constraints, te_type=os.getenv("DEFAULT_TE_TYPE", "rsvp-te"))
             return None
 
     def _simulate_path(
@@ -164,6 +164,7 @@ class KGDijkstraClient:
         source: str,
         destination: str,
         constraints: PathConstraints,
+        te_type: Optional[str] = None,
     ) -> Optional[ComputedPath]:
         """
         Simulate path computation for demo/testing.
@@ -178,20 +179,21 @@ class KGDijkstraClient:
 
         # Generate synthetic path
         segments = [source, "P1", "P2", destination]
-        segment_sids = [16001, 16002, 16003, 16004]
+        recommended = te_type or os.getenv("DEFAULT_TE_TYPE", "rsvp-te")
+        sids = [16001, 16002, 16003, 16004] if recommended in ["sr-mpls", "srv6"] else []
 
         return ComputedPath(
             path_id=f"path-{uuid4().hex[:8]}",
             source=source,
             destination=destination,
             segments=segments,
-            segment_sids=segment_sids,
+            segment_sids=sids,
             total_hops=len(segments) - 1,
             total_delay_ms=15.0,
             total_igp_metric=100,
             total_te_metric=100,
             min_available_bandwidth_gbps=10.0,
-            recommended_te_type="sr-mpls",
+            recommended_te_type=recommended,
         )
 
     async def close(self) -> None:

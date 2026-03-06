@@ -44,9 +44,22 @@ async def build_payload_node(state: dict[str, Any]) -> dict[str, Any]:
         "protected": True,
     }
 
-    if path_type == "explicit" and computed_path.get("segment_sids"):
-        payload["segment_sids"] = computed_path.get("segment_sids")
-        payload["explicit_hops"] = [{"hop": {"node-ipv4-address": seg}, "step": i+1} for i, seg in enumerate(computed_path.get("segments", []))]
+    if path_type == "explicit" and computed_path.get("segments"):
+        segments = computed_path.get("segments", [])
+        if te_type in ["sr-mpls", "srv6"]:
+            # SR-MPLS: use SID list from segment_sids
+            if computed_path.get("segment_sids"):
+                payload["segment_sids"] = computed_path.get("segment_sids")
+            payload["explicit_hops"] = [
+                {"hop": {"node-ipv4-address": seg}, "step": i + 1}
+                for i, seg in enumerate(segments)
+            ]
+        else:
+            # RSVP-TE: use explicit hop IP addresses (loose or strict hops)
+            payload["explicit_hops"] = [
+                {"address": seg, "hop-type": "strict", "index": i + 1}
+                for i, seg in enumerate(segments)
+            ]
 
     logger.info("Payload built", incident_id=incident_id, color=color, binding_sid=binding_sid)
     return {

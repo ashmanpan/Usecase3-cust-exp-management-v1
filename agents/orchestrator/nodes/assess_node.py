@@ -76,7 +76,25 @@ async def assess_node(state: dict[str, Any]) -> dict[str, Any]:
             **state.get("a2a_responses", {}),
             "service_impact": result,
         }
-        updates["affected_services"] = affected_services
+
+        # Filter to premium tiers only - tunnel provisioning is only triggered for
+        # gold and platinum VRFs (e.g. HDFC, SBI, ICICI pay extra for this guarantee)
+        premium_tiers = {"platinum", "gold"}
+        all_affected_services = affected_services
+        premium_affected_services = [
+            s for s in all_affected_services
+            if (s.get("sla_tier") if isinstance(s, dict) else getattr(s, "sla_tier", None)) in premium_tiers
+        ]
+        services_affected = len(premium_affected_services) > 0
+        logger.info(
+            "Service tier filter applied",
+            total=len(all_affected_services),
+            premium=len(premium_affected_services),
+        )
+
+        updates["all_affected_services"] = all_affected_services
+        updates["premium_affected_services"] = premium_affected_services
+        updates["affected_services"] = all_affected_services
         updates["total_affected"] = total_affected
         updates["services_by_tier"] = services_by_tier
 
@@ -85,13 +103,13 @@ async def assess_node(state: dict[str, Any]) -> dict[str, Any]:
             incident_id=incident_id,
             updates={
                 "status": "assessing",
-                "affected_services": affected_services,
+                "affected_services": all_affected_services,
                 "total_affected": total_affected,
                 "services_by_tier": services_by_tier,
             },
         )
 
-        if total_affected > 0:
+        if services_affected:
             logger.info(
                 "Services affected, proceeding to compute",
                 incident_id=incident_id,
