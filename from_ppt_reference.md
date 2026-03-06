@@ -282,60 +282,63 @@ Fields: session-id, SA, DA, VRF, SP, DP, timestamp, EMA loss/latency,
 
 ## Part 4: Crosswork API Inventory (from developer.cisco.com)
 
-All available Crosswork Network Controller 7.1 APIs reviewed against codebase.
+**Last updated: 2026-03-06** — Full API sweep complete. 24 OpenAPI specs downloaded to `api_specs/`.
 
 ### Crosswork Active Topology APIs
 
-| API | Status | Code Location |
-|-----|--------|---------------|
-| Service Inventory API | ADDED | `service_impact/tools/cnc_client.py` — 7 new RPC methods |
-| IETF L3VPN Service Operational Data | ADDED | `cnc_client.py` — `get_l3vpn_service()` via RESTCONF |
-| IETF L3VPN Service Config | ADDED | `cnc_client.py` — GET/PUT/PATCH/DELETE RESTCONF |
-| Cisco SR-TE Policy Service Config | ADDED | `tunnel_provisioning/tools/cnc_srte_config_client.py` — NEW |
-| IETF TE (RSVP-TE) Service Config | PARTIAL | `cnc_tunnel.py` covers create/delete; full RESTCONF CRUD pending |
-| IETF L2VPN Service Operational Data | MISSING | Not implemented |
-| IETF L2VPN Service Config | MISSING | Not implemented |
-| Cisco Circuit-Style SR-TE Policy | MISSING | Not implemented |
-| IETF Network Slice Service Config | MISSING | Not implemented |
-| CAT NSO Connector API | PARTIAL | `cnc_tunnel.py` uses NSO REST directly |
-| CAT FP Deployment Manager | MISSING | Not implemented |
+| API | Status | Spec File | Code Location |
+|-----|--------|-----------|---------------|
+| Service Inventory API | ✅ DONE | `cat_inventory_rpc_7_1_0.json` | `service_impact/cnc_client.py` — 7 RPC methods |
+| IETF L3VPN Operational Data | ✅ DONE | `ietf_l3vpn_oper_data.json` | `cnc_client.py` — get_l3vpn_oper_services/service/transports |
+| IETF L3VPN Service Config | ✅ DONE | `ietf_l3vpn_config.json` | `cnc_client.py` — get_l3vpn_service (RESTCONF) |
+| IETF L2VPN Operational Data | ✅ DONE | `ietf_l2vpn_oper_data.json` | `cnc_client.py` — get_l2vpn_oper_services/service |
+| IETF L2VPN Service Config | ⬛ spec only | `ietf_l2vpn_config.json` | Downloaded; not wired (low priority) |
+| Cisco SR-TE Policy Service Config | ✅ DONE | `cisco_sr_te_cfp_7_1_0.json` | `tunnel_provisioning/cnc_srte_config_client.py` |
+| Cisco Circuit-Style SR-TE Config | ⬛ spec only | `cisco_cs_srte_config.json` | Downloaded for future CS-SR-TE use |
+| IETF TE (RSVP-TE) Service Config | ✅ DONE | `ietf_te_7_1_0.json` | `cnc_tunnel.py` — create/delete via NSO |
+| IETF Network Slice | ⬛ spec only | `ietf_network_slice.json` | Not in scope |
+| CAT NSO Connector | ⬛ spec only | `nso_connector.json` | NSO REST used directly |
+| CAT FP Deployment Manager | ⬛ spec only | `cat_fp_deployment.json` | Not in scope |
 
 ### Crosswork Optimization Engine APIs
 
-| API | Status | Code Location |
-|-----|--------|---------------|
-| SR Policy Operations API | PARTIAL | `cnc_tunnel.py` — PCE REST for SR policy create/delete |
-| RSVP-TE Tunnel Operations API | PARTIAL | `cnc_tunnel.py` — NSO-initiated create/delete |
-| Performance Metrics API | MISSING | Not implemented — needed for traffic_analytics agent |
-| SR P2MP Policy Operations | MISSING | Not in scope |
-| LCM / OAM / OPM Operations | MISSING | Not in scope |
+| API | Status | Spec File | Code Location |
+|-----|--------|-----------|---------------|
+| RSVP-TE Tunnel Operations | ✅ DONE | `coe_rsvp_te_tunnel_ops.yaml` | `tunnel_provisioning/coe_tunnel_ops_client.py` |
+| SR Policy Operations | ✅ DONE | `coe_sr_policy_ops.yaml` | `tunnel_provisioning/coe_tunnel_ops_client.py` |
+| Performance Metrics | ✅ DONE | `coe_performance_metrics.json` | `traffic_analytics/coe_metrics_client.py` |
+| COE Optimization Engine Ops | ✅ DONE | `coe_optimization_engine.yaml` | `traffic_analytics/coe_metrics_client.py` |
+| NPM Service APIs | ✅ DONE | `coe_npm_metrics.json` | `traffic_analytics/coe_metrics_client.py` |
+| RSVP-TE LSP Details | ✅ DONE | `coe_rsvp_te_lsp_details.json` | `path_computation/cnc_topology_client.py` |
+| SR Policy Details | ✅ DONE | `coe_sr_policy_details.json` | `path_computation/cnc_topology_client.py` |
+| Layer 3 & L2 Topology Details | ✅ DONE | `coe_topology_l3_l2.json` | `path_computation/cnc_topology_client.py` |
+| CSM Config Operations | ⬛ spec only | `coe_csm_config.yaml` | Bandwidth pool config — not in scope |
+| SR P2MP Policy | ⬛ not downloaded | — | Point-to-multipoint — not in scope |
 
 ### Crosswork Service Health APIs
 
-| API | Status | Code Location |
-|-----|--------|---------------|
-| Probe Manager API | MISSING | PCA used instead via `restoration_monitor/tools/pca_client.py` |
-| Historical Data API | MISSING | Not implemented |
-| Assurance Graph API | MISSING | Not implemented — useful for graph-based SLA view |
-| Heuristic Packages API | MISSING | Not in scope |
+| API | Status | Spec File | Code Location |
+|-----|--------|-----------|---------------|
+| Assurance Graph API | ✅ DONE | `sh_assurance_graph.json` | `restoration_monitor/service_health_client.py` |
+| Historical Data API | ✅ DONE | `sh_historical_data.json` | `restoration_monitor/service_health_client.py` |
+| Probe Manager API | ✅ DONE | `sh_probe_manager.json` | `restoration_monitor/service_health_client.py` |
+| Heuristic Packages API | ⬛ not downloaded | — | Not in scope |
 
-### New Files Added (2026-03-06)
+### All Files Added / Updated (2026-03-06 complete session)
 
-| File | Purpose |
-|------|---------|
-| `agents/tunnel_provisioning/tools/cnc_srte_config_client.py` | SR-TE Policy RESTCONF CRUD (Crosswork Active Topology) |
+| File | Change | Purpose |
+|------|--------|---------|
+| `tunnel_provisioning/tools/cnc_srte_config_client.py` | NEW | CAT SR-TE Policy RESTCONF CRUD |
+| `tunnel_provisioning/tools/coe_tunnel_ops_client.py` | NEW | COE RSVP-TE tunnel + SR policy ops |
+| `restoration_monitor/tools/service_health_client.py` | NEW | Service Health: assurance, historical, probe |
+| `traffic_analytics/tools/coe_metrics_client.py` | NEW | COE metrics + NPM + optimization plan |
+| `service_impact/tools/cnc_client.py` | UPDATED | +L3/L2VPN oper data (5 methods) |
+| `path_computation/tools/cnc_topology_client.py` | UPDATED | +IETF topology + RSVP-TE LSPs + SR policy details |
+| `api_specs/` (24 files) | NEW | All OpenAPI specs from Cisco DevNet CNC 7.1 |
 
-### Updated Files (2026-03-06)
+### Remaining Gaps (genuinely out of scope)
 
-| File | Changes |
-|------|---------|
-| `agents/service_impact/tools/cnc_client.py` | Added Service Inventory API (7 RPCs), L3VPN RESTCONF, sub-service methods |
-| `agents/tunnel_provisioning/tools/__init__.py` | Exported CNCSRTEConfigClient |
-
-### Key Gaps Still Remaining After This Update
-
-1. **Performance Metrics API** (Optimization Engine) — needed for `traffic_analytics` link utilization data
-2. **Assurance Graph API** (Service Health) — graph-based SLA topology view
-3. **Historical Data API** (Service Health) — trend analysis for SLA data
-4. **L2VPN Service APIs** — L2VPN services not queried (only L3VPN)
-5. **IETF TE RSVP-TE Service Config** — full RESTCONF CRUD missing (create via NSO, not RESTCONF)
+1. **L2VPN Service Config CRUD** — provisioning L2VPN handled by NSO directly, not RESTCONF
+2. **Circuit-Style SR-TE** — deterministic latency paths, future feature post-SR migration
+3. **Network Slice** — 5G slice management, not relevant for enterprise VPN use case
+4. **CSM/LCM/OAM/OPM** — Internal COE management operations, not needed for SLA protection workflow

@@ -354,16 +354,6 @@ If automation fails at any point, the system escalates to the right team automat
 
 ## CNC API Integrations
 
-| API | Purpose | Auth |
-|-----|---------|------|
-| CNC SSE Notification Stream | Real-time service health alerts | JWT (TGT→JWT) |
-| CNC Service Health API | Affected VPN services per link | JWT (TGT→JWT) |
-| CNC Topology API | Live IGP topology, P-to-P hops | JWT (TGT→JWT) |
-| NSO REST API | RSVP-TE tunnel create/delete, VRF steering | Basic/Token |
-| PCA REST API | SLA probe data, session mapping | API Key |
-| DPM Kafka | Interface TCA events (packet loss, errors) | SASL |
-| SRPM REST API | SR per-link metrics (SR phase) | JWT |
-
 All CNC clients use the same JWT authentication pattern:
 ```
 1. POST /crosswork/sso/v1/tickets  →  TGT
@@ -371,21 +361,87 @@ All CNC clients use the same JWT authentication pattern:
 3. Use JWT in Authorization: Bearer header
 ```
 
+### Crosswork Active Topology (CAT)
+
+| API | Agent | File | Operations |
+|-----|-------|------|-----------|
+| Service Inventory API | service_impact | `cnc_client.py` | get_services_by_transport, get_all_services, get_service_plan, get_service_count, get_l3vpn_sub_service_paths |
+| IETF L3VPN Operational Data | service_impact | `cnc_client.py` | get_l3vpn_oper_services, get_l3vpn_oper_service, get_l3vpn_discovered_transports |
+| IETF L2VPN Operational Data | service_impact | `cnc_client.py` | get_l2vpn_oper_services, get_l2vpn_oper_service |
+| IETF L3VPN Service Config | service_impact | `cnc_client.py` | get_l3vpn_service (RESTCONF GET) |
+| Cisco SR-TE Policy Service Config | tunnel_provisioning | `cnc_srte_config_client.py` | create/get/update/delete/list SR policies (RESTCONF CRUD) |
+| IETF TE (RSVP-TE) Service Config | tunnel_provisioning | `cnc_tunnel.py` | RSVP-TE tunnel config (RESTCONF) |
+
+### Crosswork Optimization Engine (COE)
+
+| API | Agent | File | Operations |
+|-----|-------|------|-----------|
+| RSVP-TE Tunnel Operations | tunnel_provisioning | `coe_tunnel_ops_client.py` | list/create/delete/modify/dryrun RSVP-TE tunnels |
+| SR Policy Operations | tunnel_provisioning | `coe_tunnel_ops_client.py` | list/create/delete/modify/dryrun SR policies |
+| Performance Metrics | traffic_analytics | `coe_metrics_client.py` | IGP links metrics, SR policy metrics, RSVP policy metrics |
+| COE Operations | traffic_analytics | `coe_metrics_client.py` | sr_policy_metrics, sr_policies_on_node/interface, optimization plan |
+| NPM Metrics | traffic_analytics | `coe_metrics_client.py` | LSP utilization metrics |
+| Layer 3 & L2 Topology Details | path_computation | `cnc_topology_client.py` | get_all_networks, get_network, get_network_node, get_topology_links |
+| RSVP-TE LSP Details | path_computation | `cnc_topology_client.py` | get_all_rsvp_tunnels, get_rsvp_tunnel |
+| SR Policy Details | path_computation | `cnc_topology_client.py` | get_all_sr_policy_details, get_sr_policy_details |
+
+### Crosswork Service Health
+
+| API | Agent | File | Operations |
+|-----|-------|------|-----------|
+| Assurance Graph API | restoration_monitor | `service_health_client.py` | get_impacted_services, get_matching_subservices, get_service_details |
+| Historical Data API | restoration_monitor | `service_health_client.py` | get_historical_metrics, get_historical_timeline, get_dashboard_metrics/sla |
+| Probe Manager API | restoration_monitor | `service_health_client.py` | get_probe_status, reactivate_probe |
+
+### Other Integrations
+
+| API | Agent | File | Auth |
+|-----|-------|------|------|
+| CNC SSE Notification Stream | event_correlator | `cnc_notification_subscriber.py` | JWT |
+| DPM Kafka | event_correlator | `dpm_client.py` | SASL |
+| NSO REST API | tunnel_provisioning | `cnc_tunnel.py` | Basic/Token |
+| PCA REST API | restoration_monitor | `pca_client.py` | API Key |
+| CNC Topology (legacy IGP) | path_computation | `cnc_topology_client.py` | JWT |
+| SRPM REST API | traffic_analytics | `srpm_client.py` | JWT (SR phase) |
+
 ---
 
 ## Environment Variables
 
-### CNC Connectivity
+### CNC Core Auth
 ```bash
-CNC_URL=https://cnc.example.com:30603
 CNC_USERNAME=admin
 CNC_PASSWORD=<secret>
 CNC_AUTH_URL=https://cnc.example.com:30603/crosswork/sso/v1/tickets
 CNC_JWT_URL=https://cnc.example.com:30603/crosswork/sso/v2/tickets/jwt
-CNC_SERVICE_HEALTH_URL=https://cnc.example.com:30603/crosswork/nbi/servicehealth/v1
-CNC_TOPOLOGY_URL=https://cnc.example.com:30603/crosswork/nbi/topology/v1
-CNC_NOTIFICATION_URL=https://cnc.example.com:30603/crosswork/nbi/servicehealth/v1/notification-stream
 CA_CERT_PATH=/path/to/ca.crt
+```
+
+### Crosswork Active Topology (CAT) APIs
+```bash
+CNC_SERVICE_HEALTH_URL=https://cnc.example.com:30603/crosswork/nbi/servicehealth/v1
+CNC_SERVICE_INVENTORY_URL=https://cnc.example.com:30603/crosswork/nbi/cat-inventory/v1/restconf
+CNC_RESTCONF_URL=https://cnc.example.com:30603/crosswork/nbi/cat-inventory/v1/restconf
+CNC_L3VPN_OPER_URL=https://cnc.example.com:30603/crosswork/nbi/cat-inventory/v1/restconf
+CNC_L2VPN_OPER_URL=https://cnc.example.com:30603/crosswork/nbi/cat-inventory/v1/restconf
+CNC_NOTIFICATION_URL=https://cnc.example.com:30603/crosswork/nbi/servicehealth/v1/notification-stream
+```
+
+### Crosswork Optimization Engine (COE) APIs
+```bash
+CNC_COE_URL=https://cnc.example.com:30603/crosswork/nbi/optimization/v3/restconf
+CNC_PM_URL=https://cnc.example.com:30603/crosswork/nbi/topology/v3/restconf
+CNC_NPM_URL=https://cnc.example.com:30603/crosswork/optima-analytics
+CNC_TOPOLOGY_URL=https://cnc.example.com:30603/crosswork/nbi/topology/v1
+```
+
+### Crosswork Service Health APIs
+```bash
+CNC_SH_URL=https://cnc.example.com:30603
+# Sub-paths (auto-appended by service_health_client.py):
+#   Historical Data: /crosswork/aa/aaapp/v1
+#   Assurance Graph: /crosswork/aa/agmgr/v1
+#   Probe Manager:   /crosswork/probemgr/v1
 ```
 
 ### NSO Connectivity
@@ -527,18 +583,27 @@ agents/
 │   └── main.py                   ← SSE subscriber wired to startup (updated)
 │
 ├── service_impact/            # CNC Service Health (port 8002)
-│   └── tools/cnc_client.py
+│   └── tools/
+│       ├── cnc_client.py     ← Service Inventory + L3/L2VPN oper data + assurance (updated)
+│       ├── impact_analyzer.py
+│       └── sla_enricher.py
 │
 ├── path_computation/          # Alternate route (port 8003)
 │   └── tools/
 │       ├── kg_client.py              ← dual-mode path simulation (updated)
-│       ├── cnc_topology_client.py    ← NEW: live IGP topology
-│       └── srpm_client.py            ← NEW: SR Performance Monitoring
+│       ├── cnc_topology_client.py    ← IGP topology + IETF networks + RSVP-TE LSPs + SR policies (updated)
+│       ├── srpm_client.py            ← SR Performance Monitoring
+│       ├── constraint_builder.py
+│       ├── path_validator.py
+│       └── kg_client.py
 │
 ├── tunnel_provisioning/       # Tunnel lifecycle (port 8004)
 │   ├── tools/
-│   │   ├── cnc_tunnel.py     ← NSO mode, async polling, correct delete (updated)
-│   │   └── te_detector.py    ← default rsvp-te (updated)
+│   │   ├── cnc_tunnel.py            ← NSO mode, async polling, correct delete (updated)
+│   │   ├── cnc_srte_config_client.py ← CAT SR-TE policy RESTCONF CRUD
+│   │   ├── coe_tunnel_ops_client.py  ← NEW: COE RSVP-TE + SR policy ops (create/delete/modify)
+│   │   ├── te_detector.py           ← default rsvp-te (updated)
+│   │   └── bsid_allocator.py
 │   ├── nodes/
 │   │   ├── detect_node.py    ← capabilities passed to detector (updated)
 │   │   ├── build_node.py     ← correct RSVP-TE hop format (updated)
@@ -547,12 +612,46 @@ agents/
 │   └── schemas/state.py      ← steer_error, affected_vrfs fields (updated)
 │
 ├── restoration_monitor/       # SLA recovery (port 8005)
-│   └── tools/pca_client.py   ← 30ms/60ms thresholds (updated)
+│   └── tools/
+│       ├── pca_client.py          ← 30ms/60ms SLA thresholds (updated)
+│       ├── service_health_client.py ← NEW: impacted services, historical data, probe manager
+│       ├── cutover.py
+│       ├── hold_timer.py
+│       └── tunnel_deleter.py
 │
-├── traffic_analytics/         # Proactive TE (port 8006)
+├── traffic_analytics/         # Proactive TE / metrics (port 8006)
+│   └── tools/
+│       ├── coe_metrics_client.py  ← NEW: COE performance metrics + NPM + optimization plan
+│       ├── telemetry_collector.py
+│       ├── congestion_predictor.py
+│       ├── demand_matrix_builder.py
+│       └── alert_emitter.py
+│
 ├── notification/              # Webex/Email/ServiceNow (port 8007)
 ├── audit/                     # Compliance logging (port 8008)
 └── io_agent/                  # Human ticket UI (port 8009)
+
+api_specs/                     # 24 OpenAPI spec files from Cisco DevNet CNC 7.1
+├── cat_inventory_rpc_7_1_0.json         # Service Inventory RPC
+├── ietf_l3vpn_oper_data.json            # L3VPN Operational Data
+├── ietf_l2vpn_oper_data.json            # L2VPN Operational Data
+├── ietf_l3vpn_config.json               # L3VPN Service Config
+├── ietf_l2vpn_config.json               # L2VPN Service Config
+├── cisco_sr_te_cfp_7_1_0.json           # Cisco SR-TE Policy Config
+├── cisco_cs_srte_config.json            # Cisco Circuit-Style SR-TE Config
+├── ietf_te_7_1_0.json                   # IETF TE (RSVP-TE) Service Config
+├── sh_historical_data.json              # Service Health Historical Data
+├── sh_assurance_graph.json              # Service Health Assurance Graph
+├── sh_probe_manager.json                # Service Health Probe Manager
+├── coe_performance_metrics.json         # COE Performance Metrics
+├── coe_rsvp_te_lsp_details.json         # COE RSVP-TE LSP Details
+├── coe_rsvp_te_tunnel_ops.yaml          # COE RSVP-TE Tunnel Operations
+├── coe_sr_policy_details.json           # COE SR Policy Details
+├── coe_sr_policy_ops.yaml               # COE SR Policy Operations
+├── coe_topology_l3_l2.json              # COE Layer 3 & L2 Topology Details
+├── coe_npm_metrics.json                 # COE NPM Service APIs
+├── coe_optimization_engine.yaml         # COE Optimization Engine Operations
+└── ... (5 more: L3/L2 route policy, network slice, NSO connector, FP deployment)
 ```
 
 ---
@@ -584,4 +683,21 @@ The Event Correlator automatically starts the CNC SSE subscriber on startup. Onc
 | `WORKFLOW.md` | Ticket lifecycle and IO Agent integration |
 | `callrecording_vs_code_gap.md` | 14 gaps found + fixed from 2026-03-05 call |
 | `recording.md` | Full transcript of CNC Supports call (2026-03-05) |
+| `from_ppt_reference.md` | PPT reference gap analysis + full CNC API inventory |
 | `architecture_and_design.md` | High-level architecture overview |
+| `api_specs/` | 24 downloaded OpenAPI spec files (Cisco DevNet CNC 7.1) |
+
+---
+
+## CNC API Coverage Summary
+
+Total APIs implemented across all agents (as of 2026-03-06):
+
+| Agent | APIs Implemented | Source Spec |
+|-------|-----------------|-------------|
+| service_impact | Service Inventory (7 RPCs) + L3VPN oper (3) + L2VPN oper (2) + L3VPN config (1) = **13** | `cat_inventory_rpc`, `ietf_l3/l2vpn_oper_data`, `ietf_l3vpn_config` |
+| tunnel_provisioning | SR-TE Config CRUD (5) + COE RSVP-TE ops (5) + COE SR policy ops (5) = **15** | `cisco_sr_te_cfp`, `coe_rsvp_te_tunnel_ops`, `coe_sr_policy_ops` |
+| restoration_monitor | Assurance Graph (3) + Historical Data (6) + Probe Manager (2) = **11** | `sh_assurance_graph`, `sh_historical_data`, `sh_probe_manager` |
+| traffic_analytics | Performance Metrics (3) + COE Operations (5) + NPM (1) = **9** | `coe_performance_metrics`, `coe_optimization_engine`, `coe_npm_metrics` |
+| path_computation | IETF Topology (4) + RSVP-TE LSP (2) + SR Policy Details (2) + legacy IGP (3) = **11** | `coe_topology_l3_l2`, `coe_rsvp_te_lsp_details`, `coe_sr_policy_details` |
+| **Total** | **~59 API operations** | **24 spec files** |
