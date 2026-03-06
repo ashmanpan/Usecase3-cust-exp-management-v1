@@ -1,0 +1,1262 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "ietf-network-slice-service",
+    "description" : "This module defines a model for the IETF Network Slice service.\n\n   Copyright (c) 2022 IETF Trust and the persons identified as\n   authors of the code.  All rights reserved.\n\n   Redistribution and use in source and binary forms, with or\n   without modification, is permitted pursuant to, and subject\n   to the license terms contained in, the Revised BSD License\n   set forth in Section 4.c of the IETF Trust's Legal Provisions\n   Relating to IETF Documents\n   (https://trustee.ietf.org/license-info).\n\nThis version of this YANG module is part of RFC XXXX; see the\nRFC itself for full legal notices.",
+    "termsOfService": "http://www.cisco.com/web/siteassets/legal/terms_condition.html",
+    "contact" : {
+      "name" : "Cisco Systems",
+      "url" : "https://www.cisco.com",
+      "email" : "support@cisco.com"
+    },
+    "license" : {
+      "name" : "Cisco Software License Agreement",
+      "url" : "http://www.cisco.com/public/sw-license-agreement.html"
+    },
+    "version" : "7.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://{cnc-host}:{cnc-port}/crosswork/proxy/nso/restconf",
+      "variables": {
+        "cnc-host": {
+          "default": "127.0.0.1",
+          "description": "host name or ip address of the target CNC Cluster"
+        },
+        "cnc-port": {
+          "default": "30603",
+          "description": "port number of the target CNC Cluster"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags" : [ {
+    "name" : "data",
+    "description" : "data resources"
+  } ],
+  "paths" : {
+    "/data/ietf-network-slice-service:network-slice-services/slo-sle-templates/slo-sle-template={slo-sle-template-id}" : {
+      "get" : {
+        "tags" : [ "data" ],
+        "summary" : "SLO and SLE template.",
+        "description" : "SLO and SLE template",
+        "operationId" : "data_ietf_network_slice_service_network_slice_services_slo_sle_templates_slo_sle_template_slo_sle_template_id_get",
+        "parameters" : [ {
+          "name" : "slo-sle-template-id",
+          "in" : "path",
+          "description" : "Identification of the Service Level Objective (SLO)\nand Service Level Expectation (SLE) template to be used.\nLocal administration meaning.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "content",
+          "in" : "query",
+          "description" : "controlling descendant nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "config",
+            "enum" : [ "config", "nonconfig", "all" ]
+          }
+        }, {
+          "name" : "depth",
+          "in" : "query",
+          "description" : "limit the depth of nodes in response",
+          "schema" : {
+            "type" : "integer",
+            "format" : "uint16"
+          }
+        }, {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "optionally identify specific data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "xpath expression to filter data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "with-defaults",
+          "in" : "query",
+          "description" : "controlling default values in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "report-all",
+            "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List for SLO and SLE template identifiers.",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_ietf-network-slice-service_network-slice-services_slo-sle-templates_slo-sle-template_slo-sle-template-id"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "data" ],
+        "summary" : "SLO and SLE template.",
+        "description" : "SLO and SLE template.",
+        "operationId" : "data_ietf_network_slice_service_network_slice_services_slo_sle_templates_slo_sle_template_slo_sle_template_id_put",
+        "parameters" : [ {
+          "name" : "slo-sle-template-id",
+          "in" : "path",
+          "description" : "Identification of the Service Level Objective (SLO)\nand Service Level Expectation (SLE) template to be used.\nLocal administration meaning.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "insert",
+          "in" : "query",
+          "description" : "controlling the order when adding new list elements",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "first",
+            "enum" : [ "first", "last", "before", "after" ]
+          }
+        }, {
+          "name" : "point",
+          "in" : "query",
+          "description" : "used to specify the insertion point",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "List for SLO and SLE template identifiers.",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_ietf-network-slice-service_network-slice-services_slo-sle-templates_slo-sle-template_slo-sle-template-id"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "slo-sle-template created or replaced",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "slo-sle-template"
+      },
+      "delete" : {
+        "tags" : [ "data" ],
+        "summary" : "SLO and SLE template.",
+        "description" : "SLO and SLE template.",
+        "operationId" : "data_ietf_network_slice_service_network_slice_services_slo_sle_templates_slo_sle_template_slo_sle_template_id_delete",
+        "parameters" : [ {
+          "name" : "slo-sle-template-id",
+          "in" : "path",
+          "description" : "Identification of the Service Level Objective (SLO)\nand Service Level Expectation (SLE) template to be used.\nLocal administration meaning.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "data" ],
+        "summary" : "SLO and SLE template.",
+        "description" : "SLO and SLE template.",
+        "operationId" : "data_ietf_network_slice_service_network_slice_services_slo_sle_templates_slo_sle_template_slo_sle_template_id_patch",
+        "parameters" : [ {
+          "name" : "slo-sle-template-id",
+          "in" : "path",
+          "description" : "Identification of the Service Level Objective (SLO)\nand Service Level Expectation (SLE) template to be used.\nLocal administration meaning.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "SLO and SLE template.",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_ietf-network-slice-service_network-slice-services_slo-sle-templates_slo-sle-template_slo-sle-template-id"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "list slo-sle-template updated",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "slo-sle-template"
+      }
+    },
+    "/data/ietf-network-slice-service:network-slice-services/slice-service={slice-service-service-id}" : {
+      "get" : {
+        "tags" : [ "data" ],
+        "summary" : "A slice service identified by a service-id.",
+        "description" : "A slice service is identified by a service-id.",
+        "operationId" : "data_ietf_network_slice_service_network_slice_services_slice_service_slice_service_service_id_get",
+        "parameters" : [ {
+          "name" : "slice-service-service-id",
+          "in" : "path",
+          "description" : "A unique slice service identifier.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "content",
+          "in" : "query",
+          "description" : "controlling descendant nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "config",
+            "enum" : [ "config", "nonconfig", "all" ]
+          }
+        }, {
+          "name" : "depth",
+          "in" : "query",
+          "description" : "limit the depth of nodes in response",
+          "schema" : {
+            "type" : "integer",
+            "format" : "uint16"
+          }
+        }, {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "optionally identify specific data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "xpath expression to filter data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "with-defaults",
+          "in" : "query",
+          "description" : "controlling default values in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "report-all",
+            "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A slice service is identified by a service-id.",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_ietf-network-slice-service_network-slice-services_slice-service_slice-service-service-id"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "data" ],
+        "summary" : "A slice service identified by a service-id.",
+        "description" : "A slice service is identified by a service-id.",
+        "operationId" : "data_ietf_network_slice_service_network_slice_services_slice_service_slice_service_service_id_put",
+        "parameters" : [ {
+          "name" : "slice-service-service-id",
+          "in" : "path",
+          "description" : "A unique slice service identifier.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "insert",
+          "in" : "query",
+          "description" : "controlling the order when adding new list elements",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "first",
+            "enum" : [ "first", "last", "before", "after" ]
+          }
+        }, {
+          "name" : "point",
+          "in" : "query",
+          "description" : "used to specify the insertion point",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "A slice service identified by a service-id.",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_ietf-network-slice-service_network-slice-services_slice-service_slice-service-service-id"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "slice-service created or replaced",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "slice-service"
+      },
+      "delete" : {
+        "tags" : [ "data" ],
+        "summary" : "A slice service identified by a service-id.",
+        "description" : "A slice service is identified by a service-id.",
+        "operationId" : "data_ietf_network_slice_service_network_slice_services_slice_service_slice_service_service_id_delete",
+        "parameters" : [ {
+          "name" : "slice-service-service-id",
+          "in" : "path",
+          "description" : "A unique slice service identifier.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "data" ],
+        "summary" : "A slice service identified by a service-id.",
+        "description" : "A slice service is identified by a service-id.",
+        "operationId" : "data_ietf_network_slice_service_network_slice_services_slice_service_slice_service_service_id_patch",
+        "parameters" : [ {
+          "name" : "slice-service-service-id",
+          "in" : "path",
+          "description" : "A unique slice service identifier.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "A slice service identified by a service-id.",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_ietf-network-slice-service_network-slice-services_slice-service_slice-service-service-id"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "slice-service updated",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "slice-service"
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "data_ietf-network-slice-service_network-slice-services_slo-sle-templates_slo-sle-template_slo-sle-template-id" : {
+        "type" : "object",
+        "properties" : {
+          "ietf-network-slice-service:slo-sle-template" : {
+            "type" : "array",
+            "description" : "List for SLO and SLE template identifiers. (list)",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "template-description" : {
+                  "type" : "string",
+                  "description" : "Description of the SLO and SLE policy template. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "id" : {
+                  "type" : "string",
+                  "description" : "Identification of the Service Level Objective (SLO)\nand Service Level Expectation (SLE) template to be used.\nLocal administration meaning. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                }
+              }
+            },
+            "x-yang" : {
+              "type" : "list"
+            }
+          }
+        }
+      },
+      "data_ietf-network-slice-service_network-slice-services_slice-service_slice-service-service-id" : {
+        "type" : "object",
+        "properties" : {
+          "ietf-network-slice-service:slice-service" : {
+            "type" : "array",
+            "description" : "A slice service is identified by a service-id. (list)",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "sdps" : {
+                  "type" : "object",
+                  "properties" : {
+                    "sdp" : {
+                      "type" : "array",
+                      "description" : "List of SDPs in this slice service. (list)",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "node-id" : {
+                            "type" : "string",
+                            "description" : "Uniquely identifies an edge node of the SDP. (leaf)",
+                            "format" : "string",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "sdp-ip" : {
+                            "type" : "string",
+                            "description" : "The IP address of the SDP. (leaf)",
+                            "format" : "union",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "attachment-circuits" : {
+                            "type" : "object",
+                            "properties" : {
+                              "attachment-circuit" : {
+                                "type" : "array",
+                                "description" : "The IETF Network Slice service SDP attachment circuit\nrelated parameters. (list)",
+                                "items" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "ac-ip-address" : {
+                                      "type" : "string",
+                                      "description" : "The IP address of the attachment circuit. (leaf)",
+                                      "format" : "union",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    },
+                                    "ac-id" : {
+                                      "type" : "string",
+                                      "description" : "Uniquely identifier a attachment circuit. (leaf)",
+                                      "format" : "string",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    },
+                                    "ac-ip-prefix-length" : {
+                                      "type" : "integer",
+                                      "description" : "The subnet prefix length expressed in bits. (leaf)",
+                                      "format" : "byte",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    },
+                                    "ac-description" : {
+                                      "type" : "string",
+                                      "description" : "The attachment circuit description. (leaf)",
+                                      "format" : "string",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    },
+                                    "ac-tags" : {
+                                      "type" : "object",
+                                      "properties" : {
+                                        "ac-tags" : {
+                                          "type" : "array",
+                                          "description" : "The attachment circuit tags list. (list)",
+                                          "items" : {
+                                            "type" : "object",
+                                            "properties" : {
+                                              "ac-tag-type" : {
+                                                "type" : "string",
+                                                "description" : "The attachment circuit tag type. (leaf)",
+                                                "format" : "identityref",
+                                                "x-yang" : {
+                                                  "type" : "leaf"
+                                                }
+                                              },
+                                              "value" : {
+                                                "type" : "array",
+                                                "items" : {
+                                                  "type" : "string",
+                                                  "description" : "The attachment circuit tag value. (leaf-list)",
+                                                  "format" : "string"
+                                                },
+                                                "x-yang" : {
+                                                  "type" : "leaf-list"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "x-yang" : {
+                                            "type" : "list"
+                                          }
+                                        }
+                                      },
+                                      "description" : "Container for the attachment circuit tags. (non-presence)",
+                                      "x-yang" : {
+                                        "is_presence" : "false",
+                                        "type" : "container"
+                                      }
+                                    },
+                                    "sdp-peering" : {
+                                      "type" : "object",
+                                      "properties" : {
+                                        "protocol" : {
+                                          "type" : "array",
+                                          "description" : "List of the SDP peering protocol. (list)",
+                                          "items" : {
+                                            "type" : "object",
+                                            "properties" : {
+                                              "protocol-type" : {
+                                                "type" : "string",
+                                                "description" : "Identifies an entry in the list of SDP peering\nprotocol type. (leaf)",
+                                                "format" : "identityref",
+                                                "x-yang" : {
+                                                  "type" : "leaf"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "x-yang" : {
+                                            "type" : "list"
+                                          }
+                                        }
+                                      },
+                                      "description" : "Describes SDP peering attributes. (non-presence)",
+                                      "x-yang" : {
+                                        "is_presence" : "false",
+                                        "type" : "container"
+                                      }
+                                    },
+                                    "ac-tp-id" : {
+                                      "type" : "string",
+                                      "description" : "The termination port ID of the attachment circuit. (leaf)",
+                                      "format" : "string",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    }
+                                  }
+                                },
+                                "x-yang" : {
+                                  "type" : "list"
+                                }
+                              }
+                            },
+                            "description" : "List of attachment circuit. (non-presence)",
+                            "x-yang" : {
+                              "is_presence" : "false",
+                              "type" : "container"
+                            }
+                          },
+                          "sdp-peering" : {
+                            "type" : "object",
+                            "properties" : {
+                              "protocol" : {
+                                "type" : "array",
+                                "description" : "List of the SDP peering protocol. (list)",
+                                "items" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "protocol-type" : {
+                                      "type" : "string",
+                                      "description" : "Identifies an entry in the list of SDP peering\nprotocol type. (leaf)",
+                                      "format" : "identityref",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    }
+                                  }
+                                },
+                                "x-yang" : {
+                                  "type" : "list"
+                                }
+                              }
+                            },
+                            "description" : "Describes SDP peering attributes. (non-presence)",
+                            "x-yang" : {
+                              "is_presence" : "false",
+                              "type" : "container"
+                            }
+                          },
+                          "service-match-criteria" : {
+                            "type" : "object",
+                            "properties" : {
+                              "match-criterion" : {
+                                "type" : "array",
+                                "description" : "List of the slice service traffic match criteria. (list)",
+                                "items" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "index" : {
+                                      "type" : "integer",
+                                      "description" : "The entry index. (leaf)",
+                                      "format" : "uint32",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    },
+                                    "target-connection-group-id" : {
+                                      "type" : "string",
+                                      "description" : "Reference to the slice service connection group. (leaf)",
+                                      "format" : "leafref",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    },
+                                    "connection-group-sdp-role" : {
+                                      "type" : "string",
+                                      "description" : "Indicates the role in the connection group when\na slice service has multiple multipoint-to-multipoint\nconnection groups, e.g., hub-spoke. (leaf)",
+                                      "format" : "identityref",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    }
+                                  }
+                                },
+                                "x-yang" : {
+                                  "type" : "list"
+                                }
+                              }
+                            },
+                            "description" : "Describes the slice service match criteria. (non-presence)",
+                            "x-yang" : {
+                              "is_presence" : "false",
+                              "type" : "container"
+                            }
+                          },
+                          "location" : {
+                            "type" : "object",
+                            "properties" : {
+                              "altitude" : {
+                                "type" : "string",
+                                "description" : "Distance above the sea level. (leaf)",
+                                "format" : "int64",
+                                "x-yang" : {
+                                  "type" : "leaf"
+                                }
+                              },
+                              "latitude" : {
+                                "type" : "number",
+                                "description" : "Relative position north or south on the Earth's surface. (leaf)",
+                                "format" : "double",
+                                "x-yang" : {
+                                  "type" : "leaf"
+                                }
+                              },
+                              "longitude" : {
+                                "type" : "number",
+                                "description" : "Angular distance east or west on the Earth's surface. (leaf)",
+                                "format" : "double",
+                                "x-yang" : {
+                                  "type" : "leaf"
+                                }
+                              }
+                            },
+                            "description" : "A container containing a GPS location. (non-presence)",
+                            "x-yang" : {
+                              "is_presence" : "false",
+                              "type" : "container"
+                            }
+                          },
+                          "sdp-id" : {
+                            "type" : "string",
+                            "description" : "Unique identifier for the referred slice service SDP. (leaf)",
+                            "format" : "string",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "sdp-description" : {
+                            "type" : "string",
+                            "description" : "Give more description of the SDP. (leaf)",
+                            "format" : "string",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          }
+                        }
+                      },
+                      "x-yang" : {
+                        "type" : "list"
+                      }
+                    }
+                  },
+                  "description" : "Slice service SDPs. (non-presence)",
+                  "x-yang" : {
+                    "is_presence" : "false",
+                    "type" : "container"
+                  }
+                },
+                "service-id" : {
+                  "type" : "string",
+                  "description" : "A unique slice service identifier. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "service-tags" : {
+                  "type" : "object",
+                  "properties" : {
+                    "tag-type" : {
+                      "type" : "array",
+                      "description" : "(list)",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "tag-type" : {
+                            "type" : "string",
+                            "description" : "Slice service tag type. (leaf)",
+                            "format" : "identityref",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "value" : {
+                            "type" : "array",
+                            "items" : {
+                              "type" : "string",
+                              "description" : "The tag value (leaf-list)",
+                              "format" : "string"
+                            },
+                            "x-yang" : {
+                              "type" : "leaf-list"
+                            }
+                          }
+                        }
+                      },
+                      "x-yang" : {
+                        "type" : "list"
+                      }
+                    },
+                    "tag-opaque" : {
+                      "type" : "array",
+                      "description" : "(list)",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "tag-name" : {
+                            "type" : "string",
+                            "description" : "The opaque tag name (leaf)",
+                            "format" : "string",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "value" : {
+                            "type" : "array",
+                            "items" : {
+                              "type" : "string",
+                              "description" : "The opaque tag value (leaf-list)",
+                              "format" : "string"
+                            },
+                            "x-yang" : {
+                              "type" : "leaf-list"
+                            }
+                          }
+                        }
+                      },
+                      "x-yang" : {
+                        "type" : "list"
+                      }
+                    }
+                  },
+                  "description" : "Container for the list of service tags. (non-presence)",
+                  "x-yang" : {
+                    "is_presence" : "false",
+                    "type" : "container"
+                  }
+                },
+                "service-description" : {
+                  "type" : "string",
+                  "description" : "Textual description of the slice service. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "slo-sle-template" : {
+                  "type" : "string",
+                  "description" : "Standard SLO and SLE template to be used. (leaf)",
+                  "format" : "leafref",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "status" : {
+                  "type" : "object",
+                  "properties" : {
+                    "oper-status" : {
+                      "type" : "object",
+                      "properties" : {
+                        "last-change" : {
+                          "type" : "string",
+                          "description" : "Indicates the actual date and time of the service status\nchange. (leaf)",
+                          "format" : "string",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "status" : {
+                          "type" : "string",
+                          "description" : "Operational status. (leaf)",
+                          "format" : "identityref",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        }
+                      },
+                      "description" : "Operational service status. (non-presence)",
+                      "x-yang" : {
+                        "is_presence" : "false",
+                        "type" : "container"
+                      }
+                    }
+                  },
+                  "description" : "Service status. (non-presence)",
+                  "x-yang" : {
+                    "is_presence" : "false",
+                    "type" : "container"
+                  }
+                },
+                "connection-groups" : {
+                  "type" : "object",
+                  "properties" : {
+                    "connection-group" : {
+                      "type" : "array",
+                      "description" : "List of connection groups. (list)",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "connection-group-id" : {
+                            "type" : "string",
+                            "description" : "The connection group identifier. (leaf)",
+                            "format" : "string",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "slo-sle-template" : {
+                            "type" : "string",
+                            "description" : "Standard SLO and SLE template to be used. (leaf)",
+                            "format" : "leafref",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "connectivity-type" : {
+                            "type" : "string",
+                            "description" : "Connection group connectivity type. (leaf)",
+                            "format" : "identityref",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          }
+                        }
+                      },
+                      "x-yang" : {
+                        "type" : "list"
+                      }
+                    }
+                  },
+                  "description" : "Contains connections group. (non-presence)",
+                  "x-yang" : {
+                    "is_presence" : "false",
+                    "type" : "container"
+                  }
+                }
+              }
+            },
+            "x-yang" : {
+              "type" : "list"
+            }
+          }
+        }
+      }
+    },
+    "responses" : {
+      "200" : {
+        "description" : "OK",
+        "content" : { }
+      },
+      "201" : {
+        "description" : "Created",
+        "content" : { }
+      },
+      "400" : {
+        "description" : "Bad Request",
+        "content" : { }
+      },
+      "401" : {
+        "description" : "Unauthorized",
+        "content" : { }
+      },
+      "204" : {
+        "description" : "No Content",
+        "content" : { }
+      },
+      "404" : {
+        "description" : "Not Found",
+        "content" : { }
+      },
+      "405" : {
+        "description" : "Method Not Allowed",
+        "content" : { }
+      },
+      "409" : {
+        "description" : "Conflict",
+        "content" : { }
+      }
+    },
+    "parameters" : {
+      "fields" : {
+        "name" : "fields",
+        "in" : "query",
+        "description" : "optionally identify specific data nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "insert" : {
+        "name" : "insert",
+        "in" : "query",
+        "description" : "controlling the order when adding new list elements",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "first",
+          "enum" : [ "first", "last", "before", "after" ]
+        }
+      },
+      "content" : {
+        "name" : "content",
+        "in" : "query",
+        "description" : "controlling descendant nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "config",
+          "enum" : [ "config", "nonconfig", "all" ]
+        }
+      },
+      "point" : {
+        "name" : "point",
+        "in" : "query",
+        "description" : "used to specify the insertion point",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "with-defaults" : {
+        "name" : "with-defaults",
+        "in" : "query",
+        "description" : "controlling default values in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "report-all",
+          "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+        }
+      },
+      "slice-service-service-id" : {
+        "name" : "slice-service-service-id",
+        "in" : "path",
+        "description" : "A unique slice service identifier.",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "filter" : {
+        "name" : "filter",
+        "in" : "query",
+        "description" : "xpath expression to filter data nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "slo-sle-template-id" : {
+        "name" : "slo-sle-template-id",
+        "in" : "path",
+        "description" : "Identification of the Service Level Objective (SLO)\nand Service Level Expectation (SLE) template to be used.\nLocal administration meaning.",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "depth" : {
+        "name" : "depth",
+        "in" : "query",
+        "description" : "limit the depth of nodes in response",
+        "schema" : {
+          "type" : "integer",
+          "format" : "uint16"
+        }
+      }
+    },
+    "requestBodies" : {
+      "data_ietf-network-slice-service_network-slice-services_slo-sle-templates_slo-sle-template_slo-sle-template-id" : {
+        "description" : "List for SLO and SLE template identifiers.",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/data_ietf-network-slice-service_network-slice-services_slo-sle-templates_slo-sle-template_slo-sle-template-id"
+            }
+          }
+        },
+        "required" : true
+      },
+      "data_ietf-network-slice-service_network-slice-services_slice-service_slice-service-service-id" : {
+        "description" : "A slice service is identified by a service-id.",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/data_ietf-network-slice-service_network-slice-services_slice-service_slice-service-service-id"
+            }
+          }
+        },
+        "required" : true
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "x-original-swagger-version" : "2.0"
+}

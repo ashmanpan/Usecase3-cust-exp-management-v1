@@ -1,0 +1,663 @@
+---
+swagger: "2.0"
+info:
+  description: "This API provides operations for managing RSVP-TE tunnels, including creation, modification, deletion, and dry-run simulations."
+  version: "7.1.0"
+  title: "Cisco Crosswork RSVP-TE Tunnel Operations API"
+  contact:
+    name: API Support
+    url: https://www.cisco.com/support
+    email: support@cisco.com
+  license:
+    name: Cisco Software License Agreement
+    url: http://www.cisco.com/public/sw-license-agreement.html
+host: "localhost:30603"
+basePath: "/crosswork/nbi/optimization/v3/restconf"
+consumes:
+- "application/yang-data+json"
+produces:
+- "application/yang-data+json"
+securityDefinitions:
+  api_key:
+    description: "Authentication: Bearer $JWT"
+    type: apiKey
+    name: api_key
+    in: header
+paths:
+  /operations/cisco-crosswork-optimization-engine-rsvp-te-tunnel-operations:rsvp-te-datalist-oper:
+    post:
+      operationId: "rsvpTeDatalistOper"
+      tags:
+      - "cisco-crosswork-optimization-engine-rsvp-te-tunnel-operations"
+      summary: "Operate on RSVP-TE tunnel data list"
+      description: "Performs operations on the RSVP-TE tunnel data list, including retrieval and updates."
+      parameters:
+      - in: "body"
+        name: "rsvp.te.tunnel.operations.rsvptedatalistoper.Input.body-param"
+        description: "Input parameters for RSVP-TE datalist operation."
+        required: false
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/rsvp.te.tunnel.operations.rsvptedatalistoper.Input"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/rsvp.te.tunnel.operations.rsvptedatalistoper.Output"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-rsvp-te-tunnel-operations:rsvp-te-tunnel-create:
+    post:
+      operationId: "rsvpTeTunnelCreate"
+      tags:
+      - "cisco-crosswork-optimization-engine-rsvp-te-tunnel-operations"
+      summary: "Create an RSVP-TE tunnel"
+      description: "Creates a new RSVP-TE tunnel with the specified details."
+      parameters:
+      - in: "body"
+        name: "rsvp.te.tunnel.common.RsvpTeTunnelDetailList.body-param"
+        description: "Input parameters for creating an RSVP-TE tunnel."
+        required: false
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelDetailList"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelResultList"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-rsvp-te-tunnel-operations:rsvp-te-tunnel-delete:
+    post:
+      operationId: "rsvpTeTunnelDelete"
+      tags:
+      - "cisco-crosswork-optimization-engine-rsvp-te-tunnel-operations"
+      summary: "Delete an RSVP-TE tunnel"
+      description: "Deletes an existing RSVP-TE tunnel based on the provided key details."
+      parameters:
+      - in: "body"
+        name: "rsvp.te.tunnel.common.RsvpTeTunnelKeyList.body-param"
+        description: "Input parameters for deleting an RSVP-TE tunnel."
+        required: false
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelKeyList"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelResultList"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-rsvp-te-tunnel-operations:rsvp-te-tunnel-dryrun:
+    post:
+      operationId: "rsvpTeTunnelDryrun"
+      tags:
+      - "cisco-crosswork-optimization-engine-rsvp-te-tunnel-operations"
+      summary: "Perform dry run for RSVP-TE tunnel"
+      description: "Simulates the creation or modification of an RSVP-TE tunnel without applying changes."
+      parameters:
+      - in: "body"
+        name: "rsvp.te.tunnel.common.RsvpTeTunnelDryrunInput.body-param"
+        description: "Input parameters for performing a dry run on an RSVP-TE tunnel."
+        required: false
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelDryrunInput"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelDryrunResult"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-rsvp-te-tunnel-operations:rsvp-te-tunnel-modify:
+    post:
+      operationId: "rsvpTeTunnelModify"
+      tags:
+      - "cisco-crosswork-optimization-engine-rsvp-te-tunnel-operations"
+      summary: "Modify an RSVP-TE tunnel"
+      description: "Modifies the configuration of an existing RSVP-TE tunnel."
+      parameters:
+      - in: "body"
+        name: "rsvp.te.tunnel.common.RsvpTeTunnelDetailList.body-param"
+        description: "Input parameters for modifying an RSVP-TE tunnel."
+        required: false
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelDetailList"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelResultList"
+        "204":
+          description: "No response"
+definitions:
+  common.ActionEnumeration:
+    type: "string"
+    enum:
+    - "GET"
+    - "SAVE"
+    - "DELETE"
+    - "RESPONSE"
+    - "SYNC_START"
+    - "SYNC_DONE"
+  common.DeploymentStatusEnumeration:
+    type: "string"
+    enum:
+    - "NOT_SET"
+    - "INITIATED"
+    - "ACTIVE"
+    - "FAILED"
+  common.DisjointType:
+    type: "string"
+    enum:
+    - "UNRECOGNIZED_TYPE"
+    - "LINK"
+    - "NODE"
+    - "SRLG"
+    - "SRLGNODE4"
+  common.OeConfigdbCommonInfo:
+    type: "object"
+    properties:
+      disjoint-type:
+        description: "Disjoint type."
+        $ref: "#/definitions/common.DisjointType"
+      binding-sid:
+        type: "integer"
+        format: "int64"
+        description: "binding sid."
+      include-all:
+        type: "integer"
+        format: "int64"
+        description: "Include all."
+      description:
+        type: "string"
+        description: "Policy description"
+      bandwidth-mbps:
+        type: "integer"
+        format: "int64"
+        description: "Bandwidth percentage."
+      optimization-objective:
+        description: "Optimization-objective."
+        $ref: "#/definitions/common.OptimizationObjective"
+      association-group:
+        type: "integer"
+        format: "int64"
+        description: "AssociationGroup."
+      include-any:
+        type: "integer"
+        format: "int64"
+        description: "Include any."
+      protected:
+        type: "boolean"
+        description: "Path is protected."
+      profile_id:
+        type: "integer"
+        format: "int64"
+        description: "Profile Id."
+      deployment-status:
+        description: "Deployment status."
+        $ref: "#/definitions/common.DeploymentStatusEnumeration"
+      exclude-any:
+        type: "integer"
+        format: "int64"
+        description: "Exclude any."
+      association-subgroup:
+        type: "integer"
+        format: "int64"
+        description: "AssociationSubGroup."
+      source-app-id:
+        type: "string"
+        description: "Source applicatoin id."
+    description: "SR Policy properties"
+  common.OptimizationObjective:
+    type: "string"
+    enum:
+    - "igp-metric"
+    - "te-metric"
+    - "delay"
+    - "hop-count"
+  common.PathType:
+    type: "string"
+    enum:
+    - "EXPLICIT"
+    - "DYNAMIC"
+    - "BW_ON_DEMAND"
+  common.RsvpDatalistInfo:
+    type: "object"
+    properties:
+      rsvp-datalist:
+        type: "array"
+        items:
+          $ref: "#/definitions/common.rsvpdatalistinfo.RsvpDatalist"
+    description: "RSVP datalist properties"
+  common.StateEnumeration:
+    type: "string"
+    enum:
+    - "success"
+    - "failure"
+    - "degraded"
+  common.p2mpdatalistinfo.P2mpDatalist:
+    allOf:
+    - $ref: "#/definitions/common.OeConfigdbCommonInfo"
+    - type: "object"
+      properties:
+        name:
+          type: "string"
+          description: "Name of p2mp policy."
+        root-node:
+          type: "string"
+          description: "String of root nodes."
+        lfa-frr:
+          type: "boolean"
+          description: "LFA FRR enabled or not."
+        leaf-nodes:
+          type: "string"
+          description: "String of leaf nodes."
+        treesid-label:
+          type: "integer"
+          format: "int64"
+          description: "Label of Tree Sid."
+  common.rsvpdatalistinfo.RsvpDatalist:
+    allOf:
+    - $ref: "#/definitions/common.OeConfigdbCommonInfo"
+    - type: "object"
+      properties:
+        head-end:
+          type: "string"
+          description: "Policy head end IP address string or host name"
+        end-point:
+          type: "string"
+          description: "Policy end point IP address or host name"
+        path-name:
+          type: "string"
+          description: "Path name"
+        frr-enabled:
+          type: "boolean"
+          description: "FRR enabled or not."
+        signaled-bandwidth:
+          type: "integer"
+          format: "int32"
+          description: "Signaled Bandwidth."
+        setup-priority:
+          type: "integer"
+          format: "int64"
+          description: "Setup Priority."
+        hold-priority:
+          type: "integer"
+          format: "int64"
+          description: "Hold Priority."
+        tunnel-path-type:
+          description: "Tunnel path type."
+          $ref: "#/definitions/common.PathType"
+  common.srpolicydatalistinfo.SrPolicyDatalist:
+    allOf:
+    - $ref: "#/definitions/common.OeConfigdbCommonInfo"
+    - type: "object"
+      properties:
+        policy-path-type:
+          description: "Policy path type."
+          $ref: "#/definitions/common.PathType"
+        head-end:
+          type: "string"
+          description: "Policy head end IP address string or host name"
+        sid-algo:
+          type: "integer"
+          format: "int64"
+          description: "sid algo."
+        color:
+          type: "integer"
+          format: "int64"
+          description: "Color associated with the policy"
+        end-point:
+          type: "string"
+          description: "Policy end point IP address or host name"
+        path_name:
+          type: "string"
+          description: "Path name"
+  rsvp.te.tunnel.common.DisjointnessTypeEnumeration:
+    type: "string"
+    enum:
+    - "node"
+    - "circuit"
+    - "srlg"
+    - "srlg-node"
+  rsvp.te.tunnel.common.FastReRoute:
+    type: "string"
+    enum:
+    - "enable"
+    - "disable"
+  rsvp.te.tunnel.common.HopType:
+    type: "string"
+    enum:
+    - "loose"
+    - "strict"
+  rsvp.te.tunnel.common.OptimizationObjectiveEnumeration:
+    type: "string"
+    enum:
+    - "igp-metric"
+    - "te-metric"
+    - "delay"
+  rsvp.te.tunnel.common.RsvpTeTunnelDetailList:
+    type: "object"
+    properties:
+      rsvp-te-tunnels:
+        type: "array"
+        items:
+          $ref: "#/definitions/rsvp.te.tunnel.common.rsvptetunneldetaillist.RsvpTeTunnels"
+  rsvp.te.tunnel.common.RsvpTeTunnelDryrunInput:
+    allOf:
+    - $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelPath"
+    - properties:
+        head-end:
+          type: "string"
+          description: "The IP address of the RSVP-TE tunnel source"
+        end-point:
+          type: "string"
+          description: "The IP address of the RSVP-TE tunnel destination"
+        signaled-bandwidth:
+          type: "integer"
+          format: "int32"
+          description: "The signaled bandwidth for the RSVP-TE tunnel"
+          default: 0
+  rsvp.te.tunnel.common.RsvpTeTunnelDryrunResult:
+    type: "object"
+    properties:
+      path-hops:
+        type: "array"
+        items:
+          $ref: "#/definitions/rsvp.te.tunnel.common.rsvptetunneldryrunresult.PathHops"
+      state:
+        description: "The result for the policy preview operation"
+        $ref: "#/definitions/rsvp.te.tunnel.common.StateEnumeration"
+      message:
+        type: "string"
+        description: "The details of state above, for failure or degraded"
+  rsvp.te.tunnel.common.RsvpTeTunnelEndPoints:
+    type: "object"
+    properties:
+      head-end:
+        type: "string"
+        description: "The IP address of the RSVP-TE tunnel source"
+      end-point:
+        type: "string"
+        description: "The IP address of the RSVP-TE tunnel destination"
+  rsvp.te.tunnel.common.RsvpTeTunnelKeyFields:
+    allOf:
+    - $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelEndPoints"
+    - type: "object"
+      properties:
+        path-name:
+          type: "string"
+          description: "The path name of the RSVP-TE tunnel"
+  rsvp.te.tunnel.common.RsvpTeTunnelKeyList:
+    type: "object"
+    properties:
+      rsvp-te-tunnels:
+        type: "array"
+        items:
+          $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelKeyFields"
+  rsvp.te.tunnel.common.RsvpTeTunnelPath:
+    type: "object"
+    properties:
+      rsvp-te-tunnel-path:
+        $ref: "#/definitions/rsvp.te.tunnel.common.rsvptetunnelpath.RsvpTeTunnelPath"
+  rsvp.te.tunnel.common.RsvpTeTunnelResultList:
+    type: "object"
+    properties:
+      results:
+        type: "array"
+        items:
+          $ref: "#/definitions/rsvp.te.tunnel.common.rsvptetunnelresultlist.Results"
+  rsvp.te.tunnel.common.StateEnumeration:
+    type: "string"
+    enum:
+    - "success"
+    - "failure"
+    - "degraded"
+  rsvp.te.tunnel.common.rsvptetunneldetaillist.RsvpTeTunnels:
+    allOf:
+    - $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelKeyFields"
+    - properties:
+        rsvp-te-tunnel-path:
+          $ref: "#/definitions/rsvp.te.tunnel.common.rsvptetunnelpath.RsvpTeTunnelPath"
+        head-end:
+          type: "string"
+          description: "The IP address of the RSVP-TE tunnel source"
+        end-point:
+          type: "string"
+          description: "The IP address of the RSVP-TE tunnel destination"
+        binding-label:
+          type: "integer"
+          format: "int64"
+          description: "The binding label for the RSVP-TE tunnel"
+        description:
+          type: "string"
+          description: "The description of the RSVP-TE tunnel"
+        setup-priority:
+          type: "integer"
+          format: "int64"
+          description: "Setup priority for the RSVP-TE tunnel"
+        signaled-bandwidth:
+          type: "integer"
+          format: "int32"
+          description: "The signaled bandwidth for the RSVP-TE tunnel"
+          default: 0
+        hold-priority:
+          type: "integer"
+          format: "int64"
+          description: "Hold priority for the RSVP-TE tunnel"
+        fast-re-route:
+          description: "Enable or disable fast re-route of the RSVP-TE tunnel"
+          $ref: "#/definitions/rsvp.te.tunnel.common.FastReRoute"
+  rsvp.te.tunnel.common.rsvptetunneldryrunresult.PathHops:
+    type: "object"
+    properties:
+      ip-address:
+        type: "string"
+        description: "The IP address of the hop"
+      step:
+        type: "integer"
+        format: "int64"
+        description: "The representation of the hop order in the path"
+  rsvp.te.tunnel.common.rsvptetunneldynamicpath.Affinities:
+    type: "object"
+    properties:
+      include-all:
+        type: "integer"
+        format: "int64"
+        description: "include-any affinity bits combined into an unsigned integer"
+      exclude-any:
+        type: "integer"
+        format: "int64"
+        description: "include-any affinity bits combined into an unsigned integer"
+      include-any:
+        type: "integer"
+        format: "int64"
+        description: "include-any affinity bits combined into an unsigned integer"
+  rsvp.te.tunnel.common.rsvptetunneldynamicpath.Disjointness:
+    type: "object"
+    properties:
+      association-group:
+        type: "integer"
+        format: "int64"
+        description: "Association group"
+      disjointness-type:
+        $ref: "#/definitions/rsvp.te.tunnel.common.DisjointnessTypeEnumeration"
+      association-sub-group:
+        type: "integer"
+        format: "int64"
+        description: "Association sub-group"
+  rsvp.te.tunnel.common.rsvptetunnelexplicitpath.Hops:
+    type: "object"
+    properties:
+      hop:
+        $ref: "#/definitions/rsvp.te.tunnel.common.rsvptetunnelexplicitpath.hops.Hop"
+      step:
+        type: "integer"
+        format: "int64"
+        description: "The representation of the hop order in the path"
+      hop-type:
+        description: "The type of hop, strict or loose"
+        $ref: "#/definitions/rsvp.te.tunnel.common.HopType"
+  rsvp.te.tunnel.common.rsvptetunnelexplicitpath.hops.Hop:
+    type: "object"
+    properties:
+      adjacency-address:
+        type: "string"
+        description: "The IPv4 adjacency address"
+        x-choice: "hop:adjacency-hop"
+      node-address:
+        type: "string"
+        description: "The IPv4 node address"
+        x-choice: "hop:node-hop"
+  rsvp.te.tunnel.common.rsvptetunnelpath.RsvpTeTunnelPath:
+    type: "object"
+    properties:
+      disjointness:
+        $ref: "#/definitions/rsvp.te.tunnel.common.rsvptetunneldynamicpath.Disjointness"
+        x-choice: "rsvp-te-tunnel-path:dynamic-path"
+      hops:
+        type: "array"
+        items:
+          $ref: "#/definitions/rsvp.te.tunnel.common.rsvptetunnelexplicitpath.Hops"
+        x-choice: "rsvp-te-tunnel-path:explicit-path"
+      optimization-objective:
+        description: "The objective to minimize, igp-metric, te-metric or delay"
+        $ref: "#/definitions/rsvp.te.tunnel.common.OptimizationObjectiveEnumeration"
+        x-choice: "rsvp-te-tunnel-path:dynamic-path"
+      affinities:
+        $ref: "#/definitions/rsvp.te.tunnel.common.rsvptetunneldynamicpath.Affinities"
+        x-choice: "rsvp-te-tunnel-path:dynamic-path"
+  rsvp.te.tunnel.common.rsvptetunnelresultlist.Results:
+    allOf:
+    - $ref: "#/definitions/rsvp.te.tunnel.common.RsvpTeTunnelKeyFields"
+    - properties:
+        head-end:
+          type: "string"
+          description: "The IP address of the RSVP-TE tunnel source"
+        end-point:
+          type: "string"
+          description: "The IP address of the RSVP-TE tunnel destination"
+        message:
+          type: "string"
+          description: "The details of state above, for failure and degraded"
+        state:
+          description: "The result for a RSVP-TE tunnel create, update or delete operation"
+          $ref: "#/definitions/rsvp.te.tunnel.common.StateEnumeration"
+  rsvp.te.tunnel.operations.rsvptedatalistoper.Input:
+    allOf:
+    - $ref: "#/definitions/common.RsvpDatalistInfo"
+    - properties:
+        not-pce-initiated:
+          type: "boolean"
+          description: "indicating whether this orphan list is not for lsps initiated\
+            \ by pce."
+        last-update-time:
+          type: "integer"
+          format: "int32"
+          description: "Last update time, timestamp in Unix Epoch. For datalist query"
+        offset:
+          type: "integer"
+          format: "int64"
+          description: "offset of the list (start from 0). if it's not 0 for GET,\
+            \ the list should start from offset, not from beginning"
+        action:
+          description: "Action type of this request"
+          $ref: "#/definitions/common.ActionEnumeration"
+        end-of-list:
+          type: "boolean"
+          description: "Whether this is the last pieceof the list"
+        application-id:
+          type: "string"
+          description: "Application id"
+        is-orphan:
+          type: "boolean"
+          description: "indicating whether this is an orphan list or not"
+        source-app-id:
+          type: "string"
+          description: "Filter based on source app id"
+  rsvp.te.tunnel.operations.rsvptedatalistoper.Output:
+    allOf:
+    - $ref: "#/definitions/common.RsvpDatalistInfo"
+    - properties:
+        not-pce-initiated:
+          type: "boolean"
+          description: "indicating whether this orphan list is not for lsps initiated\
+            \ by pce."
+        last-update-time:
+          type: "integer"
+          format: "int32"
+          description: "Last update time, timestamp in Unix Epoch. For datalist query"
+        offset:
+          type: "integer"
+          format: "int64"
+          description: "offset of the list (start from 0). if it's not 0 for GET,\
+            \ the list should start from offset, not from beginning"
+        action:
+          description: "Action type of this request"
+          $ref: "#/definitions/common.ActionEnumeration"
+        end-of-list:
+          type: "boolean"
+          description: "Whether this is the last pieceof the list"
+        application-id:
+          type: "string"
+          description: "Application id"
+        is-orphan:
+          type: "boolean"
+          description: "indicating whether this is an orphan list or not"
+        source-app-id:
+          type: "string"
+          description: "Filter based on source app id"
+        p2mp-datalist:
+          type: "array"
+          items:
+            $ref: "#/definitions/common.p2mpdatalistinfo.P2mpDatalist"
+        message:
+          type: "string"
+          description: "The details of state above, for failure or degraded"
+        state:
+          description: "The result for the policy datalist operation"
+          $ref: "#/definitions/common.StateEnumeration"
+        sr-policy-datalist:
+          type: "array"
+          items:
+            $ref: "#/definitions/common.srpolicydatalistinfo.SrPolicyDatalist"

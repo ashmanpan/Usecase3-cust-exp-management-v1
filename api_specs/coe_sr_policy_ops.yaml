@@ -1,0 +1,681 @@
+---
+swagger: "2.0"
+info:
+  description: "This API provides operations for managing Segment Routing (SR) policies, including creation, modification, deletion, and dry-run simulations."
+  version: "7.1.0"
+  title: "Cisco Crosswork SR Policy Operations API"
+  contact:
+    name: API Support
+    url: https://www.cisco.com/support
+    email: support@cisco.com
+  license:
+    name: Cisco Software License Agreement
+    url: http://www.cisco.com/public/sw-license-agreement.html
+host: "localhost:30603"
+basePath: "/crosswork/nbi/optimization/v3/restconf"
+consumes:
+- "application/yang-data+json"
+produces:
+- "application/yang-data+json"
+securityDefinitions:
+  api_key:
+    description: "Authentication: Bearer $JWT"
+    type: apiKey
+    name: api_key
+    in: header
+paths:
+  /operations/cisco-crosswork-optimization-engine-sr-policy-operations:sr-datalist-oper:
+    post:
+      operationId: "srDatalistOper"
+      tags:
+      - "cisco-crosswork-optimization-engine-sr-policy-operations"
+      summary: "Operate on SR policy data list"
+      description: "Performs operations on the SR policy data list, including retrieval and updates."
+      parameters:
+      - in: "body"
+        name: "sr.policy.operations.srdatalistoper.Input.body-param"
+        description: "Input parameters for SR policy data list operation."
+        required: false
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/sr.policy.operations.srdatalistoper.Input"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/sr.policy.operations.srdatalistoper.Output"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-sr-policy-operations:sr-policy-create:
+    post:
+      operationId: "srPolicyCreate"
+      tags:
+      - "cisco-crosswork-optimization-engine-sr-policy-operations"
+      summary: "Create an SR policy"
+      description: "Creates a new Segment Routing (SR) policy with the specified details."
+      parameters:
+      - in: "body"
+        name: "sr.policy.common.SrPolicyDetailList.body-param"
+        description: "Input parameters for creating an SR policy."
+        required: false
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/sr.policy.common.SrPolicyDetailList"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/sr.policy.common.SrPolicyResultList"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-sr-policy-operations:sr-policy-delete:
+    post:
+      operationId: "srPolicyDelete"
+      tags:
+      - "cisco-crosswork-optimization-engine-sr-policy-operations"
+      summary: "Delete an SR policy"
+      description: "Deletes an existing Segment Routing (SR) policy based on the provided key details."
+      parameters:
+      - in: "body"
+        name: "sr.policy.common.SrPolicyKeyList.body-param"
+        description: "Input parameters for deleting an SR policy."
+        required: false
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/sr.policy.common.SrPolicyKeyList"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/sr.policy.common.SrPolicyResultList"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-sr-policy-operations:sr-policy-dryrun:
+    post:
+      operationId: "srPolicyDryrun"
+      tags:
+      - "cisco-crosswork-optimization-engine-sr-policy-operations"
+      summary: "Perform dry run for SR policy"
+      description: "Simulates the creation or modification of an SR policy without applying changes."
+      parameters:
+      - in: "body"
+        name: "sr.policy.common.SrPolicyDryrunInput.body-param"
+        description: "Input parameters for performing a dry run on an SR policy."
+        required: false
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/sr.policy.common.SrPolicyDryrunInput"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/sr.policy.common.SrPolicyDryrunResult"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-sr-policy-operations:sr-policy-modify:
+    post:
+      operationId: "srPolicyModify"
+      tags:
+      - "cisco-crosswork-optimization-engine-sr-policy-operations"
+      summary: "Modify an SR policy"
+      description: "Modifies the configuration of an existing Segment Routing (SR) policy."
+      parameters:
+      - in: "body"
+        name: "sr.policy.common.SrPolicyDetailList.body-param"
+        description: "Input parameters for modifying an SR policy."
+        required: false
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/sr.policy.common.SrPolicyDetailList"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/sr.policy.common.SrPolicyResultList"
+        "204":
+          description: "No response"
+definitions:
+  common.ActionEnumeration:
+    type: "string"
+    enum:
+    - "GET"
+    - "SAVE"
+    - "DELETE"
+    - "RESPONSE"
+    - "SYNC_START"
+    - "SYNC_DONE"
+  common.DeploymentStatusEnumeration:
+    type: "string"
+    enum:
+    - "NOT_SET"
+    - "INITIATED"
+    - "ACTIVE"
+    - "FAILED"
+  common.DisjointType:
+    type: "string"
+    enum:
+    - "UNRECOGNIZED_TYPE"
+    - "LINK"
+    - "NODE"
+    - "SRLG"
+    - "SRLGNODE4"
+  common.OeConfigdbCommonInfo:
+    type: "object"
+    properties:
+      disjoint-type:
+        description: "Disjoint type."
+        $ref: "#/definitions/common.DisjointType"
+      binding-sid:
+        type: "integer"
+        format: "int64"
+        description: "binding sid."
+      include-all:
+        type: "integer"
+        format: "int64"
+        description: "Include all."
+      description:
+        type: "string"
+        description: "Policy description"
+      bandwidth-mbps:
+        type: "integer"
+        format: "int64"
+        description: "Bandwidth percentage."
+      optimization-objective:
+        description: "Optimization-objective."
+        $ref: "#/definitions/common.OptimizationObjective"
+      association-group:
+        type: "integer"
+        format: "int64"
+        description: "AssociationGroup."
+      include-any:
+        type: "integer"
+        format: "int64"
+        description: "Include any."
+      protected:
+        type: "boolean"
+        description: "Path is protected."
+      profile_id:
+        type: "integer"
+        format: "int64"
+        description: "Profile Id."
+      deployment-status:
+        description: "Deployment status."
+        $ref: "#/definitions/common.DeploymentStatusEnumeration"
+      exclude-any:
+        type: "integer"
+        format: "int64"
+        description: "Exclude any."
+      association-subgroup:
+        type: "integer"
+        format: "int64"
+        description: "AssociationSubGroup."
+      source-app-id:
+        type: "string"
+        description: "Source applicatoin id."
+    description: "SR Policy properties"
+  common.OeDatalistCommonInfo:
+    type: "object"
+    properties:
+      not-pce-initiated:
+        type: "boolean"
+        description: "indicating whether this orphan list is not for lsps initiated\
+          \ by pce."
+      last-update-time:
+        type: "integer"
+        format: "int32"
+        description: "Last update time, timestamp in Unix Epoch. For datalist query"
+      offset:
+        type: "integer"
+        format: "int64"
+        description: "offset of the list (start from 0). if it's not 0 for GET, the\
+          \ list should start from offset, not from beginning"
+      action:
+        description: "Action type of this request"
+        $ref: "#/definitions/common.ActionEnumeration"
+      end-of-list:
+        type: "boolean"
+        description: "Whether this is the last pieceof the list"
+      application-id:
+        type: "string"
+        description: "Application id"
+      is-orphan:
+        type: "boolean"
+        description: "indicating whether this is an orphan list or not"
+      source-app-id:
+        type: "string"
+        description: "Filter based on source app id"
+  common.OptimizationObjective:
+    type: "string"
+    enum:
+    - "igp-metric"
+    - "te-metric"
+    - "delay"
+    - "hop-count"
+  common.PathType:
+    type: "string"
+    enum:
+    - "EXPLICIT"
+    - "DYNAMIC"
+    - "BW_ON_DEMAND"
+  common.StateEnumeration:
+    type: "string"
+    enum:
+    - "success"
+    - "failure"
+    - "degraded"
+  common.p2mpdatalistinfo.P2mpDatalist:
+    allOf:
+    - $ref: "#/definitions/common.OeConfigdbCommonInfo"
+    - type: "object"
+      properties:
+        name:
+          type: "string"
+          description: "Name of p2mp policy."
+        root-node:
+          type: "string"
+          description: "String of root nodes."
+        lfa-frr:
+          type: "boolean"
+          description: "LFA FRR enabled or not."
+        leaf-nodes:
+          type: "string"
+          description: "String of leaf nodes."
+        treesid-label:
+          type: "integer"
+          format: "int64"
+          description: "Label of Tree Sid."
+  common.rsvpdatalistinfo.RsvpDatalist:
+    allOf:
+    - $ref: "#/definitions/common.OeConfigdbCommonInfo"
+    - type: "object"
+      properties:
+        head-end:
+          type: "string"
+          description: "Policy head end IP address string or host name"
+        end-point:
+          type: "string"
+          description: "Policy end point IP address or host name"
+        path-name:
+          type: "string"
+          description: "Path name"
+        frr-enabled:
+          type: "boolean"
+          description: "FRR enabled or not."
+        signaled-bandwidth:
+          type: "integer"
+          format: "int32"
+          description: "Signaled Bandwidth."
+        setup-priority:
+          type: "integer"
+          format: "int64"
+          description: "Setup Priority."
+        hold-priority:
+          type: "integer"
+          format: "int64"
+          description: "Hold Priority."
+        tunnel-path-type:
+          description: "Tunnel path type."
+          $ref: "#/definitions/common.PathType"
+  common.srpolicydatalistinfo.SrPolicyDatalist:
+    allOf:
+    - $ref: "#/definitions/common.OeConfigdbCommonInfo"
+    - type: "object"
+      properties:
+        policy-path-type:
+          description: "Policy path type."
+          $ref: "#/definitions/common.PathType"
+        head-end:
+          type: "string"
+          description: "Policy head end IP address string or host name"
+        sid-algo:
+          type: "integer"
+          format: "int64"
+          description: "sid algo."
+        color:
+          type: "integer"
+          format: "int64"
+          description: "Color associated with the policy"
+        end-point:
+          type: "string"
+          description: "Policy end point IP address or host name"
+        path_name:
+          type: "string"
+          description: "Path name"
+  sr.policy.common.DisjointnessTypeEnumeration:
+    type: "string"
+    enum:
+    - "node"
+    - "circuit"
+    - "srlg"
+    - "srlg-node"
+  sr.policy.common.OptimizationObjective:
+    type: "string"
+    enum:
+    - "igp-metric"
+    - "te-metric"
+    - "delay"
+    - "hop-count"
+  sr.policy.common.SrPolicyDetailList:
+    type: "object"
+    properties:
+      sr-policies:
+        type: "array"
+        items:
+          $ref: "#/definitions/sr.policy.common.srpolicydetaillist.SrPolicies"
+  sr.policy.common.SrPolicyDryrunInput:
+    allOf:
+    - $ref: "#/definitions/sr.policy.common.SrPolicyEndPoints"
+    - properties:
+        sr-policy-path:
+          $ref: "#/definitions/sr.policy.common.srpolicypath.SrPolicyPath"
+  sr.policy.common.SrPolicyDryrunResult:
+    type: "object"
+    properties:
+      segment-list-hops:
+        type: "array"
+        items:
+          $ref: "#/definitions/sr.policy.common.srpolicydryrunresult.SegmentListHops"
+      state:
+        description: "The result for the policy preview operation"
+        $ref: "#/definitions/sr.policy.common.StateEnumeration"
+      message:
+        type: "string"
+        description: "The details of state above, for failure or degraded"
+      igp-route:
+        type: "array"
+        items:
+          $ref: "#/definitions/sr.policy.common.srpolicydryrunresult.IgpRoute"
+  sr.policy.common.SrPolicyEndPoints:
+    type: "object"
+    properties:
+      head-end:
+        type: "string"
+        description: "The IP address of the SR policy source"
+      end-point:
+        type: "string"
+        description: "The IP address of the SR policy destination"
+  sr.policy.common.SrPolicyKeyFields:
+    allOf:
+    - $ref: "#/definitions/sr.policy.common.SrPolicyEndPoints"
+    - type: "object"
+      properties:
+        color:
+          type: "integer"
+          format: "int64"
+          description: "The color for the SR policy"
+  sr.policy.common.SrPolicyKeyList:
+    type: "object"
+    properties:
+      sr-policies:
+        type: "array"
+        items:
+          $ref: "#/definitions/sr.policy.common.SrPolicyKeyFields"
+  sr.policy.common.SrPolicyResultList:
+    type: "object"
+    properties:
+      results:
+        type: "array"
+        items:
+          $ref: "#/definitions/sr.policy.common.srpolicyresultlist.Results"
+  sr.policy.common.StateEnumeration:
+    type: "string"
+    enum:
+    - "success"
+    - "failure"
+    - "degraded"
+  sr.policy.common.TypeEnumeration:
+    type: "string"
+    enum:
+    - "node-ipv4"
+    - "adjacency-ipv4"
+    - "node-ipv6"
+    - "adjacency-ipv6"
+    - "unknown"
+  sr.policy.common.srpolicydetaillist.SrPolicies:
+    allOf:
+    - $ref: "#/definitions/sr.policy.common.SrPolicyEndPoints"
+    - properties:
+        binding-sid:
+          type: "integer"
+          format: "int64"
+          description: "The binding SID for the SR policy"
+        path-name:
+          type: "string"
+          description: "The path name of the SR policy"
+        profile-id:
+          type: "integer"
+          format: "int64"
+          description: "The profile ID for the SR policy"
+        description:
+          type: "string"
+          description: "The description of the SR policy"
+        color:
+          type: "integer"
+          format: "int64"
+          description: "The color for the SR policy"
+        sr-policy-path:
+          $ref: "#/definitions/sr.policy.common.srpolicypath.SrPolicyPath"
+  sr.policy.common.srpolicydryrunresult.IgpRoute:
+    type: "object"
+    properties:
+      interface:
+        type: "string"
+        description: "The name of the interface"
+      node:
+        type: "string"
+        description: "The hostname of the source-node for the interface"
+  sr.policy.common.srpolicydryrunresult.SegmentListHops:
+    type: "object"
+    properties:
+      ip-address:
+        type: "string"
+        description: "The IP address of the hop"
+      step:
+        type: "integer"
+        format: "int64"
+        description: "The representation of the hop order in the path"
+      type:
+        description: "The type of the hop"
+        $ref: "#/definitions/sr.policy.common.TypeEnumeration"
+      sid:
+        type: "integer"
+        format: "int64"
+        description: "The segment identifier for the hop"
+  sr.policy.common.srpolicydynamicpath.Affinities:
+    type: "object"
+    properties:
+      include-all:
+        type: "integer"
+        format: "int64"
+        description: "include-any affinity bits combined into an unsigned integer"
+      exclude-any:
+        type: "integer"
+        format: "int64"
+        description: "include-any affinity bits combined into an unsigned integer"
+      include-any:
+        type: "integer"
+        format: "int64"
+        description: "include-any affinity bits combined into an unsigned integer"
+  sr.policy.common.srpolicydynamicpath.Disjointness:
+    type: "object"
+    properties:
+      association-group:
+        type: "integer"
+        format: "int64"
+        description: "Association group"
+      disjointness-type:
+        $ref: "#/definitions/sr.policy.common.DisjointnessTypeEnumeration"
+      association-sub-group:
+        type: "integer"
+        format: "int64"
+        description: "Association sub-group"
+  sr.policy.common.srpolicyexplicitpath.Hops:
+    type: "object"
+    properties:
+      hop:
+        $ref: "#/definitions/sr.policy.common.srpolicyexplicitpath.hops.Hop"
+      step:
+        type: "integer"
+        format: "int64"
+        description: "The representation of the hop order in the path"
+  sr.policy.common.srpolicyexplicitpath.hops.Hop:
+    type: "object"
+    properties:
+      adjacency-ipv6-address:
+        type: "string"
+        description: "The IPv6 adjacency address"
+        x-choice: "hop:adjacency-ipv6-hop"
+      adjacency-ipv4-sid:
+        type: "integer"
+        format: "int64"
+        description: "The IPv4 adjacency segment identifier"
+        x-choice: "hop:adjacency-ipv4-hop"
+      node-ipv6-address:
+        type: "string"
+        description: "The IPv6 node address"
+        x-choice: "hop:node-ipv6-hop"
+      node-ipv4-address:
+        type: "string"
+        description: "The IPv4 node address"
+        x-choice: "hop:node-ipv4-hop"
+      adjacency-ipv6-sid:
+        type: "integer"
+        format: "int64"
+        description: "The IPv6 adjacency segment identifier"
+        x-choice: "hop:adjacency-ipv6-hop"
+      adjacency-ipv4-address:
+        type: "string"
+        description: "The IPv4 adjacency address"
+        x-choice: "hop:adjacency-ipv4-hop"
+      node-ipv6-sid:
+        type: "integer"
+        format: "int64"
+        description: "The IPv6 node segment identifier"
+        x-choice: "hop:node-ipv6-hop"
+      node-ipv4-sid:
+        type: "integer"
+        format: "int64"
+        description: "The IPv4 node segment identifier"
+        x-choice: "hop:node-ipv4-hop"
+  sr.policy.common.srpolicypath.SrPolicyPath:
+    type: "object"
+    properties:
+      path-optimization-objective:
+        description: "The objective to minimize, igp-metric, te-metric or delay"
+        $ref: "#/definitions/sr.policy.common.OptimizationObjective"
+        x-choice: "sr-policy-path:dynamic-path"
+      disjointness:
+        $ref: "#/definitions/sr.policy.common.srpolicydynamicpath.Disjointness"
+        x-choice: "sr-policy-path:dynamic-path"
+      protected:
+        type: "boolean"
+        description: "Use protected adjacency SIDs in path computation, defaults to\
+          \ true"
+        x-choice: "sr-policy-path:dynamic-path"
+      bandwidth:
+        type: "integer"
+        format: "int32"
+        description: "The desired bandwidth for the SR policy"
+        x-choice: "sr-policy-path:bandwidth-path"
+      bw-path-optimization-objective:
+        description: "The objective to minimize, igp-metric, te-metric or delay"
+        $ref: "#/definitions/sr.policy.common.OptimizationObjective"
+        x-choice: "sr-policy-path:bandwidth-path"
+      affinities:
+        $ref: "#/definitions/sr.policy.common.srpolicydynamicpath.Affinities"
+        x-choice: "sr-policy-path:dynamic-path"
+      sid-algorithm:
+        type: "integer"
+        format: "int32"
+        description: "The flexalgo of SIDs in path computation"
+        x-choice: "sr-policy-path:dynamic-path"
+      hops:
+        type: "array"
+        items:
+          $ref: "#/definitions/sr.policy.common.srpolicyexplicitpath.Hops"
+        x-choice: "sr-policy-path:explicit-path"
+      bw-path-sid-algorithm:
+        type: "integer"
+        format: "int32"
+        description: "The flexalgo of SIDs in bandwidth path computation"
+        x-choice: "sr-policy-path:bandwidth-path"
+  sr.policy.common.srpolicyresultlist.Results:
+    allOf:
+    - $ref: "#/definitions/sr.policy.common.SrPolicyEndPoints"
+    - properties:
+        message:
+          type: "string"
+          description: "The details of state above, for failure and degraded"
+        state:
+          description: "The result for a policy create, update or delete operation"
+          $ref: "#/definitions/sr.policy.common.StateEnumeration"
+        color:
+          type: "integer"
+          format: "int64"
+          description: "The color for the SR policy"
+  sr.policy.operations.srdatalistoper.Input:
+    allOf:
+    - $ref: "#/definitions/common.OeDatalistCommonInfo"
+    - properties:
+        sr-policy-datalist:
+          type: "array"
+          items:
+            $ref: "#/definitions/common.srpolicydatalistinfo.SrPolicyDatalist"
+  sr.policy.operations.srdatalistoper.Output:
+    allOf:
+    - $ref: "#/definitions/common.OeDatalistCommonInfo"
+    - properties:
+        p2mp-datalist:
+          type: "array"
+          items:
+            $ref: "#/definitions/common.p2mpdatalistinfo.P2mpDatalist"
+        rsvp-datalist:
+          type: "array"
+          items:
+            $ref: "#/definitions/common.rsvpdatalistinfo.RsvpDatalist"
+        message:
+          type: "string"
+          description: "The details of state above, for failure or degraded"
+        state:
+          description: "The result for the policy datalist operation"
+          $ref: "#/definitions/common.StateEnumeration"
+        sr-policy-datalist:
+          type: "array"
+          items:
+            $ref: "#/definitions/common.srpolicydatalistinfo.SrPolicyDatalist"
+

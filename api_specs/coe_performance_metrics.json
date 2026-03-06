@@ -1,0 +1,893 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Performance Metrics",
+    "description": "This module defines a Data Model for reporting various performance metrics in Crosswork.\nThese statistics tend to be attributes that are constantly changing.\nFor this reason, they are not included in their respective topology models, as that would\nimply constant updates via notifications for all the relevant entities (eg. Links and SR Policies).\nThis model is provided as a way to query for these performance metrics as needed.\nThere's no mechanism to subscribe to these changes via notifications.",
+    "contact": {
+      "name": "Crosswork Team, Cisco",
+      "email": "support@cisco.com"
+    },
+    "license": {
+      "name": "Cisco Software License Agreement",
+      "url": "http://www.cisco.com/public/sw-license-agreement.html"
+    },
+    "version": "7.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://{cnc-host}:{cnc-port}/crosswork/nbi/topology/v3/restconf",
+      "variables": {
+        "cnc-host": {
+          "default": "127.0.0.1",
+          "description": "host name or ip address of the target CNC Cluster"
+        },
+        "cnc-port": {
+          "default": "30603",
+          "description": "port number of the target CNC Cluster"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name" : "Operational data",
+      "description" : "Operational data resources"
+    }
+  ],
+  "paths": {
+    "/data/cisco-crosswork-performance-metrics:igp-links-performance-metrics/igp-link-pm={link-id}": {
+      "get": {
+        "tags": [
+          "Operational data", "Since 3.0"
+        ],
+        "summary": "Retrieve IGP link performance metrics",
+        "description": "Attributes related to performance metrics for a IGP links.",
+        "operationId": "data_cisco_crosswork_performance_metrics_igp_links_performance_metrics_igp_link_pm_igp_link_pm_link_id_get",
+        "parameters": [
+          {
+            "name": "link-id",
+            "in": "path",
+            "description": "The identifier of a link in the topology.\nA link is specific to a topology to which it belongs.\nThis is the same link-id as used in the topology model.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Attributes related to performance metrics for a IGP links.",
+            "content": {
+              "application/yang-data+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cisco-crosswork-performance-metrics:igp-link-pm": {
+                      "type": "array",
+                      "description": "Attributes related to performance metrics for a IGP links.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "link-id": {
+                            "type": "string",
+                            "description": "The identifier of a link in the topology.\nA link is specific to a topology to which it belongs.\nThis is the same link-id as used in the topology model.",
+                            "format": "string"
+                          },
+                          "source": {
+                            "type": "object",
+                            "properties": {
+                              "source-node": {
+                                "type": "string",
+                                "description": "Source node identifier.  Must be in the same topology.",
+                                "format": "string"
+                              },
+                              "source-tp": {
+                                "type": "string",
+                                "description": "This termination point is located within the source node\nand terminates the link.",
+                                "format": "string"
+                              }
+                            },
+                            "description": "This container holds the logical source of a particular\nlink."
+                          },
+                          "destination": {
+                            "type": "object",
+                            "properties": {
+                              "dest-node": {
+                                "type": "string",
+                                "description": "Destination node identifier.  Must be in the same\nnetwork.",
+                                "format": "string"
+                              },
+                              "dest-tp": {
+                                "type": "string",
+                                "description": "This termination point is located within the\ndestination node and terminates the link.",
+                                "format": "string"
+                              }
+                            },
+                            "description": "This container holds the logical destination of a\nparticular link."
+                          },
+                          "max-bandwidth-kbps": {
+                            "type": "integer",
+                            "description": "Max bandwidth for this link, in kilobits per second.",
+                            "format": "uint64"
+                          },
+                          "bandwidth-utilization-kbps": {
+                            "type": "integer",
+                            "description": "Current bandwidth utilization for this link, in kilobits per second.",
+                            "format": "uint64"
+                          },
+                          "delay": {
+                            "type": "integer",
+                            "description": "The unidirectional minimum delay for this link, in microseconds.",
+                            "format": "uint32"
+                          },
+                          "delay-telemetry": {
+                            "type": "integer",
+                            "description": "Current delay for this link, in microseconds. This value comes from NAPM telemetry.",
+                            "format": "uint32"
+                          },
+                          "jitter-telemetry": {
+                            "type": "integer",
+                            "description": "Current jitter for this link, in microseconds. This value comes from NAPM telemetry.",
+                            "format": "uint32"
+                          },
+                          "interfaces": {
+                            "type": "object",
+                            "properties": {
+                              "TX-packet-drops": {
+                                "type": "integer",
+                                "description": "Number of transmitted packets dropped on this interface.",
+                                "format": "uint64"
+                              },
+                              "RX-packet-drops": {
+                                "type": "integer",
+                                "description": "Number of received packets dropped on this interface.",
+                                "format": "uint64"
+                              },
+                              "TX-Errors": {
+                                "type": "integer",
+                                "description": "Number of errors on transmitted packets on this interface.",
+                                "format": "uint64"
+                              },
+                              "RX-Errors": {
+                                "type": "integer",
+                                "description": "Number of errors on received packets on this interface.",
+                                "format": "uint64"
+                              },
+                              "Throughput": {
+                                "type": "number",
+                                "description": "Transmit utilization percentage for this interface.",
+                                "format": "double"
+                              },
+                              "Bandwidth": {
+                                "type": "integer",
+                                "description": "Speed of the interface in Mbps.",
+                                "format": "uint64"
+                              }
+                            },
+                            "description": "This container holds the pm traffic data of the interfaces releated to the link. These values come from NAPM telemetry."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {}
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    },
+    "/data/cisco-crosswork-performance-metrics:sr-policies-performance-metrics/sr-policy-pm={policy-headend},{policy-endpoint},{policy-color}": {
+      "get": {
+        "tags": [
+          "Operational data", "Since 3.0"
+        ],
+        "summary": "Retrieve SR policy performance metrics",
+        "description": "Attributes related to performance metrics for a single SR policy.",
+        "operationId": "data_cisco_crosswork_performance_metrics_sr_policies_performance_metrics_sr_policy_pm_sr_policy_pm_headend_sr_policy_pm_endpoint_sr_policy_pm_color_get",
+        "parameters": [
+          {
+            "name": "policy-headend",
+            "in": "path",
+            "description": "Policy head end Router ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "union"
+            }
+          },
+          {
+            "name": "policy-endpoint",
+            "in": "path",
+            "description": "Policy endpoint IP address",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "union"
+            }
+          },
+          {
+            "name": "policy-color",
+            "in": "path",
+            "description": "Color associated with the policy",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "uint32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Attributes related to performance metrics for a single SR policy.",
+            "content": {
+              "application/yang-data+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cisco-crosswork-performance-metrics:sr-policy-pm": {
+                      "type": "array",
+                      "description": "Attributes related to performance metrics for a single SR policy.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "headend": {
+                            "type": "string",
+                            "description": "Policy head end IP address",
+                            "format": "union"
+                          },
+                          "endpoint": {
+                            "type": "string",
+                            "description": "Policy end point IP address",
+                            "format": "union"
+                          },
+                          "color": {
+                            "type": "integer",
+                            "description": "Color associated with the policy",
+                            "format": "uint32"
+                          },
+                          "bandwidth-utilization-kbps": {
+                            "type": "integer",
+                            "description": "Current bandwidth utilization for this SR policy, in kilobits per second.",
+                            "format": "uint64"
+                          },
+                          "delay": {
+                            "type": "integer",
+                            "description": "Current one directional delay for this SR policy, in microseconds.",
+                            "format": "uint32"
+                          },
+                          "delay-telemetry": {
+                            "type": "integer",
+                            "description": "Current delay for this SR policy, in microseconds. This value comes from NAPM telemetry.",
+                            "format": "uint32"
+                          },
+                          "jitter-telemetry": {
+                            "type": "integer",
+                            "description": "Current jitter for this SR policy, in microseconds. This value comes from NAPM telemetry.",
+                            "format": "uint32"
+                          },
+                          "liveness-telemetry": {
+                            "type": "string",
+                            "description": "Session state. This value comes from NAPM telemetry.",
+                            "format": "boolean"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {}
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    },
+    "/data/cisco-crosswork-performance-metrics:rsvp-policies-performance-metrics/rsvp-policy-pm={rsvp-policy-pm-headend},{rsvp-policy-pm-endpoint},{rsvp-policy-pm-tunnel-id}": {
+      "get": {
+        "tags": [
+          "Operational data", "Since 6.0"
+        ],
+        "summary": "Retrieve RSVP LSP performance metrics",
+        "description": "Attributes related to performance metrics for a single RSVP LSP.",
+        "operationId": "data_cisco_crosswork_performance_metrics_rsvp_policies_performance_metrics_rsvp_policy_pm_rsvp_policy_pm_headend_rsvp_policy_pm_endpoint_rsvp_policy_pm_tunnel_id_get",
+        "parameters": [
+          {
+            "name": "rsvp-policy-pm-headend",
+            "in": "path",
+            "description": "RSVP LSP headend Router ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "union"
+            }
+          },
+          {
+            "name": "rsvp-policy-pm-endpoint",
+            "in": "path",
+            "description": "RSVP LSP endpoint IP address",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "union"
+            }
+          },
+          {
+            "name": "rsvp-policy-pm-tunnel-id",
+            "in": "path",
+            "description": "Tunnel ID associated with the RSVP LSP",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "uint32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Attributes related to performance metrics for a single RSVP LSP.",
+            "content": {
+              "application/yang-data+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cisco-crosswork-performance-metrics:rsvp-policy-pm": {
+                      "type": "array",
+                      "description": "Attributes related to performance metrics for a single RSVP LSP.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "headend": {
+                            "type": "string",
+                            "description": "LSP head end IP address",
+                            "format": "union"
+                          },
+                          "endpoint": {
+                            "type": "string",
+                            "description": "LSP end point IP address",
+                            "format": "union"
+                          },
+                          "tunnel-id": {
+                            "type": "integer",
+                            "description": "Tunnel id associated with the LSP",
+                            "format": "uint32"
+                          },
+                          "bandwidth-utilization-kbps": {
+                            "type": "integer",
+                            "description": "Current bandwidth utilization for this RSVP LSP, in kilobits per second.",
+                            "format": "uint64"
+                          },
+                          "delay": {
+                            "type": "integer",
+                            "description": "Current one directional delay for this RSVP LSP, in microseconds.",
+                            "format": "uint32"
+                          },
+                          "delay-telemetry": {
+                            "type": "integer",
+                            "description": "Current delay for this RSVP LSP, in microseconds. This value comes from NAPM telemetry.",
+                            "format": "uint32"
+                          },
+                          "jitter-telemetry": {
+                            "type": "integer",
+                            "description": "Current jitter for this RSVP LSP, in microseconds. This value comes from NAPM telemetry.",
+                            "format": "uint32"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {}
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "data_cisco-crosswork-performance-metrics_igp-links-performance-metrics_igp-link-pm_igp-link-pm-link-id": {
+        "description": "Performance metrics IGP links",
+        "type": "object",
+        "properties": {
+          "cisco-crosswork-performance-metrics:igp-link-pm": {
+            "type": "array",
+            "description": "Attributes related to performance metrics for a IGP links.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "link-id": {
+                  "type": "string",
+                  "description": "The identifier of a link in the topology.\nA link is specific to a topology to which it belongs.\nThis is the same link-id as used in the topology model.",
+                  "format": "string"
+                },
+                "source": {
+                  "type": "object",
+                  "properties": {
+                    "source-node": {
+                      "type": "string",
+                      "description": "Source node identifier.  Must be in the same topology.",
+                      "format": "string"
+                    },
+                    "source-tp": {
+                      "type": "string",
+                      "description": "This termination point is located within the source node\nand terminates the link.",
+                      "format": "string"
+                    }
+                  },
+                  "description": "This container holds the logical source of a particular\nlink."
+                },
+                "destination": {
+                  "type": "object",
+                  "properties": {
+                    "dest-node": {
+                      "type": "string",
+                      "description": "Destination node identifier.  Must be in the same\nnetwork.",
+                      "format": "string"
+                    },
+                    "dest-tp": {
+                      "type": "string",
+                      "description": "This termination point is located within the\ndestination node and terminates the link.",
+                      "format": "string"
+                    }
+                  },
+                  "description": "This container holds the logical destination of a\nparticular link."
+                },
+                "max-bandwidth-kbps": {
+                  "type": "integer",
+                  "description": "Max bandwidth for this link, in kilobits per second.",
+                  "format": "uint64"
+                },
+                "bandwidth-utilization-kbps": {
+                  "type": "integer",
+                  "description": "Current bandwidth utilization for this link, in kilobits per second.",
+                  "format": "uint64"
+                },
+                "delay": {
+                  "type": "integer",
+                  "description": "The unidirectional minimum delay for this link, in microseconds.",
+                  "format": "uint32"
+                },
+                "delay-telemetry": {
+                  "type": "integer",
+                  "description": "Current delay for this link, in microseconds. This value comes from NAPM telemetry.",
+                  "format": "uint32"
+                },
+                "jitter-telemetry": {
+                  "type": "integer",
+                  "description": "Current jitter for this link, in microseconds. This value comes from NAPM telemetry.",
+                  "format": "uint32"
+                },
+                "interfaces": {
+                  "type": "object",
+                  "properties": {
+                    "TX-packet-drops": {
+                      "type": "integer",
+                      "description": "Number of transmitted packets dropped on this interface.",
+                      "format": "uint64"
+                    },
+                    "RX-packet-drops": {
+                      "type": "integer",
+                      "description": "Number of received packets dropped on this interface.",
+                      "format": "uint64"
+                    },
+                    "TX-Errors": {
+                      "type": "integer",
+                      "description": "Number of errors on transmitted packets on this interface.",
+                      "format": "uint64"
+                    },
+                    "RX-Errors": {
+                      "type": "integer",
+                      "description": "Number of errors on received packets on this interface.",
+                      "format": "uint64"
+                    },
+                    "Throughput": {
+                      "type": "number",
+                      "description": "Transmit utilization percentage for this interface.",
+                      "format": "double"
+                    },
+                    "Bandwidth": {
+                      "type": "integer",
+                      "description": "Speed of the interface in Mbps.",
+                      "format": "uint64"
+                    }
+                  },
+                  "description": "This container holds the pm traffic data of the interfaces releated to the link. These values come from NAPM telemetry."
+                }
+              }
+            }
+          }
+        }
+      },
+      "data_cisco-crosswork-performance-metrics_sr-policies-performance-metrics_sr-policy-pm_sr-policy-pm-headend_sr-policy-pm-endpoint_sr-policy-pm-color": {
+        "description": "Performance metrics SR policy",
+        "type": "object",
+        "properties": {
+          "cisco-crosswork-performance-metrics:sr-policy-pm": {
+            "type": "array",
+            "description": "Attributes related to performance metrics for a single SR policy.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "headend": {
+                  "type": "string",
+                  "description": "Policy head end IP address",
+                  "format": "union"
+                },
+                "endpoint": {
+                  "type": "string",
+                  "description": "Policy end point IP address",
+                  "format": "union"
+                },
+                "color": {
+                  "type": "integer",
+                  "description": "Color associated with the policy",
+                  "format": "uint32"
+                },
+                "bandwidth-utilization-kbps": {
+                  "type": "integer",
+                  "description": "Current bandwidth utilization for this SR policy, in kilobits per second.",
+                  "format": "uint64"
+                },
+                "delay": {
+                  "type": "integer",
+                  "description": "Current one directional delay for this SR policy, in microseconds.",
+                  "format": "uint32"
+                },
+                "delay-telemetry": {
+                  "type": "integer",
+                  "description": "Current delay for this SR policy, in microseconds. This value comes from NAPM telemetry.",
+                  "format": "uint32"
+                },
+                "jitter-telemetry": {
+                  "type": "integer",
+                  "description": "Current jitter for this SR policy, in microseconds. This value comes from NAPM telemetry.",
+                  "format": "uint32"
+                },
+                "liveness-telemetry": {
+                  "type": "string",
+                  "description": "Session state. This value comes from NAPM telemetry.",
+                  "format": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "data_cisco-crosswork-performance-metrics_rsvp-policies-performance-metrics_rsvp-policy-pm_rsvp-policy-pm-headend_rsvp-policy-pm-endpoint_rsvp-policy-pm-tunnel-id": {
+        "description": "Performance metrics RSVP policy",
+        "type": "object",
+        "properties": {
+          "cisco-crosswork-performance-metrics:rsvp-policy-pm": {
+            "type": "array",
+            "description": "Attributes related to performance metrics for a single RSVP LSP.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "headend": {
+                  "type": "string",
+                  "description": "LSP head end IP address",
+                  "format": "union"
+                },
+                "endpoint": {
+                  "type": "string",
+                  "description": "LSP end point IP address",
+                  "format": "union"
+                },
+                "tunnel-id": {
+                  "type": "integer",
+                  "description": "Tunnel id associated with the LSP",
+                  "format": "uint32"
+                },
+                "bandwidth-utilization-kbps": {
+                  "type": "integer",
+                  "description": "Current bandwidth utilization for this RSVP LSP, in kilobits per second.",
+                  "format": "uint64"
+                },
+                "delay": {
+                  "type": "integer",
+                  "description": "Current one directional delay for this RSVP LSP, in microseconds.",
+                  "format": "uint32"
+                },
+                "delay-telemetry": {
+                  "type": "integer",
+                  "description": "Current delay for this RSVP LSP, in microseconds. This value comes from NAPM telemetry.",
+                  "format": "uint32"
+                },
+                "jitter-telemetry": {
+                  "type": "integer",
+                  "description": "Current jitter for this RSVP LSP, in microseconds. This value comes from NAPM telemetry.",
+                  "format": "uint32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "OK",
+        "content": {}
+      },
+      "201": {
+        "description": "Created",
+        "content": {}
+      },
+      "204": {
+        "description": "No Content",
+        "content": {}
+      },
+      "400": {
+        "description": "Bad Request",
+        "content": {}
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {}
+      },
+      "404": {
+        "description": "Not Found",
+        "content": {}
+      },
+      "405": {
+        "description": "Method Not Allowed",
+        "content": {}
+      },
+      "409": {
+        "description": "Conflict",
+        "content": {}
+      }
+    },
+    "parameters": {
+      "content": {
+        "name": "content",
+        "in": "query",
+        "description": "controlling descendant nodes in response",
+        "schema": {
+          "type": "string",
+          "format": "enumeration",
+          "default": "config",
+          "enum": [
+            "config",
+            "nonconfig",
+            "all"
+          ]
+        }
+      },
+      "depth": {
+        "name": "depth",
+        "in": "query",
+        "description": "limit the depth of nodes in response",
+        "schema": {
+          "type": "integer",
+          "format": "uint16"
+        }
+      },
+      "fields": {
+        "name": "fields",
+        "in": "query",
+        "description": "optionally identify specific data nodes in response",
+        "schema": {
+          "type": "string",
+          "format": "string"
+        }
+      },
+      "filter": {
+        "name": "filter",
+        "in": "query",
+        "description": "xpath expression to filter data nodes in response",
+        "schema": {
+          "type": "string",
+          "format": "string"
+        }
+      },
+      "with-defaults": {
+        "name": "with-defaults",
+        "in": "query",
+        "description": "controlling default values in response",
+        "schema": {
+          "type": "string",
+          "format": "enumeration",
+          "default": "report-all",
+          "enum": [
+            "report-all",
+            "trim",
+            "explicit",
+            "report-all-tagged"
+          ]
+        }
+      },
+      "insert": {
+        "name": "insert",
+        "in": "query",
+        "description": "controlling the order when adding new list elements",
+        "schema": {
+          "type": "string",
+          "format": "enumeration",
+          "default": "first",
+          "enum": [
+            "first",
+            "last",
+            "before",
+            "after"
+          ]
+        }
+      },
+      "point": {
+        "name": "point",
+        "in": "query",
+        "description": "used to specify the insertion point",
+        "schema": {
+          "type": "string",
+          "format": "string"
+        }
+      },
+      "policy-headend": {
+        "name": "policy-headend",
+        "in": "path",
+        "description": "Policy head end Router ID",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "union"
+        }
+      },
+      "policy-endpoint": {
+        "name": "policy-endpoint",
+        "in": "path",
+        "description": "Policy endpoint IP address",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "union"
+        }
+      },
+      "policy-color": {
+        "name": "policy-color",
+        "in": "path",
+        "description": "Color associated with the policy",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "uint32"
+        }
+      },
+      "link-id": {
+        "name": "link-id",
+        "in": "path",
+        "description": "The identifier of a link in the topology.\nA link is specific to a topology to which it belongs.\nThis is the same link-id as used in the topology model.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "string"
+        }
+      },
+      "rsvp-policy-pm-headend": {
+        "name": "rsvp-policy-pm-headend",
+        "in": "path",
+        "description": "RSVP LSP headend Router ID",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "union"
+        }
+      },
+      "rsvp-policy-pm-endpoint": {
+        "name": "rsvp-policy-pm-endpoint",
+        "in": "path",
+        "description": "RSVP LSP endpoint IP address",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "union"
+        }
+      },
+      "rsvp-policy-pm-tunnel-id": {
+        "name": "rsvp-policy-pm-tunnel-id",
+        "in": "path",
+        "description": "Tunnel ID associated with the RSVP LSP",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "uint32"
+        }
+      }
+    },
+    "securitySchemes": {
+      "basicAuth": {
+        "description": "authentication",
+        "type": "http",
+        "scheme": "basic"
+      }
+    }
+  },
+  "x-original-swagger-version": "2.0"
+}

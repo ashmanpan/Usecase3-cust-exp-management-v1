@@ -1,0 +1,1502 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "cat-inventory-rpc",
+    "description" : "This module defines service inventory RPC operations for retrieving services details from CNC.",
+    "termsOfService": "http://www.cisco.com/web/siteassets/legal/terms_condition.html",
+    "contact" : {
+      "name" : "Cisco Systems",
+      "url" : "https://www.cisco.com",
+      "email" : "support@cisco.com"
+    },
+    "license" : {
+      "name" : "Cisco Software License Agreement",
+      "url" : "http://www.cisco.com/public/sw-license-agreement.html"
+    },
+    "version" : "7.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://{cnc-host}:{cnc-port}/crosswork/nbi/cat-inventory/v1/restconf",
+      "variables": {
+        "cnc-host": {
+          "default": "127.0.0.1",
+          "description": "host name or ip address of the target CNC Cluster"
+        },
+        "cnc-port": {
+          "default": "30603",
+          "description": "port number of the target CNC Cluster"
+        }
+      }
+    }
+  ],
+  "security": [{
+    "bearerAuth": []
+  }],
+  "tags": [
+    {
+      "name": "operations",
+      "description": "service inventory operations"
+    }
+  ],
+  "paths" : {
+    "/operations/cat-inventory-rpc:get-all-services" : {
+      "post" : {
+        "tags" : [ "operations", "Since 1.0.0" ],
+        "summary" : "All Service instance references in a batch",
+        "description" : "return all services in the system (istp inventory db). The return\nset of records can be indexed and limited using the collection-header\nparameters - offset and limit. Also, the query criteria can be\nspecified to filter the services returned. This operation can\nbe called iteratively to retrieve all the services for a given\ncriteria by passing the offset incremented based on the last response\nto the operation. ",
+        "operationId" : "operations_cat_inventory_rpc_get_all_services_post",
+        "requestBody" : {
+          "description" : "return all services in the system (istp inventory db). The return\nset of records can be indexed and limited using the collection-header\nparameters - offset and limit. Also, the query criteria can be\nspecified to filter the services returned. This operation can\nbe called iteratively to retrieve all the services for a given\ncriteria by passing the offset incremented based on the last response\nto the operation. ",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-all-services-post-input"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-all-services-post-output"
+                }
+              }
+            }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "get-all-services"
+      }
+    },
+    "/operations/cat-inventory-rpc:get-available-service-types" : {
+      "post" : {
+        "tags" : [ "operations", "Since 1.0.0" ],
+        "summary" : "Get all available service types",
+        "description" : "returns all available service types that are currently known\nto the system. service-type from this response can be used as\na input filter in get all services rpc",
+        "operationId" : "operations_cat_inventory_rpc_get_available_service_types_post",
+        "requestBody" : {
+          "description" : "returns all available service types that are currently known\nto the system. service-type from this response can be used as\na input filter in get all services rpc",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-available-service-types-post-input"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-available-service-types-post-output"
+                }
+              }
+            }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "get-available-service-types"
+      }
+    },
+    "/operations/cat-inventory-rpc:get-service-plan-data" : {
+      "post" : {
+        "tags" : [ "operations", "Since 1.0.0" ],
+        "summary" : "Get service plan details",
+        "description" : "this rpc returns the service plan status and creation time for\none or more service instances passed in the input",
+        "operationId" : "operations_cat_inventory_rpc_get_service_plan_data_post",
+        "requestBody" : {
+          "description" : "this rpc returns the service plan status and creation time for\none or more service instances passed in the input",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-service-plan-data-post-input"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-service-plan-data-post-output"
+                }
+              }
+            }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "get-service-plan-data"
+      }
+    },
+    "/operations/cat-inventory-rpc:get-services-count" : {
+      "post" : {
+        "tags" : [ "operations", "Since 1.0.0" ],
+        "summary" : "Get Service instances count",
+        "description" : "returns all service instances count including service instances\ncount per type that are currently known to the system at the time\nof request",
+        "operationId" : "operations_cat_inventory_rpc_get_services_count_post",
+        "requestBody" : {
+          "description" : "returns all service instances count including service instances\ncount per type that are currently known to the system at the time\nof request",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-services-count-post-input"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-services-count-post-output"
+                }
+              }
+            }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "get-services-count"
+      }
+    },
+    "/operations/cat-inventory-rpc:get-sub-service-count" : {
+      "post" : {
+        "tags" : [ "operations", "Since 7.0.0" ],
+        "summary" : "Sub-services count of IETF-L3VPN Service Instance",
+        "description" : "return the sub-services count of the service. returns unsupported\nerror if the service does not support sub-services ",
+        "operationId" : "operations_cat_inventory_rpc_get_sub_service_count_post",
+        "requestBody" : {
+          "description" : "return the sub-services count of the service. returns unsupported\nerror if the service does not support sub-services ",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-sub-service-count-post-input"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-sub-service-count-post-output"
+                }
+              }
+            }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "get-sub-service-count"
+      }
+    },
+    "/operations/cat-inventory-rpc:get-sub-service-paths" : {
+      "post" : {
+        "tags" : [ "operations", "Since 7.1.0" ],
+        "summary" : "Get IETF-L3VPN sub-service instance references",
+        "description" : "return the batch list of sub-services paths of the IETF L3VPN service. returns\nunsupported error if the service does not support sub-services",
+        "operationId" : "operations_cat_inventory_rpc_get_sub_service_paths_post",
+        "requestBody" : {
+          "description" : "return the batch list of sub-services paths of the service. returns\nunsupported error if the service does not support sub-services",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-sub-service-paths-post-input"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-sub-service-paths-post-output"
+                }
+              }
+            }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "get-sub-service-paths"
+      }
+    },
+    "/operations/cat-inventory-rpc:get-associated-services-for-transport" : {
+      "post" : {
+        "tags" : [ "operations" ],
+        "summary" : "Get Vpn-services associated with a given underlay-transport",
+        "description" : "return the list of vpn services that use the given underlay transport (sr-te policy or rsvp-te tunnel)",
+        "operationId" : "operations_cat_inventory_rpc_get_associated_services_for_transport_post",
+        "requestBody" : {
+          "description" : "return the list of vpn services that use the given underlay transport (sr-te policy or rsvp-te tunnel)",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-associated-services-for-transport-post-input"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-associated-services-for-transport-post-output"
+                }
+              }
+            }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "get-associated-services-for-transport"
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "operations_cat-inventory-rpc_get-all-services-post-input": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:input": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-all-services-request": {
+                "type": "object",
+                "properties": {
+                  "collection-header": {
+                    "type": "object",
+                    "properties": {
+                      "offset": {
+                        "type": "integer",
+                        "description": "offset of the first record of the collection (leaf)",
+                        "format": "uint32",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      },
+                      "limit": {
+                        "type": "string",
+                        "description": "max number of records that should be in collection (leaf)",
+                        "format": "int32",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      },
+                      "count": {
+                        "type": "string",
+                        "description": "actual number of records in the collection. (leaf)",
+                        "format": "int32",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      }
+                    },
+                    "description": "(non-presence)",
+                    "x-yang": {
+                      "type": "container",
+                      "is_presence": "false"
+                    }
+                  },
+                  "query-criteria": {
+                    "type": "object",
+                    "properties": {
+                      "service-name-filters": {
+                        "type": "object",
+                        "properties": {
+                          "start-with": {
+                            "type": "string",
+                            "description": "start with pattern to apply for service-name match - example:\n       for [foo-service, foo-bar-service] services, start-with=foo return\n       both, start-with=foo-s return only foo-service (leaf)",
+                            "format": "string",
+                            "x-yang": {
+                              "type": "leaf"
+                            }
+                          },
+                          "case-sensitive": {
+                            "type": "string",
+                            "description": "indicate if the filter value should be used for case sensitive\n   filtering or not. if missing, it is considered as false (leaf)",
+                            "format": "boolean",
+                            "x-yang": {
+                              "type": "leaf"
+                            }
+                          }
+                        },
+                        "description": "filter to match the service-name to include services that match\nwith the pattern specified in the filter - default when this filter\nin not specified, no matching pattern is added on service name.\nWhen matching service name is not needed, it is recomended to\nommit this filter in the input as using this filter afffects query\nperformance. (non-presence)",
+                        "x-yang": {
+                          "type": "container",
+                          "is_presence": "false"
+                        }
+                      },
+                      "service-type-filters": {
+                        "type": "object",
+                        "properties": {
+                          "includes": {
+                            "type": "object",
+                            "properties": {
+                              "service-type": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "description": "type of the service (leaf-list)",
+                                  "format": "string"
+                                },
+                                "x-yang": {
+                                  "type": "leaf-list"
+                                }
+                              }
+                            },
+                            "description": "filter to specify the included service types for retrieval. When\n   includes is empty or missing, it is treated as all includes (non-presence)",
+                            "x-yang": {
+                              "type": "container",
+                              "is_presence": "false"
+                            }
+                          },
+                          "excludes": {
+                            "type": "object",
+                            "properties": {
+                              "service-type": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "description": "type of the service (leaf-list)",
+                                  "format": "string"
+                                },
+                                "x-yang": {
+                                  "type": "leaf-list"
+                                }
+                              }
+                            },
+                            "description": "filter to specify the excluded service types for retrieval. When\n   excludes is empty or missing, it is treated as nothing excluded (non-presence)",
+                            "x-yang": {
+                              "type": "container",
+                              "is_presence": "false"
+                            }
+                          }
+                        },
+                        "description": "filter to specify the included and excluded service types from\nretrieval. by default if none of includes and excludes specified,\nall available service types are included. when these filters are\napplied the resulting service types included in the retrieval\nare subset of available service types computed out of includes\nand excludes together. (non-presence)",
+                        "x-yang": {
+                          "type": "container",
+                          "is_presence": "false"
+                        }
+                      }
+                    },
+                    "description": "(non-presence)",
+                    "x-yang": {
+                      "type": "container",
+                      "is_presence": "false"
+                    }
+                  }
+                },
+                "description": "(non-presence)",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+              }
+            }
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-all-services-post-output" : {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:output": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-all-services-response": {
+                "type": "object",
+                "properties": {
+                  "collection-header": {
+                    "type": "object",
+                    "properties": {
+                      "offset": {
+                        "type": "integer",
+                        "description": "offset of the first record of the collection (leaf)",
+                        "format": "uint32",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      },
+                      "limit": {
+                        "type": "string",
+                        "description": "max number of records that should be in collection (leaf)",
+                        "format": "int32",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      },
+                      "count": {
+                        "type": "string",
+                        "description": "actual number of records in the collection. (leaf)",
+                        "format": "int32",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      }
+                    },
+                    "description": "(non-presence)",
+                    "x-yang": {
+                      "type": "container",
+                      "is_presence": "false"
+                    }
+                  },
+                  "collection-data": {
+                    "type": "object",
+                    "properties": {
+                      "service-info": {
+                        "type": "array",
+                        "description": "(list)",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "service-name": {
+                              "type": "string",
+                              "description": "name of the service (leaf)",
+                              "format": "string",
+                              "x-yang": {
+                                "type": "leaf"
+                              }
+                            },
+                            "service-type": {
+                              "type": "string",
+                              "description": "type of the service with qname in string format e.g. {urn:a:b:c:foo}bar\nfor bar service type (leaf)",
+                              "format": "string",
+                              "x-yang": {
+                                "type": "leaf"
+                              }
+                            },
+                            "yang-path": {
+                              "type": "string",
+                              "description": "restconf yang path to the data resource that can retrieve full\ndetails of the service intent (leaf)",
+                              "format": "string",
+                              "x-yang": {
+                                "type": "leaf"
+                              }
+                            },
+                            "plan-yang-path": {
+                              "type": "string",
+                              "description": "restconf yang path to the service plan data resource that can\nretrieve full details of the service plan/deployment corresponds\nto this service intent (leaf)",
+                              "format": "string",
+                              "x-yang": {
+                                "type": "leaf"
+                              }
+                            }
+                          }
+                        },
+                        "x-yang": {
+                          "type": "list"
+                        }
+                      }
+                    },
+                    "description": "(non-presence)",
+                    "x-yang": {
+                      "type": "container",
+                      "is_presence": "false"
+                    }
+                  }
+                },
+                "description": "(non-presence)",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+              }
+            }
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-associated-services-for-transport-post-input": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:input": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-associated-services-for-transport-request": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "sr-policy-ref": {
+                        "type" : "object",
+                        "properties" : {
+                          "headend" : {
+                            "type" : "string",
+                            "description" : "SR policy Headend Device ID (leaf)",
+                            "format" : "string",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "color" : {
+                            "type" : "string",
+                            "description" : "<1-4294967295> - SR policy color (leaf)",
+                            "format" : "int32",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "endpoint" : {
+                            "type" : "string",
+                            "description" : "SR policy Endopint IP (leaf)",
+                            "format" : "union",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          }
+                        },
+                        "description" : "sr-policy refernce (non-presence)",
+                        "x-yang": {
+                          "type": "container",
+                          "is_presence": "false"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "te-tunnel-ref": {
+                        "type": "object",
+                        "properties": {
+                          "tunnel-id": {
+                            "type": "string",
+                            "description": "TE tunnel Identifier (leaf)",
+                              "format": "string",
+                            "x-yang": {
+                              "type": "leaf"
+                            }
+                          },
+                          "source": {
+                            "type": "string",
+                            "description": "TE tunnel Source IP (leaf)",
+                            "format": "union",
+                            "x-yang": {
+                              "type": "leaf"
+                            }
+                          },
+                          "destination": {
+                            "type": "string",
+                            "description": "TE tunnel Destination IP (leaf)",
+                            "format": "union",
+                            "x-yang": {
+                              "type": "leaf"
+                            }
+                          }
+                        },
+                        "description": "rsvp-te tunnel reference (non-presence)",
+                        "x-yang": {
+                          "type": "container",
+                          "is_presence": "false"
+                        }
+                      }
+                    }
+                  }
+                ],
+                "description" : "container for sr-policy or rsvp-te tunnel reference",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+               }
+            }
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-associated-services-for-transport-post-output": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:output": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-associated-services-for-transport-response": {
+                "type": "object",
+                "properties": {
+                  "service-path": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "service instance paths of the services associated with the given underlay transport (leaf-list)",
+                      "format": "string"
+                    },
+                    "x-yang": {
+                      "type": "leaf-list"
+                    }
+                  }
+                },
+                "description": "(non-presence)",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+              }
+            }
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-available-service-types-post-input": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:input": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-available-service-types-post-output": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:output": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-available-service-types-response": {
+                "type": "object",
+                "properties": {
+                  "service-type-info": {
+                    "type": "array",
+                    "description": "(list)",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "service-type": {
+                          "type": "string",
+                          "description": "type of the service (leaf)",
+                          "format": "string",
+                          "x-yang": {
+                            "type": "leaf"
+                          }
+                        },
+                        "service-type-label": {
+                          "type": "string",
+                          "description": "optional label used for display purpose. For example, can be\n           used in ui. by default implementation might return local-part\n           of the servicee-type qname if there is no explicit label defined (leaf)",
+                          "format": "string",
+                          "x-yang": {
+                            "type": "leaf"
+                          }
+                        }
+                      }
+                    },
+                    "x-yang": {
+                      "type": "list"
+                    }
+                  }
+                },
+                "description": "(non-presence)",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+              }
+            }
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-service-plan-data-post-input": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:input": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-service-plan-data-request": {
+                "type": "object",
+                "properties": {
+                  "service-plan-yang-path": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "yang path with key corresponding to the service plan that has\n       the status details (leaf-list)",
+                      "format": "string"
+                    },
+                    "x-yang": {
+                      "type": "leaf-list"
+                    }
+                  }
+                },
+                "description": "(non-presence)",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+              }
+            }
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-service-plan-data-post-output": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:output": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-service-plan-data-response": {
+                "type": "object",
+                "properties": {
+                  "service-plan-data": {
+                    "type": "array",
+                    "description": "(list)",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "yang-path": {
+                          "type": "string",
+                          "description": "yang path with key corresponding to the service plan (leaf)",
+                          "format": "string",
+                          "x-yang": {
+                            "type": "leaf"
+                          }
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "status of the service deployment - unknown: no plan data available\n           or has errors before the deployment reached to create plan data.\n           completed: service deployment is successful on all phases. failed:\n           one or more components have status not reached. in-progress: service\n           deployment is in progress and there are no errors reported currently\n           in the plan (leaf)",
+                          "format": "enumeration",
+                          "default": "unknown",
+                          "enum": [
+                            "unknown",
+                            "completed",
+                            "failed",
+                            "in-progress",
+                            "delete-in-progress"
+                          ],
+                          "x-yang": {
+                            "type": "leaf"
+                          }
+                        },
+                        "error-info": {
+                          "type": "object",
+                          "properties": {
+                            "message": {
+                              "type": "string",
+                              "description": "An explanatory message for the failing plan. or plan does not\nexists (leaf)",
+                              "format": "string",
+                              "x-yang": {
+                                "type": "leaf"
+                              }
+                            }
+                          },
+                          "description": "(presence)",
+                          "x-yang": {
+                            "type": "container",
+                            "is_presence": "true"
+                          }
+                        },
+                        "creation-time": {
+                          "type": "string",
+                          "description": "service creation time - this is the time reported in service\n           plan data in self component's init state status (leaf)",
+                          "format": "string",
+                          "x-yang": {
+                            "type": "leaf"
+                          }
+                        },
+                        "last-updated-time": {
+                          "type": "string",
+                          "description": "service last updated time - this is the time reported in service\n           plan data in self component's ready state status (leaf)",
+                          "format": "string",
+                          "x-yang": {
+                            "type": "leaf"
+                          }
+                        }
+                      }
+                    },
+                    "x-yang": {
+                      "type": "list"
+                    }
+                  }
+                },
+                "description": "(non-presence)",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+              }
+            }
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-services-count-post-input": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:input": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-services-count-request": {
+                "type": "object",
+                "properties": {
+                  "service-type": {
+                    "type": "string",
+                    "description": "optinal. type of the service to which service instances count\n       should be returned. if not provided, counts for all services and\n       all service types will be returned. (leaf)",
+                    "format": "string",
+                    "x-yang": {
+                      "type": "leaf"
+                    }
+                  },
+                  "service-name-filters": {
+                    "type": "object",
+                    "properties": {
+                      "start-with": {
+                        "type": "string",
+                        "description": "start with pattern to apply for service-name match - example:\n       for [foo-service, foo-bar-service] services, start-with=foo return\n       both, start-with=foo-s return only foo-service (leaf)",
+                        "format": "string",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      },
+                      "case-sensitive": {
+                        "type": "string",
+                        "description": "indicate if the filter value should be used for case sensitive\n   filtering or not. if missing, it is considered as false (leaf)",
+                        "format": "boolean",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      }
+                    },
+                    "description": "filter to match the service-name to include services that match\nwith the pattern specified in the filter - default when this filter\nin not specified, no matching pattern is added on service name.\nWhen matching service name is not needed, it is recomended to\nommit this filter in the input as using this filter afffects query\nperformance. (non-presence)",
+                    "x-yang": {
+                      "type": "container",
+                      "is_presence": "false"
+                    }
+                  }
+                },
+                "description": "(non-presence)",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+              }
+            }
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-services-count-post-output": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:output": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-services-count-response": {
+                "type": "object",
+                "properties": {
+                  "total-services-count": {
+                    "type": "string",
+                    "description": "total count of all service instances currently known to the system\n       at the time of the request (leaf)",
+                    "format": "int32",
+                    "x-yang": {
+                      "type": "leaf"
+                    }
+                  },
+                  "services-count-per-type": {
+                    "type": "array",
+                    "description": "(list)",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "service-type": {
+                          "type": "string",
+                          "description": "type of the service (leaf)",
+                          "format": "string",
+                          "x-yang": {
+                            "type": "leaf"
+                          }
+                        },
+                        "count": {
+                          "type": "string",
+                          "description": "service instances count per service type currently known to the\n           system at the time of the request (leaf)",
+                          "format": "int32",
+                          "x-yang": {
+                            "type": "leaf"
+                          }
+                        }
+                      }
+                    },
+                    "x-yang": {
+                      "type": "list"
+                    }
+                  }
+                },
+                "description": "(non-presence)",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+              }
+            }
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-sub-service-count-post-input": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:input": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-sub-service-count-request": {
+                "type": "object",
+                "properties": {
+                  "service-instance-path": {
+                    "type": "string",
+                    "description": "service instance yang path (leaf)",
+                    "format": "string",
+                    "x-yang": {
+                      "type": "leaf"
+                    }
+                  }
+                },
+                "description": "(non-presence)",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+              }
+            }
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-sub-service-count-post-output": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:output": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-sub-service-count-response": {
+                "type": "object",
+                "properties": {
+                  "sub-service-count": {
+                    "type": "string",
+                    "description": "total count of sub-services in a given service instance currently\nknown to the system at the time of the request (leaf)",
+                    "format": "int32",
+                    "x-yang": {
+                      "type": "leaf"
+                    }
+                  }
+                },
+                "description": "(non-presence)",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+              }
+            }
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-sub-service-paths-post-input": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:input": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-sub-service-paths-request": {
+                "type": "object",
+                "properties": {
+                  "collection-header": {
+                    "type": "object",
+                    "properties": {
+                      "offset": {
+                        "type": "integer",
+                        "description": "offset of the first record of the collection (leaf)",
+                        "format": "uint32",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      },
+                      "limit": {
+                        "type": "string",
+                        "description": "max number of records that should be in collection (leaf)",
+                        "format": "int32",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      },
+                      "count": {
+                        "type": "string",
+                        "description": "actual number of records in the collection. (leaf)",
+                        "format": "int32",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      }
+                    },
+                    "description": "(non-presence)",
+                    "x-yang": {
+                      "type": "container",
+                      "is_presence": "false"
+                    }
+                  },
+                  "service-instance-path": {
+                    "type": "string",
+                    "description": "service instance yang path (leaf)",
+                    "format": "string",
+                    "x-yang": {
+                      "type": "leaf"
+                    }
+                  }
+                },
+                "description": "(non-presence)",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+              }
+            }
+          }
+        }
+      },
+      "operations_cat-inventory-rpc_get-sub-service-paths-post-output": {
+        "type": "object",
+        "properties": {
+          "cat-inventory-rpc:output": {
+            "type": "object",
+            "properties": {
+              "cat-inventory-rpc:get-sub-service-paths-response": {
+                "type": "object",
+                "properties": {
+                  "collection-header": {
+                    "type": "object",
+                    "properties": {
+                      "offset": {
+                        "type": "integer",
+                        "description": "offset of the first record of the collection (leaf)",
+                        "format": "uint32",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      },
+                      "limit": {
+                        "type": "string",
+                        "description": "max number of records that should be in collection (leaf)",
+                        "format": "int32",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      },
+                      "count": {
+                        "type": "string",
+                        "description": "actual number of records in the collection. (leaf)",
+                        "format": "int32",
+                        "x-yang": {
+                          "type": "leaf"
+                        }
+                      }
+                    },
+                    "description": "(non-presence)",
+                    "x-yang": {
+                      "type": "container",
+                      "is_presence": "false"
+                    }
+                  },
+                  "sub-service-path": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "sub service instance paths of the service (leaf-list)",
+                      "format": "string"
+                    },
+                    "x-yang": {
+                      "type": "leaf-list"
+                    }
+                  }
+                },
+                "description": "(non-presence)",
+                "x-yang": {
+                  "type": "container",
+                  "is_presence": "false"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses" : {
+      "200" : {
+        "description" : "OK",
+        "content" : { }
+      },
+      "201" : {
+        "description" : "Created",
+        "content" : { }
+      },
+      "204" : {
+        "description" : "No Content",
+        "content" : { }
+      },
+      "400" : {
+        "description" : "Bad Request",
+        "content" : { }
+      },
+      "401" : {
+        "description" : "Unauthorized",
+        "content" : { }
+      },
+      "404" : {
+        "description" : "Not Found",
+        "content" : { }
+      },
+      "405" : {
+        "description" : "Method Not Allowed",
+        "content" : { }
+      },
+      "409" : {
+        "description" : "Conflict",
+        "content" : { }
+      }
+    },
+    "parameters" : {
+      "content" : {
+        "name" : "content",
+        "in" : "query",
+        "description" : "controlling descendant nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "config",
+          "enum" : [ "config", "nonconfig", "all" ]
+        }
+      },
+      "depth" : {
+        "name" : "depth",
+        "in" : "query",
+        "description" : "limit the depth of nodes in response",
+        "schema" : {
+          "type" : "integer",
+          "format" : "uint16"
+        }
+      },
+      "fields" : {
+        "name" : "fields",
+        "in" : "query",
+        "description" : "optionally identify specific data nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "filter" : {
+        "name" : "filter",
+        "in" : "query",
+        "description" : "xpath expression to filter data nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "with-defaults" : {
+        "name" : "with-defaults",
+        "in" : "query",
+        "description" : "controlling default values in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "report-all",
+          "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+        }
+      },
+      "insert" : {
+        "name" : "insert",
+        "in" : "query",
+        "description" : "controlling the order when adding new list elements",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "first",
+          "enum" : [ "first", "last", "before", "after" ]
+        }
+      },
+      "point" : {
+        "name" : "point",
+        "in" : "query",
+        "description" : "used to specify the insertion point",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      }
+    },
+    "requestBodies" : {
+      "operations_cat-inventory-rpc_get-all-services-post-input" : {
+        "description" : "return all services in the system (istp inventory db). The return\nset of records can be indexed and limited using the collection-header\nparameters - offset and limit. Also, the query criteria can be\nspecified to filter the services returned. This operation can\nbe called iteratively to retrieve all the services for a given\ncriteria by passing the offset incremented based on the last response\nto the operation. ",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-all-services-post-input"
+            }
+          }
+        },
+        "required" : true
+      },
+      "operations_cat-inventory-rpc_get-associated-services-for-transport-post-input" : {
+        "description" : "return the list of vpn services that use the given underlay transport (sr-te policy or rsvp-te tunnel)",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-associated-services-for-transport-post-input"
+            }
+          }
+        },
+        "required" : true
+      },
+      "operations_cat-inventory-rpc_get-available-service-types-post-input" : {
+        "description" : "returns all available service types that are currently known\nto the system. service-type from this response can be used as\na input filter in get all services rpc",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-available-service-types-post-input"
+            }
+          }
+        },
+        "required" : true
+      },
+      "operations_cat-inventory-rpc_get-service-plan-data-post-input" : {
+        "description" : "this rpc returns the service plan status and creation time for\none or more service instances passed in the input",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-service-plan-data-post-input"
+            }
+          }
+        },
+        "required" : true
+      },
+      "operations_cat-inventory-rpc_get-services-count-post-input" : {
+        "description" : "returns all service instances count including service instances\ncount per type that are currently known to the system at the time\nof request",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-services-count-post-input"
+            }
+          }
+        },
+        "required" : true
+      },
+      "operations_cat-inventory-rpc_get-sub-service-count-post-input" : {
+        "description" : "return the sub-services count of the service. returns unsupported\nerror if the service does not support sub-services ",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-sub-service-count-post-input"
+            }
+          }
+        },
+        "required" : true
+      },
+      "operations_cat-inventory-rpc_get-sub-service-paths-post-input" : {
+        "description" : "return the batch list of sub-services paths of the service. returns\nunsupported error if the service does not support sub-services",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/operations_cat-inventory-rpc_get-sub-service-paths-post-input"
+            }
+          }
+        },
+        "required" : true
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }      
+    }
+  },
+  "x-original-swagger-version" : "2.0"
+}

@@ -1,0 +1,1692 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "cisco-l3vpn-routing-policy",
+    "description" : "This YANG module defines models that l3vpn-ntw-deviations\nwill make ietf-l3vpn-ntw to depend on.",
+    "termsOfService": "http://www.cisco.com/web/siteassets/legal/terms_condition.html",
+    "contact" : {
+      "name" : "Cisco Systems",
+      "url" : "https://www.cisco.com",
+      "email" : "support@cisco.com"
+    },
+    "license" : {
+      "name" : "Cisco Software License Agreement",
+      "url" : "http://www.cisco.com/public/sw-license-agreement.html"
+    },
+    "version" : "7.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://{cnc-host}:{cnc-port}/crosswork/proxy/nso/restconf",
+      "variables": {
+        "cnc-host": {
+          "default": "127.0.0.1",
+          "description": "host name or ip address of the target CNC Cluster"
+        },
+        "cnc-port": {
+          "default": "30603",
+          "description": "port number of the target CNC Cluster"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags" : [ {
+    "name" : "data",
+    "description" : "data resources"
+  } ],
+  "paths" : {
+    "/data/cisco-l3vpn-routing-policy:l3vpn-routing-policy/policy-definitions/policy-definition={policy-definition-name}" : {
+      "get" : {
+        "tags" : [ "data" ],
+        "summary" : "List of top-level policy definitions",
+        "description" : "List of top-level policy definitions",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_policy_definitions_policy_definition_policy_definition_name_get",
+        "parameters" : [ {
+          "name" : "policy-definition-name",
+          "in" : "path",
+          "description" : "Name of the top-level policy definition; this name\nis used in references to the current policy.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "content",
+          "in" : "query",
+          "description" : "controlling descendant nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "config",
+            "enum" : [ "config", "nonconfig", "all" ]
+          }
+        }, {
+          "name" : "depth",
+          "in" : "query",
+          "description" : "limit the depth of nodes in response",
+          "schema" : {
+            "type" : "integer",
+            "format" : "uint16"
+          }
+        }, {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "optionally identify specific data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "xpath expression to filter data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "with-defaults",
+          "in" : "query",
+          "description" : "controlling default values in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "report-all",
+            "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of top-level policy definitions",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_policy-definitions_policy-definition_policy-definition-name"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "data" ],
+        "summary" : "List of top-level policy definitions",
+        "description" : "List of top-level policy definitions",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_policy_definitions_policy_definition_policy_definition_name_put",
+        "parameters" : [ {
+          "name" : "policy-definition-name",
+          "in" : "path",
+          "description" : "Name of the top-level policy definition; this name\nis used in references to the current policy.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "insert",
+          "in" : "query",
+          "description" : "controlling the order when adding new list elements",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "first",
+            "enum" : [ "first", "last", "before", "after" ]
+          }
+        }, {
+          "name" : "point",
+          "in" : "query",
+          "description" : "used to specify the insertion point",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "List of top-level policy definitions",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_policy-definitions_policy-definition_policy-definition-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "list policy-definition created or replaced",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "policy-definition"
+      },
+      "delete" : {
+        "tags" : [ "data" ],
+        "summary" : "List of top-level policy definitions",
+        "description" : "List of top-level policy definitions",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_policy_definitions_policy_definition_policy_definition_name_delete",
+        "parameters" : [ {
+          "name" : "policy-definition-name",
+          "in" : "path",
+          "description" : "Name of the top-level policy definition; this name\nis used in references to the current policy.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "data" ],
+        "summary" : "List of top-level policy definitions",
+        "description" : "List of top-level policy definitions",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_policy_definitions_policy_definition_policy_definition_name_patch",
+        "parameters" : [ {
+          "name" : "policy-definition-name",
+          "in" : "path",
+          "description" : "Name of the top-level policy definition; this name\nis used in references to the current policy.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "List of top-level policy definitions",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_policy-definitions_policy-definition_policy-definition-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "list policy-definition updated",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "policy-definition"
+      }
+    },
+    "/data/cisco-l3vpn-routing-policy:l3vpn-routing-policy/defined-sets/prefix-sets/dest-prefix-set={dest-prefix-set-name}" : {
+      "get" : {
+        "tags" : [ "data" ],
+        "summary" : "List of the defined destination prefix sets",
+        "description" : "List of the defined destination prefix sets",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_defined_sets_prefix_sets_dest_prefix_set_dest_prefix_set_name_get",
+        "parameters" : [ {
+          "name" : "dest-prefix-set-name",
+          "in" : "path",
+          "description" : "Name of the prefix set to reference the set in match conditions.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "content",
+          "in" : "query",
+          "description" : "controlling descendant nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "config",
+            "enum" : [ "config", "nonconfig", "all" ]
+          }
+        }, {
+          "name" : "depth",
+          "in" : "query",
+          "description" : "limit the depth of nodes in response",
+          "schema" : {
+            "type" : "integer",
+            "format" : "uint16"
+          }
+        }, {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "optionally identify specific data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "xpath expression to filter data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "with-defaults",
+          "in" : "query",
+          "description" : "controlling default values in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "report-all",
+            "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of the defined destination prefix sets",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_prefix-sets_dest-prefix-set_dest-prefix-set-name"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "data" ],
+        "summary" : "List of the defined destination prefix sets",
+        "description" : "List of the defined destination prefix sets",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_defined_sets_prefix_sets_dest_prefix_set_dest_prefix_set_name_put",
+        "parameters" : [ {
+          "name" : "dest-prefix-set-name",
+          "in" : "path",
+          "description" : "Name of the prefix set to reference the set in match conditions.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "insert",
+          "in" : "query",
+          "description" : "controlling the order when adding new list elements",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "first",
+            "enum" : [ "first", "last", "before", "after" ]
+          }
+        }, {
+          "name" : "point",
+          "in" : "query",
+          "description" : "used to specify the insertion point",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "List of the defined destination prefix sets",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_prefix-sets_dest-prefix-set_dest-prefix-set-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "list dest-prefix-set created or replaced",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "dest-prefix-set"
+      },
+      "delete" : {
+        "tags" : [ "data" ],
+        "summary" : "List of the defined destination prefix sets",
+        "description" : "List of the defined destination prefix sets",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_defined_sets_prefix_sets_dest_prefix_set_dest_prefix_set_name_delete",
+        "parameters" : [ {
+          "name" : "dest-prefix-set-name",
+          "in" : "path",
+          "description" : "Name of the prefix set to reference the set in match conditions.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "data" ],
+        "summary" : "List of the defined destination prefix sets",
+        "description" : "List of the defined destination prefix sets",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_defined_sets_prefix_sets_dest_prefix_set_dest_prefix_set_name_patch",
+        "parameters" : [ {
+          "name" : "dest-prefix-set-name",
+          "in" : "path",
+          "description" : "Name of the prefix set to reference the set in match conditions.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "List of the defined destination prefix sets",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_prefix-sets_dest-prefix-set_dest-prefix-set-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "list dest-prefix-set updated",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "dest-prefix-set"
+      }
+    },
+    "/data/cisco-l3vpn-routing-policy:l3vpn-routing-policy/defined-sets/tag-sets/tag-set={tag-set-name}" : {
+      "get" : {
+        "tags" : [ "data" ],
+        "summary" : "List of tag set definitions.",
+        "description" : "List of tag set definitions.",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_defined_sets_tag_sets_tag_set_tag_set_name_get",
+        "parameters" : [ {
+          "name" : "tag-set-name",
+          "in" : "path",
+          "description" : "Name of the tag set; this is used as a label to\nreference the set in actions conditions.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "content",
+          "in" : "query",
+          "description" : "controlling descendant nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "config",
+            "enum" : [ "config", "nonconfig", "all" ]
+          }
+        }, {
+          "name" : "depth",
+          "in" : "query",
+          "description" : "limit the depth of nodes in response",
+          "schema" : {
+            "type" : "integer",
+            "format" : "uint16"
+          }
+        }, {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "optionally identify specific data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "xpath expression to filter data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "with-defaults",
+          "in" : "query",
+          "description" : "controlling default values in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "report-all",
+            "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of tag set definitions.",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_tag-sets_tag-set_tag-set-name"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "data" ],
+        "summary" : "List of tag set definitions.",
+        "description" : "List of tag set definitions.",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_defined_sets_tag_sets_tag_set_tag_set_name_put",
+        "parameters" : [ {
+          "name" : "tag-set-name",
+          "in" : "path",
+          "description" : "Name of the tag set; this is used as a label to\nreference the set in actions conditions.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "insert",
+          "in" : "query",
+          "description" : "controlling the order when adding new list elements",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "first",
+            "enum" : [ "first", "last", "before", "after" ]
+          }
+        }, {
+          "name" : "point",
+          "in" : "query",
+          "description" : "used to specify the insertion point",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "List of tag set definitions.",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_tag-sets_tag-set_tag-set-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "list tag-set created or replaced",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "tag-set"
+      },
+      "delete" : {
+        "tags" : [ "data" ],
+        "summary" : "List of tag set definitions.",
+        "description" : "List of tag set definitions.",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_defined_sets_tag_sets_tag_set_tag_set_name_delete",
+        "parameters" : [ {
+          "name" : "tag-set-name",
+          "in" : "path",
+          "description" : "Name of the tag set; this is used as a label to\nreference the set in actions conditions.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "data" ],
+        "summary" : "List of tag set definitions.",
+        "description" : "List of tag set definitions.",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_defined_sets_tag_sets_tag_set_tag_set_name_patch",
+        "parameters" : [ {
+          "name" : "tag-set-name",
+          "in" : "path",
+          "description" : "Name of the tag set; this is used as a label to\nreference the set in actions conditions.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "List of tag set definitions.",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_tag-sets_tag-set_tag-set-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "list tag-set updated",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "tag-set"
+      }
+    },
+    "/data/cisco-l3vpn-routing-policy:l3vpn-routing-policy/defined-sets/prefix-sets/source-prefix-set={source-prefix-set-name}" : {
+      "get" : {
+        "tags" : [ "data" ],
+        "summary" : "List of the defined source prefix sets",
+        "description" : "List of the defined source prefix sets",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_defined_sets_prefix_sets_source_prefix_set_source_prefix_set_name_get",
+        "parameters" : [ {
+          "name" : "source-prefix-set-name",
+          "in" : "path",
+          "description" : "Name of the prefix set to reference the set in match conditions.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "content",
+          "in" : "query",
+          "description" : "controlling descendant nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "config",
+            "enum" : [ "config", "nonconfig", "all" ]
+          }
+        }, {
+          "name" : "depth",
+          "in" : "query",
+          "description" : "limit the depth of nodes in response",
+          "schema" : {
+            "type" : "integer",
+            "format" : "uint16"
+          }
+        }, {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "optionally identify specific data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "xpath expression to filter data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "with-defaults",
+          "in" : "query",
+          "description" : "controlling default values in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "report-all",
+            "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of the defined source prefix sets",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_prefix-sets_source-prefix-set_source-prefix-set-name"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "data" ],
+        "summary" : "List of the defined source prefix sets",
+        "description" : "List of the defined source prefix sets",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_defined_sets_prefix_sets_source_prefix_set_source_prefix_set_name_put",
+        "parameters" : [ {
+          "name" : "source-prefix-set-name",
+          "in" : "path",
+          "description" : "Name of the prefix set to reference the set in match conditions.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "insert",
+          "in" : "query",
+          "description" : "controlling the order when adding new list elements",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "first",
+            "enum" : [ "first", "last", "before", "after" ]
+          }
+        }, {
+          "name" : "point",
+          "in" : "query",
+          "description" : "used to specify the insertion point",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "List of the defined source prefix sets",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_prefix-sets_source-prefix-set_source-prefix-set-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "list source-prefix-set created or replaced",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "source-prefix-set"
+      },
+      "delete" : {
+        "tags" : [ "data" ],
+        "summary" : "List of the defined source prefix sets",
+        "description" : "List of the defined source prefix sets",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_defined_sets_prefix_sets_source_prefix_set_source_prefix_set_name_delete",
+        "parameters" : [ {
+          "name" : "source-prefix-set-name",
+          "in" : "path",
+          "description" : "Name of the prefix set to reference the set in match conditions.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "data" ],
+        "summary" : "List of the defined source prefix sets",
+        "description" : "List of the defined source prefix sets",
+        "operationId" : "data_cisco_l3vpn_routing_policy_l3vpn_routing_policy_defined_sets_prefix_sets_source_prefix_set_source_prefix_set_name_patch",
+        "parameters" : [ {
+          "name" : "source-prefix-set-name",
+          "in" : "path",
+          "description" : "Name of the prefix set to reference the set in match conditions.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "List of the defined source prefix sets",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_prefix-sets_source-prefix-set_source-prefix-set-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "list source-prefix-set updated",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "source-prefix-set"
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_prefix-sets_source-prefix-set_source-prefix-set-name" : {
+        "type" : "object",
+        "properties" : {
+          "cisco-l3vpn-routing-policy:source-prefix-set" : {
+            "type" : "array",
+            "description" : "List of the defined source prefix sets (list)",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "mode" : {
+                  "type" : "string",
+                  "description" : "Mode of the prefix set (address families IPv4 or IPv6) (leaf)",
+                  "format" : "enumeration",
+                  "default" : "ipv4",
+                  "enum" : [ "ipv4", "ipv6" ],
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "prefixes" : {
+                  "type" : "object",
+                  "properties" : {
+                    "prefix-list" : {
+                      "type" : "array",
+                      "description" : "List of prefixes in the prefix set. (list)",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "ip-prefix" : {
+                            "type" : "string",
+                            "description" : "The IP prefix represented as an IPv6 or IPv4 network\nnumber followed by a prefix length with an intervening\nslash character as a delimiter.  All members of the\nprefix-set MUST be of the same address family as the\nprefix-set mode. (leaf)",
+                            "format" : "union",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          }
+                        }
+                      },
+                      "x-yang" : {
+                        "type" : "list"
+                      }
+                    }
+                  },
+                  "description" : "Container for the list of prefixes in a policy\nprefix list. (non-presence)",
+                  "x-yang" : {
+                    "is_presence" : "false",
+                    "type" : "container"
+                  }
+                },
+                "name" : {
+                  "type" : "string",
+                  "description" : "Name of the prefix set to reference the set in match conditions. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                }
+              }
+            },
+            "x-yang" : {
+              "type" : "list"
+            }
+          }
+        }
+      },
+      "data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_tag-sets_tag-set_tag-set-name" : {
+        "type" : "object",
+        "properties" : {
+          "cisco-l3vpn-routing-policy:tag-set" : {
+            "type" : "array",
+            "description" : "List of tag set definitions. (list)",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "tag-value" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "integer",
+                    "description" : "<1-4294967295> list with single tag-value member allowed. Should match to a color value. (leaf-list)",
+                    "format" : "uint32"
+                  },
+                  "x-yang" : {
+                    "type" : "leaf-list"
+                  }
+                },
+                "name" : {
+                  "type" : "string",
+                  "description" : "Name of the tag set; this is used as a label to\nreference the set in actions conditions. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                }
+              }
+            },
+            "x-yang" : {
+              "type" : "list"
+            }
+          }
+        }
+      },
+      "data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_policy-definitions_policy-definition_policy-definition-name" : {
+        "type" : "object",
+        "properties" : {
+          "cisco-l3vpn-routing-policy:policy-definition" : {
+            "type" : "array",
+            "description" : "List of top-level policy definitions (list)",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "name" : {
+                  "type" : "string",
+                  "description" : "Name of the top-level policy definition; this name\nis used in references to the current policy. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "statements" : {
+                  "type" : "object",
+                  "properties" : {
+                    "statement" : {
+                      "type" : "array",
+                      "description" : "Policy statements group conditions and actions\nwithin a policy definition evaluated in\nthe order specified. (list)",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "name" : {
+                            "type" : "string",
+                            "description" : "Name of the policy statement. (leaf)",
+                            "format" : "string",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "conditions" : {
+                            "type" : "object",
+                            "properties" : {
+                              "match-source-prefix-set" : {
+                                "type" : "object",
+                                "properties" : {
+                                  "prefix-set" : {
+                                    "type" : "string",
+                                    "description" : "References a defined prefix set. Used only in the MVPN case. (leaf)",
+                                    "format" : "leafref",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  }
+                                },
+                                "description" : "Match a referenced prefix-set. Used only in the MVPN case. (presence)",
+                                "x-yang" : {
+                                  "is_presence" : "true",
+                                  "type" : "container"
+                                }
+                              },
+                              "match-dest-prefix-set" : {
+                                "type" : "object",
+                                "properties" : {
+                                  "prefix-set" : {
+                                    "type" : "string",
+                                    "description" : "References a defined prefix set. (leaf)",
+                                    "format" : "leafref",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  }
+                                },
+                                "description" : "Match a referenced prefix-set according to the\nlogic defined in the match-set-options leaf. (presence)",
+                                "x-yang" : {
+                                  "is_presence" : "true",
+                                  "type" : "container"
+                                }
+                              }
+                            },
+                            "description" : "Condition statements for the current policy\nstatement. (non-presence)",
+                            "x-yang" : {
+                              "is_presence" : "false",
+                              "type" : "container"
+                            }
+                          },
+                          "actions" : {
+                            "type" : "object",
+                            "properties" : {
+                              "multicast-actions" : {
+                                "type" : "object",
+                                "properties" : {
+                                  "set-data-mdt" : {
+                                    "type" : "string",
+                                    "description" : "Set named data mdt (leaf)",
+                                    "format" : "string",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  },
+                                  "set-on-demand-color" : {
+                                    "type" : "string",
+                                    "description" : "References a defined tag set. (leaf)",
+                                    "format" : "leafref",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  },
+                                  "set-fast-reroute" : {
+                                    "type" : "object",
+                                    "properties" : {
+                                      "set-lfa" : {
+                                        "type" : "object",
+                                        "properties" : { },
+                                        "description" : "Set LFA Fast Re-route (presence)",
+                                        "x-yang" : {
+                                          "is_presence" : "true",
+                                          "type" : "container"
+                                        }
+                                      }
+                                    },
+                                    "description" : "Set Fast Re-route protection for MVPN Tree-SID route policy only (presence)",
+                                    "x-yang" : {
+                                      "is_presence" : "true",
+                                      "type" : "container"
+                                    }
+                                  }
+                                },
+                                "description" : "Top-level container for multicast-specific actions (presence)",
+                                "x-yang" : {
+                                  "is_presence" : "true",
+                                  "type" : "container"
+                                }
+                              },
+                              "apply-policy" : {
+                                "type" : "object",
+                                "properties" : {
+                                  "extra-policy" : {
+                                    "type" : "array",
+                                    "items" : {
+                                      "type" : "string",
+                                      "description" : "List of policy names in sequence to be applied. (leaf-list)",
+                                      "format" : "string"
+                                    },
+                                    "x-yang" : {
+                                      "type" : "leaf-list"
+                                    }
+                                  }
+                                },
+                                "description" : "Anchor point for extra routing policies in the model (presence)",
+                                "x-yang" : {
+                                  "is_presence" : "true",
+                                  "type" : "container"
+                                }
+                              },
+                              "bgp-actions" : {
+                                "type" : "object",
+                                "properties" : {
+                                  "set-ext-community" : {
+                                    "type" : "object",
+                                    "properties" : {
+                                      "ext-community-set-ref" : {
+                                        "type" : "string",
+                                        "description" : "References a defined extended community set by name. Creating routing-policy tag-set is mandatory and needs to be mapped here. (leaf)",
+                                        "format" : "leafref",
+                                        "x-yang" : {
+                                          "type" : "leaf"
+                                        }
+                                      }
+                                    },
+                                    "description" : "Action to set the extended community attributes (presence)",
+                                    "x-yang" : {
+                                      "is_presence" : "true",
+                                      "type" : "container"
+                                    }
+                                  }
+                                },
+                                "description" : "Top-level container for BGP-specific actions (presence)",
+                                "x-yang" : {
+                                  "is_presence" : "true",
+                                  "type" : "container"
+                                }
+                              },
+                              "policy-result" : {
+                                "type" : "string",
+                                "description" : "Select accept disposition for the route.\nStatement cannot contain conditions with only policy-result action (leaf)",
+                                "format" : "enumeration",
+                                "default" : "accept-route",
+                                "enum" : [ "accept-route" ],
+                                "x-yang" : {
+                                  "type" : "leaf"
+                                }
+                              }
+                            },
+                            "description" : "Top-level container for policy action\nstatements. (non-presence)",
+                            "x-yang" : {
+                              "is_presence" : "false",
+                              "type" : "container"
+                            }
+                          }
+                        }
+                      },
+                      "x-yang" : {
+                        "type" : "list"
+                      }
+                    }
+                  },
+                  "description" : "Enclosing container for policy statements. (non-presence)",
+                  "x-yang" : {
+                    "is_presence" : "false",
+                    "type" : "container"
+                  }
+                }
+              }
+            },
+            "x-yang" : {
+              "type" : "list"
+            }
+          }
+        }
+      },
+      "data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_prefix-sets_dest-prefix-set_dest-prefix-set-name" : {
+        "type" : "object",
+        "properties" : {
+          "cisco-l3vpn-routing-policy:dest-prefix-set" : {
+            "type" : "array",
+            "description" : "List of the defined destination prefix sets (list)",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "mode" : {
+                  "type" : "string",
+                  "description" : "Mode of the prefix set (address families IPv4 or IPv6) (leaf)",
+                  "format" : "enumeration",
+                  "default" : "ipv4",
+                  "enum" : [ "ipv4", "ipv6" ],
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "prefixes" : {
+                  "type" : "object",
+                  "properties" : {
+                    "prefix-list" : {
+                      "type" : "array",
+                      "description" : "List of prefixes in the prefix set. (list)",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "ip-prefix" : {
+                            "type" : "string",
+                            "description" : "The IP prefix represented as an IPv6 or IPv4 network\nnumber followed by a prefix length with an intervening\nslash character as a delimiter.  All members of the\nprefix-set MUST be of the same address family as the\nprefix-set mode. (leaf)",
+                            "format" : "union",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          }
+                        }
+                      },
+                      "x-yang" : {
+                        "type" : "list"
+                      }
+                    }
+                  },
+                  "description" : "Container for the list of prefixes in a policy\nprefix list. (non-presence)",
+                  "x-yang" : {
+                    "is_presence" : "false",
+                    "type" : "container"
+                  }
+                },
+                "name" : {
+                  "type" : "string",
+                  "description" : "Name of the prefix set to reference the set in match conditions. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                }
+              }
+            },
+            "x-yang" : {
+              "type" : "list"
+            }
+          }
+        }
+      }
+    },
+    "responses" : {
+      "200" : {
+        "description" : "OK",
+        "content" : { }
+      },
+      "201" : {
+        "description" : "Created",
+        "content" : { }
+      },
+      "400" : {
+        "description" : "Bad Request",
+        "content" : { }
+      },
+      "401" : {
+        "description" : "Unauthorized",
+        "content" : { }
+      },
+      "204" : {
+        "description" : "No Content",
+        "content" : { }
+      },
+      "404" : {
+        "description" : "Not Found",
+        "content" : { }
+      },
+      "405" : {
+        "description" : "Method Not Allowed",
+        "content" : { }
+      },
+      "409" : {
+        "description" : "Conflict",
+        "content" : { }
+      }
+    },
+    "parameters" : {
+      "fields" : {
+        "name" : "fields",
+        "in" : "query",
+        "description" : "optionally identify specific data nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "policy-definition-name" : {
+        "name" : "policy-definition-name",
+        "in" : "path",
+        "description" : "Name of the top-level policy definition; this name\nis used in references to the current policy.",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "tag-set-name" : {
+        "name" : "tag-set-name",
+        "in" : "path",
+        "description" : "Name of the tag set; this is used as a label to\nreference the set in actions conditions.",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "insert" : {
+        "name" : "insert",
+        "in" : "query",
+        "description" : "controlling the order when adding new list elements",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "first",
+          "enum" : [ "first", "last", "before", "after" ]
+        }
+      },
+      "content" : {
+        "name" : "content",
+        "in" : "query",
+        "description" : "controlling descendant nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "config",
+          "enum" : [ "config", "nonconfig", "all" ]
+        }
+      },
+      "point" : {
+        "name" : "point",
+        "in" : "query",
+        "description" : "used to specify the insertion point",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "with-defaults" : {
+        "name" : "with-defaults",
+        "in" : "query",
+        "description" : "controlling default values in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "report-all",
+          "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+        }
+      },
+      "source-prefix-set-name" : {
+        "name" : "source-prefix-set-name",
+        "in" : "path",
+        "description" : "Name of the prefix set to reference the set in match conditions.",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "dest-prefix-set-name" : {
+        "name" : "dest-prefix-set-name",
+        "in" : "path",
+        "description" : "Name of the prefix set to reference the set in match conditions.",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "filter" : {
+        "name" : "filter",
+        "in" : "query",
+        "description" : "xpath expression to filter data nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "depth" : {
+        "name" : "depth",
+        "in" : "query",
+        "description" : "limit the depth of nodes in response",
+        "schema" : {
+          "type" : "integer",
+          "format" : "uint16"
+        }
+      }
+    },
+    "requestBodies" : {
+      "data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_prefix-sets_source-prefix-set_source-prefix-set-name" : {
+        "description" : "List of the defined source prefix sets",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_prefix-sets_source-prefix-set_source-prefix-set-name"
+            }
+          }
+        },
+        "required" : true
+      },
+      "data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_tag-sets_tag-set_tag-set-name" : {
+        "description" : "List of tag set definitions.",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_tag-sets_tag-set_tag-set-name"
+            }
+          }
+        },
+        "required" : true
+      },
+      "data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_policy-definitions_policy-definition_policy-definition-name" : {
+        "description" : "List of top-level policy definitions",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_policy-definitions_policy-definition_policy-definition-name"
+            }
+          }
+        },
+        "required" : true
+      },
+      "data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_prefix-sets_dest-prefix-set_dest-prefix-set-name" : {
+        "description" : "List of the defined destination prefix sets",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/data_cisco-l3vpn-routing-policy_l3vpn-routing-policy_defined-sets_prefix-sets_dest-prefix-set_dest-prefix-set-name"
+            }
+          }
+        },
+        "required" : true
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "x-original-swagger-version" : "2.0"
+}

@@ -20,6 +20,23 @@ Two complementary APIs for querying affected VPN services:
    - POST cat-inventory-rpc-get-services-count
      Returns total count of provisioned service instances.
 
+3. IETF L3VPN Operational Data API (CNC 7.1 RESTCONF):
+   Base: /crosswork/nbi/cat-inventory/v1/restconf
+   - GET /data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service
+     List all L3VPN services with operational state (oper-status + discovered transports).
+   - GET /data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service={vpn-id}
+     Single L3VPN service with operational state.
+   - GET /data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service={vpn-id}/
+         underlay-transport/cisco-l3vpn-ntw:discovered-underlay-transport
+     Discovered underlay transports (SR policies + TE tunnels) for a VPN service.
+
+4. IETF L2VPN Operational Data API (CNC 7.1 RESTCONF):
+   Base: /crosswork/nbi/cat-inventory/v1/restconf
+   - GET /data/ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service
+     List all L2VPN services with operational state.
+   - GET /data/ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service={vpn-id}
+     Single L2VPN service with operational state.
+
 Reference: https://developer.cisco.com/docs/crosswork/network-controller/
            api-reference-crosswork-active-topology-service-inventory-api-overview/
 """
@@ -48,6 +65,18 @@ class CNCServiceHealthClient:
     - POST /cat-inventory-rpc-get-all-services
     - POST /cat-inventory-rpc-get-available-service-types
     - POST /cat-inventory-rpc-get-services-count
+
+    IETF L3VPN Operational Data API (RESTCONF, CNC 7.1):
+    Base: /crosswork/nbi/cat-inventory/v1/restconf
+    - GET /data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service
+    - GET /data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service={vpn-id}
+    - GET /data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service={vpn-id}/
+          underlay-transport/cisco-l3vpn-ntw:discovered-underlay-transport
+
+    IETF L2VPN Operational Data API (RESTCONF, CNC 7.1):
+    Base: /crosswork/nbi/cat-inventory/v1/restconf
+    - GET /data/ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service
+    - GET /data/ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service={vpn-id}
     """
 
     def __init__(
@@ -59,6 +88,8 @@ class CNCServiceHealthClient:
         username: Optional[str] = None,
         password: Optional[str] = None,
         timeout: int = 30,
+        l3vpn_oper_url: Optional[str] = None,
+        l2vpn_oper_url: Optional[str] = None,
     ):
         """
         Initialize CNC client.
@@ -71,6 +102,10 @@ class CNCServiceHealthClient:
             username: CNC username
             password: CNC password
             timeout: Request timeout in seconds
+            l3vpn_oper_url: Base URL for IETF L3VPN Operational Data RESTCONF API
+                            (env: CNC_L3VPN_OPER_URL, defaults to CNC_RESTCONF_URL)
+            l2vpn_oper_url: Base URL for IETF L2VPN Operational Data RESTCONF API
+                            (env: CNC_L2VPN_OPER_URL, defaults to CNC_RESTCONF_URL)
         """
         self.base_url = base_url or os.getenv(
             "CNC_SERVICE_HEALTH_URL",
@@ -91,6 +126,24 @@ class CNCServiceHealthClient:
         self.username = username or os.getenv("CNC_USERNAME", "admin")
         self.password = password or os.getenv("CNC_PASSWORD", "")
         self.timeout = timeout
+
+        # Operational Data RESTCONF base URLs (cat-inventory/v1/restconf).
+        # Both specs declare the same server base:
+        #   https://{cnc-host}:{cnc-port}/crosswork/nbi/cat-inventory/v1/restconf
+        _default_oper_url = os.getenv(
+            "CNC_RESTCONF_URL",
+            "https://cnc.example.com:30603/crosswork/nbi/cat-inventory/v1/restconf"
+        )
+        self.l3vpn_oper_url = (
+            l3vpn_oper_url
+            or os.getenv("CNC_L3VPN_OPER_URL")
+            or _default_oper_url
+        )
+        self.l2vpn_oper_url = (
+            l2vpn_oper_url
+            or os.getenv("CNC_L2VPN_OPER_URL")
+            or _default_oper_url
+        )
 
         self._jwt_token: Optional[str] = None
         self._jwt_expires_at: Optional[datetime] = None
@@ -550,6 +603,322 @@ class CNCServiceHealthClient:
         except Exception as e:
             logger.error("Failed to get L3VPN service", vpn_id=vpn_id, error=str(e))
             return {}
+
+    # -------------------------------------------------------------------------
+    # IETF L3VPN Operational Data API (CNC 7.1 RESTCONF)
+    # Spec: api_specs/ietf_l3vpn_oper_data.json
+    # Base: /crosswork/nbi/cat-inventory/v1/restconf
+    # Reference: RFC 9182 / ietf-l3vpn-ntw YANG module
+    # -------------------------------------------------------------------------
+
+    async def get_l3vpn_oper_services(
+        self,
+        offset: Optional[int] = None,
+        limit: Optional[int] = None,
+    ) -> List[dict]:
+        """
+        List all L3VPN services with operational state (batch).
+
+        IETF L3VPN Operational Data API (CNC 7.1):
+        GET /data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service
+
+        Returns operational data including service health status and discovered
+        underlay transport references for every L3VPN service instance.
+        Supports server-side pagination via offset/limit query parameters.
+
+        Args:
+            offset: Number of list entries to skip (>= 0).
+            limit: Maximum number of entries to return (>= 1).
+
+        Returns:
+            List of vpn-service dicts, each containing vpn-id, status/oper-status,
+            and underlay-transport/cisco-l3vpn-ntw:discovered-underlay-transport.
+        """
+        client = await self._get_client()
+        token = await self._get_jwt_token()
+
+        params: Dict[str, Any] = {"content": "nonconfig"}
+        if offset is not None:
+            params["offset"] = offset
+        if limit is not None:
+            params["limit"] = limit
+
+        logger.info(
+            "Listing L3VPN services with operational data",
+            offset=offset,
+            limit=limit,
+        )
+
+        try:
+            response = await client.get(
+                f"{self.l3vpn_oper_url}/data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service",
+                params=params,
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Accept": "application/yang-data+json",
+                },
+            )
+            response.raise_for_status()
+            data = response.json()
+            services = data.get("ietf-l3vpn-ntw:vpn-service", [])
+            logger.info(
+                "L3VPN oper services listed",
+                service_count=len(services),
+            )
+            return services
+
+        except Exception as e:
+            logger.error("Failed to list L3VPN oper services", error=str(e))
+            return []
+
+    async def get_l3vpn_oper_service(self, vpn_id: str) -> Optional[dict]:
+        """
+        Get a single L3VPN service instance with operational state.
+
+        IETF L3VPN Operational Data API (CNC 7.1):
+        GET /data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service={vpn-id}
+
+        Returns the service health status (oper-status) and discovered underlay
+        transport references (SR policies and TE tunnels) for the given VPN.
+
+        Args:
+            vpn_id: VPN identifier that uniquely identifies the L3VPN service.
+
+        Returns:
+            vpn-service dict with vpn-id, status/oper-status, and
+            underlay-transport/cisco-l3vpn-ntw:discovered-underlay-transport,
+            or None if the service is not found.
+        """
+        client = await self._get_client()
+        token = await self._get_jwt_token()
+
+        logger.info("Getting L3VPN service operational data", vpn_id=vpn_id)
+
+        try:
+            response = await client.get(
+                f"{self.l3vpn_oper_url}/data/ietf-l3vpn-ntw:l3vpn-ntw"
+                f"/vpn-services/vpn-service={vpn_id}",
+                params={"content": "nonconfig"},
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Accept": "application/yang-data+json",
+                },
+            )
+            response.raise_for_status()
+            data = response.json()
+            # Response wraps the single entry in a list under the module-prefixed key
+            services = data.get("ietf-l3vpn-ntw:vpn-service", [])
+            result = services[0] if services else data
+            logger.info("L3VPN oper service retrieved", vpn_id=vpn_id)
+            return result
+
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 404:
+                logger.warning("L3VPN service not found", vpn_id=vpn_id)
+                return None
+            logger.error(
+                "Failed to get L3VPN oper service",
+                vpn_id=vpn_id,
+                status_code=e.response.status_code,
+                error=str(e),
+            )
+            return None
+
+        except Exception as e:
+            logger.error("Failed to get L3VPN oper service", vpn_id=vpn_id, error=str(e))
+            return None
+
+    async def get_l3vpn_discovered_transports(self, vpn_id: str) -> dict:
+        """
+        Get discovered underlay transport references for an L3VPN service.
+
+        IETF L3VPN Operational Data API (CNC 7.1):
+        GET /data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service={vpn-id}/
+            underlay-transport/cisco-l3vpn-ntw:discovered-underlay-transport
+
+        Returns the Cisco-augmented discovered-underlay-transport container, which
+        includes:
+        - cisco-l3vpn-ntw:sr-policy-ref  (list of SR policies: headend, endpoint, color)
+        - cisco-l3vpn-ntw:te-tunnel-ref  (list of RSVP-TE tunnels: tunnel-id, src, dst)
+
+        Args:
+            vpn_id: VPN identifier that uniquely identifies the L3VPN service.
+
+        Returns:
+            discovered-underlay-transport dict, or empty dict on error.
+        """
+        client = await self._get_client()
+        token = await self._get_jwt_token()
+
+        logger.info("Getting L3VPN discovered underlay transports", vpn_id=vpn_id)
+
+        try:
+            response = await client.get(
+                f"{self.l3vpn_oper_url}/data/ietf-l3vpn-ntw:l3vpn-ntw"
+                f"/vpn-services/vpn-service={vpn_id}"
+                f"/underlay-transport/cisco-l3vpn-ntw:discovered-underlay-transport",
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Accept": "application/yang-data+json",
+                },
+            )
+            response.raise_for_status()
+            data = response.json()
+            transport = data.get("cisco-l3vpn-ntw:discovered-underlay-transport", data)
+            logger.info(
+                "L3VPN discovered transports retrieved",
+                vpn_id=vpn_id,
+                sr_policy_count=len(transport.get("cisco-l3vpn-ntw:sr-policy-ref", [])),
+                te_tunnel_count=len(transport.get("cisco-l3vpn-ntw:te-tunnel-ref", [])),
+            )
+            return transport
+
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 404:
+                logger.warning(
+                    "No discovered transports found for L3VPN service",
+                    vpn_id=vpn_id,
+                )
+                return {}
+            logger.error(
+                "Failed to get L3VPN discovered transports",
+                vpn_id=vpn_id,
+                status_code=e.response.status_code,
+                error=str(e),
+            )
+            return {}
+
+        except Exception as e:
+            logger.error(
+                "Failed to get L3VPN discovered transports",
+                vpn_id=vpn_id,
+                error=str(e),
+            )
+            return {}
+
+    # -------------------------------------------------------------------------
+    # IETF L2VPN Operational Data API (CNC 7.1 RESTCONF)
+    # Spec: api_specs/ietf_l2vpn_oper_data.json
+    # Base: /crosswork/nbi/cat-inventory/v1/restconf
+    # Reference: RFC 9291 / ietf-l2vpn-ntw YANG module
+    # -------------------------------------------------------------------------
+
+    async def get_l2vpn_oper_services(
+        self,
+        offset: Optional[int] = None,
+        limit: Optional[int] = None,
+    ) -> List[dict]:
+        """
+        List all L2VPN services with operational state (batch).
+
+        IETF L2VPN Operational Data API (CNC 7.1):
+        GET /data/ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service
+
+        Returns operational data including service health status and discovered
+        underlay transport references for every L2VPN service instance.
+        Supports server-side pagination via offset/limit query parameters.
+
+        Args:
+            offset: Number of list entries to skip (>= 0).
+            limit: Maximum number of entries to return (>= 1).
+
+        Returns:
+            List of vpn-service dicts, each containing vpn-id, status/oper-status,
+            and underlay-transport/cisco-l2vpn-ntw:discovered-underlay-transport.
+        """
+        client = await self._get_client()
+        token = await self._get_jwt_token()
+
+        params: Dict[str, Any] = {"content": "nonconfig"}
+        if offset is not None:
+            params["offset"] = offset
+        if limit is not None:
+            params["limit"] = limit
+
+        logger.info(
+            "Listing L2VPN services with operational data",
+            offset=offset,
+            limit=limit,
+        )
+
+        try:
+            response = await client.get(
+                f"{self.l2vpn_oper_url}/data/ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service",
+                params=params,
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Accept": "application/yang-data+json",
+                },
+            )
+            response.raise_for_status()
+            data = response.json()
+            services = data.get("ietf-l2vpn-ntw:vpn-service", [])
+            logger.info(
+                "L2VPN oper services listed",
+                service_count=len(services),
+            )
+            return services
+
+        except Exception as e:
+            logger.error("Failed to list L2VPN oper services", error=str(e))
+            return []
+
+    async def get_l2vpn_oper_service(self, vpn_id: str) -> Optional[dict]:
+        """
+        Get a single L2VPN service instance with operational state.
+
+        IETF L2VPN Operational Data API (CNC 7.1):
+        GET /data/ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service={vpn-id}
+
+        Returns the service health status (oper-status) and discovered underlay
+        transport references (SR policies and TE tunnels) for the given L2VPN.
+
+        Args:
+            vpn_id: VPN identifier that uniquely identifies the L2VPN service.
+
+        Returns:
+            vpn-service dict with vpn-id, status/oper-status, and
+            underlay-transport/cisco-l2vpn-ntw:discovered-underlay-transport,
+            or None if the service is not found.
+        """
+        client = await self._get_client()
+        token = await self._get_jwt_token()
+
+        logger.info("Getting L2VPN service operational data", vpn_id=vpn_id)
+
+        try:
+            response = await client.get(
+                f"{self.l2vpn_oper_url}/data/ietf-l2vpn-ntw:l2vpn-ntw"
+                f"/vpn-services/vpn-service={vpn_id}",
+                params={"content": "nonconfig"},
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Accept": "application/yang-data+json",
+                },
+            )
+            response.raise_for_status()
+            data = response.json()
+            # Response wraps the single entry in a list under the module-prefixed key
+            services = data.get("ietf-l2vpn-ntw:vpn-service", [])
+            result = services[0] if services else data
+            logger.info("L2VPN oper service retrieved", vpn_id=vpn_id)
+            return result
+
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 404:
+                logger.warning("L2VPN service not found", vpn_id=vpn_id)
+                return None
+            logger.error(
+                "Failed to get L2VPN oper service",
+                vpn_id=vpn_id,
+                status_code=e.response.status_code,
+                error=str(e),
+            )
+            return None
+
+        except Exception as e:
+            logger.error("Failed to get L2VPN oper service", vpn_id=vpn_id, error=str(e))
+            return None
 
     async def close(self) -> None:
         """Close HTTP client."""

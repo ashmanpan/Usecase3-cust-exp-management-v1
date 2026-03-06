@@ -1,0 +1,2372 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Service Health Historical Data APIs",
+    "description": "APIs for requesting historical data recorded by the Crosswork Service Health application.",
+    "contact": {
+      "name": "Crosswork Team, Cisco",
+      "email": "support@cisco.com"
+    },
+    "license": {
+      "name": "Cisco Software License Agreement",
+      "url": "http://www.cisco.com/public/sw-license-agreement.html"
+    },
+    "version": "7.1.0"
+  },
+  "servers": [
+    {
+      "url": "/crosswork/aa/aaapp/v1/"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/confighandlemonitorerror/get": {
+      "post": {
+        "tags": [
+          "AaApplication"
+        ],
+        "summary": "Get Archiver Handle-Monitor-Errors configuration.",
+        "operationId": "AaApplication_GetMonitorErrorConfig",
+        "responses": {
+          "200": {
+            "description": "OK. The request was successful. The result is contained in the response body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigHandleMonitorErrorResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "config_handle_monitor_error": true,
+                      "status": "SUCCESS"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayRuntimeError"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "config_handle_monitor_error": false,
+                      "status": "SUCCESS"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/confighandlemonitorerror/set": {
+      "post": {
+        "tags": [
+          "AaApplication"
+        ],
+        "summary": "Set Archiver Handle-Monitor-Errors configuration.",
+        "operationId": "AaApplication_SetMonitorErrorConfig",
+        "requestBody": {
+          "description": "The ConfigHandleMonitorErrorRequest parameter.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigHandleMonitorErrorRequest"
+              },
+              "example": { "config_handle_monitor_error": "true" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK. The request was successful. The result is contained in the response body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigHandleMonitorErrorResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "config_handle_monitor_error": true,
+                      "status": "SUCCESS"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayRuntimeError"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "config_handle_monitor_error": false,
+                      "status": "SUCCESS"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/dashboard/metrics": {
+      "post": {
+        "tags": [
+          "AaApplication"
+        ],
+        "summary": "Get dashboard metrics for VPN services.",
+        "operationId": "AaApplication_GetDashboardMetrics",
+        "responses": {
+          "200": {
+            "description": "OK. The request was successful. The result is contained in the response body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardMetricsResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "status": "SUCCESS",
+                      "servicesCount": [
+                        {
+                          "serviceType": "L2VPN",
+                          "totalCount": 1,
+                          "healthState": {},
+                          "monitorState": {
+                            "basic": {},
+                            "advanced": {}
+                          }
+                        },
+                        {
+                          "serviceType": "L3VPN",
+                          "totalCount": 2,
+                          "monitoredCount": 2,
+                          "healthState": {
+                            "degraded": 2
+                          },
+                          "monitorState": {
+                            "basic": {},
+                            "advanced": {
+                              "degraded": 2,
+                              "totalCount": 2
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayRuntimeError"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "status": "SUCCESS"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/dashboard/sla": {
+      "post": {
+        "tags": [
+          "AaApplication"
+        ],
+        "summary": "Get the metrics for sla breaches",
+        "operationId": "AaApplication_GetDashboardSla",
+        "requestBody": {
+          "description": "The dashboard request parameter.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DashboardRequest"
+              },
+              "example": { "service_type": "L3VPN" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK. The request was successful. The result is contained in the response body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardSlaResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "status": "SUCCESS",
+                      "serviceType": "L2VPN",
+                      "serviceBreach": [
+                        {
+                          "serviceId": "l2nm-p2p-ncs1-2",
+                          "totalSessions": 2,
+                          "totalBreaches": 2,
+                          "fwdDelayBreaches": 2,
+                          "fwdVarianceBreaches": 2,
+                          "fwdLossBreaches": 2,
+                          "rvsLossBreaches": 2,
+                          "thresholdValues": {
+                            "delayThreshold": "500",
+                            "varianceThreshold": "80",
+                            "lossThreshold": "1"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayRuntimeError"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "status": "SUCCESS"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/historicaldatacheck": {
+      "post": {
+        "tags": [
+          "AaApplication"
+        ],
+        "summary": "Check if historical data exists for service.",
+        "operationId": "AaApplication_CheckHistoricalDataExists",
+        "requestBody": {
+          "description": "The historicalServiceRequest parameter.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HistoricalServiceRequest"
+              },
+              "example": {
+                "service_id":"ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service=l2nm-evpn-01_sr",
+                "num_of_days": 1
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK. The request was successful. The result is contained in the response body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/checkHistoricalDataExistsResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "archive_data_exists": true,
+                      "status": "SUCCESS"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "A default value response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayRuntimeError"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "status": "SUCCESS"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/historicalmetrics": {
+      "post": {
+        "tags": [
+          "AaApplication"
+        ],
+        "summary": "Get historical metrics for a service.",
+        "operationId": "AaApplication_GetHistoricalMetrics",
+        "requestBody": {
+          "description": "The HistoricalServiceRequest parameter.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HistoricalMetricsRequest"
+              },
+              "example": {
+                "service_id":"ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service=l2nm-evpn-01",
+                "event_timestamp": 1627431358591140095
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK. The request was successful. The result is contained in the response body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricsResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "event_timestamp": "1628534930601243058",
+                      "service_id": "ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service=L2VPN_NM-VPWS-Flat-01",
+                      "metric_list": {
+                        "metric.device.cpu.load custom(device=CL3-PE-A)": {
+                          "metric_display_label": "CPU Load",
+                          "class": "metric.device.cpu.load",
+                          "namespace": "custom",
+                          "metric_value_datatype": "int",
+                          "lines_data": [
+                            {
+                              "line_name": "cpmCPUTotalIndex=4097",
+                              "HistoricalMetrics": [
+                                {
+                                  "metric_timestamp": "1628445641851887426",
+                                  "metric_value": "11"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayRuntimeError"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "status": "ERROR",
+                      "error": "Historical Metric file not found -"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/historicalservice": {
+      "post": {
+        "tags": [
+          "AaApplication"
+        ],
+        "summary": "Get Assurance Graph for a service",
+        "operationId": "AaApplication_GetHistoricalService",
+        "requestBody": {
+          "description": "historicalServiceRequest parameter.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HistoricalServiceRequest"
+              },
+              "example": {
+                "service_id":"ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service=l2nm-evpn-01_sr",
+                "eos_timestamp": 1627069771759119603
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK. The request was successful. The result is contained in the response body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/assuranceReportResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "service_id": "ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service=L2VPN_NM-EVPN-VPWS-SR",
+                      "degraded_paths_only": true,
+                      "status": "SUCCESS",
+                      "assurance_graph": {
+                        "SubserviceDependencies": []
+                      },
+                      "health_report": {
+                        "health_status": "SERVICE_DEGRADED",
+                        "subservice_health_reports": {}
+                      },
+                      "rootSubservices": [
+                        "subservice.path.reachability.to.peer.system.6921f1c7d8e2c18bbcb22c21d1226c01475c818d915ca6a4094b41f336419ed3"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayRuntimeError"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "status": "ERROR",
+                      "error": "Historical Service file not found -"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/historicaltimeline": {
+      "post": {
+        "tags": [
+          "AaApplication"
+        ],
+        "summary": "Retrieve historical timeline series for a service. ",
+        "operationId": "AaApplication_GetHistoricalTimeline",
+        "requestBody": {
+          "description": "The historicalServiceRequest parameter. Note: For L3VPN, if there are more than 50 endpoints, it's recommended to select the specific endpoints you need. The result historical timeline series will contain only the selected endpoints.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HistoricalServiceRequest"
+              },
+              "example": {
+                "service_id":"ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service=l2nm-evpn-01_sr",
+                "num_of_days": 7,
+                "vpn_node_ids":[]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK. The request was successful. The result is contained in the response body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimeLineEventsResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "time_line_events": [
+                        {
+                          "event_timestamp": "1690238679205916066",
+                          "service_status": "SERVICE_DEGRADED",
+                          "symptoms": 10
+                        }
+                      ],
+                      "status": "SUCCESS"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An empty response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayRuntimeError"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "status": "SUCCESS"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/kpimetrics": {
+      "post": {
+        "tags": [
+          "AaApplication"
+        ],
+        "summary": "Get historical KPI metrics for a service.",
+        "operationId": "AaApplication_GetKpiProbeMetrics",
+        "requestBody": {
+          "description": "The KpiMetricRequest parameter.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KpiMetricsRequest"
+              },
+              "example": {
+                "service_id": "ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service=l2nm-evpn-01_sr",
+                "service_type": "L3VPN",
+                "time_range": 30,
+                "probe_session_id": "62a6b199-12c9-5b04-ab3b-330fd3e6a53f"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK. The request was successful. The result is contained in the response body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KpiMetricsResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "service_id": "ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service=l2nm-p2p-a-b-y1731",
+                      "subservice_metric_list": {
+                        "ss-1d48df18-2c8d-4f0c-9494-698f6f091c64": {
+                          "metric_data": [
+                            {
+                              "metric_instance": "metric.l2vpn.y1731.latency.rt system(device=CL2-PE-A, interfaceId=GigabitEthernet0/0/0/0.602, ipsla-number=round-trip-delay)",
+                              "metric_class": "metric.l2vpn.y1731.latency.rt",
+                              "namespace": "system",
+                              "metric_display_label": "Latency: Roundtrip",
+                              "metric_value_datatype": "float",
+                              "threshold_value": "500",
+                              "KpiHistoricalMetrics": [
+                                {}
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "status": "SUCCESS"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An empty response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayRuntimeError"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "status": "SUCCESS"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "assuranceReportResponse": {
+        "type": "object",
+        "description": "Assurance Report response.",
+        "properties": {
+          "serviceId": {
+            "description": "The ID of the service.",
+            "title": "Service-id",
+            "type": "string"
+          },
+          "ruleId": {
+            "type": "string",
+            "description": "The ID of the rule used by the service."
+          },
+          "profileId": {
+            "type": "string",
+            "description": "The ID of the profile used by the service."
+          },
+          "monitoringType": {
+            "type": "string",
+            "description": "Monitoring Type (Basic or Advanced) used by the service."
+          },
+          "degradedPathsOnly": {
+            "type": "boolean",
+            "description": "The response to use with services/subservices in a down or degraded state. See the AssuranceReportRequest API for details."
+          },
+          "status": {
+            "$ref": "#/components/schemas/assuranceReportResponseStatus"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error details in case the request failed."
+          },
+          "assuranceGraph": {
+            "$ref": "#/components/schemas/ServiceGraph"
+          },
+          "healthReport": {
+            "$ref": "#/components/schemas/ServiceHealthReport"
+          },
+          "rootSubservices": {
+            "description": "List of IDs of the subservice nodes that are directly connected to the service node.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fragmentId": {
+            "description": "Kafka message chunking fragment ID",
+            "type": "integer"
+          },
+          "moreFragments": {
+            "description": "Flag to indicate if more Kafka message chunking fragments are available",
+            "type": "boolean"
+          }
+        }
+      },
+      "assuranceReportResponseStatus": {
+        "type": "string",
+        "description": "Service assurance report is shared via NB using below schema.",
+        "default": "UNKNOWN_STATUS",
+        "enum": [
+          "UNKNOWN_STATUS",
+          "SERVICE_DOESNT_EXIST",
+          "BAD_REQUEST_SCHEMA",
+          "SUCCESS",
+          "ERROR"
+        ]
+      },
+      "checkHistoricalDataExistsResponse": {
+        "type": "object",
+        "description": "Check if historical data exists for the given Service",
+        "properties": {
+          "archiveDataExists": {
+            "description": "True if historical data exists for the given Service",
+            "type": "boolean"
+          },
+          "status": {
+            "$ref": "#/components/schemas/checkHistoricalDataExistsResponseStatus"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error details in case the request failed."
+          }
+        }
+      },
+      "checkHistoricalDataExistsResponseStatus": {
+        "type": "string",
+        "description": "Request - Status mapping",
+        "default": "UNKNOWN_STATUS",
+        "enum": [
+          "UNKNOWN_STATUS",
+          "SERVICE_DOESNT_EXIST",
+          "BAD_REQUEST_SCHEMA",
+          "SUCCESS",
+          "ERROR"
+        ]
+      },
+      "ComponentError": {
+        "type": "object",
+        "description": "To store each component's list of error messages and its timestamp.",
+        "properties": {
+          "errorMsgs": {
+            "type": "array",
+            "description": "Error message",
+            "items": {
+              "$ref": "#/components/schemas/ComponentErrorError"
+            }
+          }
+        }
+      },
+      "ComponentErrorError": {
+        "type": "object",
+        "properties": {
+          "errorMsg": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "createdTs": {
+            "type": "string",
+            "description": "Created timestamp"
+          }
+        },
+        "description": "To store each component's list of error messages and its timestamp."
+      },
+      "ConfigHandleMonitorErrorRequest": {
+        "type": "object",
+        "properties": {
+          "configHandleMonitorError": {
+            "description": "Global settings configuration to handle the Monitor Error.",
+            "type": "boolean"
+          }
+        },
+        "description": "Config-Handle-Monitor-Error Request"
+      },
+      "ConfigHandleMonitorErrorResponse": {
+        "type": "object",
+        "description": "Global settings configuration to handle the Monitor Error.",
+        "properties": {
+          "configHandleMonitorError": {
+            "description": "Global settings configuration to handle the Monitor Error.",
+            "type": "boolean"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ConfigHandleMonitorErrorResponseStatus"
+          },
+          "errmsg": {
+            "description": "Error message",
+            "type": "string"
+          }
+        }
+      },
+      "ConfigHandleMonitorErrorResponseStatus": {
+        "type": "string",
+        "description": "Response Status - Global settings configuration to handle the Monitor Error.",
+        "default": "UNKNOWN_STATUS",
+        "enum": [
+          "UNKNOWN_STATUS",
+          "SUCCESS",
+          "ERROR"
+        ]
+      },
+      "DashboardMetricsResponse": {
+        "type": "object",
+        "description": "Response - Get Dashboard metrics.",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/DashboardMetricsResponseStatus"
+          },
+          "errmsg": {
+            "description": "Error message",
+            "type": "string"
+          },
+          "servicesCount": {
+            "description": "Count of services",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DashboardServiceCount"
+            }
+          }
+        }
+      },
+      "DashboardMetricsResponseStatus": {
+        "type": "string",
+        "description": "Response Status - Get Dashboard metrics.",
+        "default": "UNKNOWN_STATUS",
+        "enum": [
+          "UNKNOWN_STATUS",
+          "SUCCESS",
+          "ERROR"
+        ]
+      },
+      "DashboardRequest": {
+        "type": "object",
+        "description": "Request - Get Dashboard metrics.",
+        "properties": {
+          "serviceType": {
+            "type": "string",
+            "description": "Service type"
+          }
+        }
+      },
+      "DashboardServiceCount": {
+        "type": "object",
+        "description": "Current count of services of a particular service type",
+        "properties": {
+          "serviceType": {
+            "description": "specify the type of service",
+            "type": "string"
+          },
+          "totalCount": {
+            "description": "current count of service",
+            "type": "integer",
+            "format": "int32"
+          },
+          "monitoredCount": {
+            "description": "Monitored count",
+            "type": "integer",
+            "format": "int32"
+          },
+          "healthState": {
+            "$ref": "#/components/schemas/HealthStateCount"
+          },
+          "monitorState": {
+            "$ref": "#/components/schemas/MonitorState"
+          },
+          "slaCount": {
+            "description": "current count of SLA breaches",
+            "type": "integer",
+            "format": "int32"
+          },
+          "kpiCount": {
+            "description": "current count of KPI breaches",
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "DashboardSlaResponse": {
+        "description": "Response - SLA breaches count for SH Dashboard",
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/DashboardSlaResponseStatus"
+          },
+          "errmsg": {
+            "description": "Error message",
+            "type": "string"
+          },
+          "serviceType": {
+            "description": "Service Type",
+            "type": "string"
+          },
+          "serviceBreach": {
+            "description": "SLA sessions and breaches of the services",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceBreach"
+            }
+          }
+        }
+      },
+      "DashboardSlaResponseStatus": {
+        "type": "string",
+        "description": "Response Status - SLA breaches count for SH Dashboard",
+        "default": "UNKNOWN_STATUS",
+        "enum": [
+          "UNKNOWN_STATUS",
+          "SUCCESS",
+          "ERROR"
+        ]
+      },
+      "ErrorMaintenance": {
+        "type": "object",
+        "description": "Represents a single error occurring in the computation that is preventing its evaluation."
+      },
+      "ErrorUninitialized": {
+        "type": "object",
+        "description": "Presents a result error due to some initial unavailability of (sufficient) expression input data."
+      },
+      "HPElemParam": {
+        "type": "object",
+        "description": "HP Element Parameter",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of this parameter. Examples: DEVICE, IFNAME, IFENTRY, VPN."
+          },
+          "description": {
+            "type": "string",
+            "description": "Description"
+          },
+          "type": {
+            "$ref": "#/components/schemas/HPElemParamType"
+          }
+        }
+      },
+      "HPElemParamType": {
+        "type": "string",
+        "description": "ParamType allows HPMgr to interpret the nature of the argument values passed while instantiating HP Elements like Rule, Subservice, etc.",
+        "default": "PARAM_TYPE_NON_LIST",
+        "enum": [
+          "PARAM_TYPE_NON_LIST",
+          "PARAM_TYPE_LIST"
+        ]
+      },
+      "HealthStateCount": {
+        "type": "object",
+        "description": "Health State Count",
+        "properties": {
+          "initiated": {
+            "type": "integer",
+            "description": "Initiated",
+            "format": "int32"
+          },
+          "down": {
+            "type": "integer",
+            "description": "Down",
+            "format": "int32"
+          },
+          "degraded": {
+            "type": "integer",
+            "description": "Degraded",
+            "format": "int32"
+          },
+          "good": {
+            "type": "integer",
+            "description": "Good",
+            "format": "int32"
+          },
+          "unmonitored": {
+            "type": "integer",
+            "description": "Unmonitored",
+            "format": "int32"
+          }
+        }
+      },
+      "HealthStatus": {
+        "type": "string",
+        "description": "Service Health Statuses: \n - UNKNOWN: Default state displayed by CNC-ISTP, when monitoring is not enabled for a given service.\n - MONITORING_INITIATED: When a monitoring request is received for a service, Service Health initializes the service or subservice to this state.\n - MONITORING_FAILED: Indicates Service Health has encountered an internal error or failure.\n - MONITORING_PAUSED: Indicates that monitoring is currently paused, but historical data is still available for inspection through the timeline.\n - SERVICE_UP: At the service level, this state indicates that all the individual subservices of the monitored service are in good health and operating without any issues to report.\n - SERVICE_DOWN: All the different subservices of the Service that are being monitored are reporting issues. Corresponding symptoms should provide more details about the issues being encountered.\n - SERVICE_DEGRADED: At the Service level, this state indicates that some of the subservices of the Service that is being monitored are reporting issues. Corresponding symptoms should provide more details about the issues being encountered.",
+        "default": "UNKNOWN",
+        "enum": [
+          "UNKNOWN",
+          "MONITORING_INITIATED",
+          "MONITORING_FAILED",
+          "MONITORING_PAUSED",
+          "SERVICE_UP",
+          "SERVICE_DOWN",
+          "SERVICE_DEGRADED"
+        ]
+      },
+      "HistoricalMetricsRequest": {
+        "type": "object",
+        "description": "Request - Historical Metrics",
+        "properties": {
+          "serviceId": {
+            "description": "Service-id",
+            "type": "string"
+          },
+          "eventTimestamp": {
+            "description": "A timestamp indicating when an event of significance happened.",
+            "type": "string",
+            "format": "int64"
+          },
+          "serviceType": {
+            "description": "Type of the service",
+            "type": "string"
+          },
+          "vpnNodeIds": {
+            "description": "Device Ids on the service",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "HistoricalServiceRequest": {
+        "type": "object",
+        "description": "Request - Historical Service",
+        "properties": {
+          "serviceId": {
+            "description": "Service-id",
+            "type": "string"
+          },
+          "eosTimestamp": {
+            "description": "EOS timestamp",
+            "type": "string",
+            "format": "int64"
+          },
+          "numOfDays": {
+            "description": "Duration - Number of days",
+            "type": "integer",
+            "format": "int32"
+          },
+          "serviceType": {
+            "description": "Type of the service",
+            "type": "string"
+          },
+          "vpnNodeIds": {
+            "description": "Device Ids or Endpoints of the service",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "graphOnly": {
+            "description": "When set to true will return graph minimal data for consumers like UI to render VPN graph",
+            "type": "boolean"
+          }
+        }
+      },
+      "KpiMetricsRequest": {
+        "type": "object",
+        "description": "Request - KPI Metrics",
+        "properties": {
+          "serviceId": {
+            "description": "Request KPI Metrics data for the Service-Id",
+            "type": "string"
+          },
+          "timeRange": {
+            "description": "Duration - Number of hours/days",
+            "type": "integer",
+            "format": "int32"
+          },
+          "serviceType": {
+            "description": "Type of the service",
+            "type": "string"
+          },
+          "probeSessionId": {
+            "description": "Probe session id",
+            "type": "string"
+          }
+        }
+      },
+      "KpiMetricsResponse": {
+        "type": "object",
+        "description": "Response - KPI Metrics",
+        "properties": {
+          "serviceId": {
+            "description": "Service-id",
+            "type": "string"
+          },
+          "subserviceMetricList": {
+            "description": "Subservice-id and corresponding metric list",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/KpiMetricsResponseMetricList"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/KpiMetricsResponseStatus"
+          },
+          "error": {
+            "description": "Error details in case the request failed",
+            "type": "string"
+          }
+        }
+      },
+      "KpiMetricsResponseMetricData": {
+        "type": "object",
+        "description": "Response - KPI Metrics data",
+        "properties": {
+          "metricInstance": {
+            "description": "Metric instance-id",
+            "type": "string"
+          },
+          "metricClass": {
+            "description": "Metric class name",
+            "type": "string"
+          },
+          "namespace": {
+            "description": "Metric namespace",
+            "type": "string"
+          },
+          "metricDisplayLabel": {
+            "description": "Metric chart label to display",
+            "type": "string"
+          },
+          "metricValueDatatype": {
+            "description": "Datatype of the Metric values",
+            "type": "string"
+          },
+          "thresholdValue": {
+            "description": "Value of the threshold",
+            "type": "string"
+          },
+          "KpiHistoricalMetrics": {
+            "description": "Timestamp and metric-value",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KpiMetricsResponseMetricTimestampValues"
+            }
+          }
+        }
+      },
+      "KpiMetricsResponseMetricList": {
+        "type": "object",
+        "description": "Response - KPI Metrics data",
+        "properties": {
+          "metricData": {
+            "description": "Metric data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KpiMetricsResponseMetricData"
+            }
+          }
+        }
+      },
+      "KpiMetricsResponseMetricTimestampValues": {
+        "type": "object",
+        "properties": {
+          "metricTimestamp": {
+            "description": "The timestamp of the metric",
+            "type": "string",
+            "format": "int64"
+          },
+          "metricValue": {
+            "description": "Value of the metric",
+            "type": "string"
+          }
+        },
+        "description": "Timestamp and corresponding value of the metric."
+      },
+      "KpiMetricsResponseStatus": {
+        "type": "string",
+        "description": "Request - Status mapping",
+        "default": "UNKNOWN_STATUS",
+        "enum": [
+          "UNKNOWN_STATUS",
+          "SERVICE_DOESNT_EXIST",
+          "BAD_REQUEST_SCHEMA",
+          "SUCCESS",
+          "ERROR"
+        ]
+      },
+      "LiveMetricFeed": {
+        "type": "object",
+        "description": "Live Metric Feed",
+        "properties": {
+          "metricLabel": {
+            "type": "string",
+            "description": "Metric identifier. SubserviceClass definition provides this label value."
+          },
+          "description": {
+            "description": "Reflects the 'description' field in SubserviceClass",
+            "type": "string"
+          },
+          "threshold": {
+            "description": "Reflects the 'threshold' field in SubserviceClass",
+            "type": "string"
+          },
+          "unitType": {
+            "description": "Unit type for the given metric",
+            "type": "string"
+          },
+          "feedVal": {
+            "$ref": "#/components/schemas/OutputMetricValue"
+          },
+          "updateTimestamp": {
+            "description": "The time when the feed was last updated",
+            "type": "string",
+            "format": "int64"
+          }
+        }
+      },
+      "MetricsResponse": {
+        "type": "object",
+        "description": "Metrics Response",
+        "properties": {
+          "eventTimestamp": {
+            "description": "The timestamp when the event of significance happened",
+            "type": "string",
+            "format": "int64"
+          },
+          "serviceId": {
+            "description": "The tracking-id of the Service",
+            "type": "string"
+          },
+          "metricList": {
+            "description": "Metric_instance_id and corresponding metric",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/MetricsResponseMetricHistory"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/MetricsResponseStatus"
+          },
+          "error": {
+            "description": "Error details in case the request failed",
+            "type": "string"
+          }
+        }
+      },
+      "MetricsResponseMetricHistory": {
+        "type": "object",
+        "description": "Metric chart label to display",
+        "properties": {
+          "metricDisplayLabel": {
+            "description": "Metric chart label to display",
+            "type": "string"
+          },
+          "class": {
+            "description": "Metric class name",
+            "type": "string"
+          },
+          "namespace": {
+            "description": "Metric namespace",
+            "type": "string"
+          },
+          "metricValueDatatype": {
+            "description": "Datatype of the metric values",
+            "type": "string"
+          },
+          "linesData": {
+            "description": "Each element of the list represents a set of data points corresponding to a line in the metric chart.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MetricsResponseMetricLineHistory"
+            }
+          }
+        }
+      },
+      "MetricsResponseMetricLineHistory": {
+        "type": "object",
+        "description": "Response - Metric Line History",
+        "properties": {
+          "lineName": {
+            "description": "Key of the metric",
+            "type": "string"
+          },
+          "HistoricalMetrics": {
+            "description": "Timestamp and metric_value",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MetricsResponseMetricTimestampValues"
+            }
+          }
+        }
+      },
+      "MetricsResponseMetricTimestampValues": {
+        "type": "object",
+        "properties": {
+          "metricTimestamp": {
+            "description": "The timestamp of the metric",
+            "type": "string",
+            "format": "int64"
+          },
+          "metricValue": {
+            "description": "The value of the metric",
+            "type": "string"
+          }
+        },
+        "description": "Timestamp and corresponding value of the metric."
+      },
+      "MetricsResponseStatus": {
+        "type": "string",
+        "description": "Request - Status mapping",
+        "default": "UNKNOWN_STATUS",
+        "enum": [
+          "UNKNOWN_STATUS",
+          "SERVICE_DOESNT_EXIST",
+          "BAD_REQUEST_SCHEMA",
+          "SUCCESS",
+          "ERROR"
+        ]
+      },
+      "MonitorState": {
+        "type": "object",
+        "description": "Monitor State",
+        "properties": {
+          "basic": {
+            "$ref": "#/components/schemas/MonitorStateCount"
+          },
+          "advanced": {
+            "$ref": "#/components/schemas/MonitorStateCount"
+          }
+        }
+      },
+      "MonitorStateCount": {
+        "type": "object",
+        "description": "Monitor State Count",
+        "properties": {
+          "down": {
+            "type": "integer",
+            "description": "Down",
+            "format": "int32"
+          },
+          "degraded": {
+            "type": "integer",
+            "description": "Degraded",
+            "format": "int32"
+          },
+          "good": {
+            "type": "integer",
+            "description": "Good",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "description": "Total count",
+            "format": "int32"
+          }
+        }
+      },
+      "MonitoringStatus": {
+        "type": "string",
+        "description": "Monitoring statuses: \n - MONITORING_UNKNOWN: Default status, set when the monitoring status is unknown.\n - MONITORING_SUCCESS: Success state when there are no errors in monitoring.\n - ENCOUNTERED_ERRORS: State reflects the monitoring errors.",
+        "default": "MONITORING_UNKNOWN",
+        "enum": [
+          "MONITORING_UNKNOWN",
+          "MONITORING_SUCCESS",
+          "ENCOUNTERED_ERRORS"
+        ]
+      },
+      "OutputCalculations": {
+        "type": "object",
+        "description": "Output Calculations",
+        "properties": {
+          "explabel": {
+            "description": "Expression label",
+            "type": "string"
+          },
+          "evalExpressionString": {
+            "description": "Eval Expression string",
+            "type": "string"
+          },
+          "observedValue": {
+            "description": "Observed value",
+            "type": "string"
+          },
+          "symptomMetrics": {
+            "description": "Symptom metrics",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OutputCalculationsSymptomMetric"
+            }
+          },
+          "subExps": {
+            "description": "Sub expressions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OutputCalculations"
+            }
+          },
+          "profileConstants": {
+            "description": "map<key, value>\n   key:    Constant name\n   value:  Value defined for this constant in the respective Config Profile\nExample:\n  \"profileConstants\": {\n       \"CPU_THRESHOLD_MAX\": \"80\"\n  }",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "OutputCalculationsSymptomMetric": {
+        "description": "Output Calculations Symptom Metric",
+        "type": "object",
+        "properties": {
+          "metricInstance": {
+            "description": "Metric instance",
+            "type": "string"
+          },
+          "value": {
+            "description": "Value",
+            "type": "string"
+          },
+          "displayLabel": {
+            "description": "Display label",
+            "type": "string"
+          }
+        }
+      },
+      "OutputConditionals": {
+        "type": "object",
+        "description": "Output Conditionals",
+        "properties": {
+          "level": {
+            "$ref": "#/components/schemas/ExpTrackerHealth"
+          },
+          "treeID": {
+            "description": "Tree id",
+            "type": "string"
+          },
+          "value": {
+            "$ref": "#/components/schemas/OutputValues"
+          },
+          "labels": {
+            "type": "object",
+            "description": "Labels",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OutputValues"
+            }
+          },
+          "nodeID": {
+            "description": "Node id",
+            "type": "string"
+          },
+          "treeType": {
+            "$ref": "#/components/schemas/OutputTreeType"
+          },
+          "calculations": {
+            "$ref": "#/components/schemas/OutputCalculations"
+          },
+          "send": {
+            "description": "Send",
+            "type": "boolean"
+          }
+        }
+      },
+      "OutputMetricValue": {
+        "type": "object",
+        "description": "Output metric value",
+        "properties": {
+          "s": {
+            "description": "string",
+            "type": "string"
+          },
+          "f": {
+            "description": "float",
+            "type": "number",
+            "format": "float"
+          },
+          "d": {
+            "description": "double",
+            "type": "number",
+            "format": "double"
+          },
+          "i": {
+            "description": "int64",
+            "type": "string",
+            "format": "int64"
+          },
+          "u": {
+            "description": "uint64",
+            "type": "string",
+            "format": "uint64"
+          },
+          "b": {
+            "description": "boolean",
+            "type": "boolean"
+          },
+          "updateTimestamp": {
+            "description": "Updated timestamp",
+            "type": "string",
+            "format": "int64"
+          }
+        }
+      },
+      "OutputSimpleValue": {
+        "type": "object",
+        "description": "Output simple value",
+        "properties": {
+          "str": {
+            "description": "string",
+            "type": "string"
+          },
+          "fl": {
+            "description": "float",
+            "type": "number",
+            "format": "float"
+          },
+          "d": {
+            "description": "double",
+            "type": "number",
+            "format": "double"
+          },
+          "int": {
+            "description": "int64",
+            "type": "string",
+            "format": "int64"
+          },
+          "u": {
+            "description": "uint64",
+            "type": "string",
+            "format": "uint64"
+          },
+          "b": {
+            "description": "boolean",
+            "type": "boolean"
+          },
+          "strList": {
+            "$ref": "#/components/schemas/OutputSimpleValueStringList"
+          },
+          "flList": {
+            "$ref": "#/components/schemas/OutputSimpleValueFloatList"
+          },
+          "intList": {
+            "$ref": "#/components/schemas/OutputSimpleValueIntList"
+          },
+          "uintList": {
+            "$ref": "#/components/schemas/OutputSimpleValueUintList"
+          },
+          "bList": {
+            "$ref": "#/components/schemas/OutputSimpleValueBoolList"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OutputSimpleValueStatus"
+          },
+          "alert": {
+            "$ref": "#/components/schemas/SimpleValueAlert"
+          },
+          "dList": {
+            "$ref": "#/components/schemas/OutputSimpleValueDoubleList"
+          },
+          "nodeID": {
+            "description": "Node id",
+            "type": "string"
+          },
+          "calculations": {
+            "$ref": "#/components/schemas/OutputCalculations"
+          },
+          "subserviceName": {
+            "description": "Subservice name",
+            "type": "string"
+          },
+          "symptoms": {
+            "description": "symptoms",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExpTrackerOutputSymptom"
+            }
+          },
+          "level": {
+            "$ref": "#/components/schemas/ExpTrackerHealth"
+          },
+          "send": {
+            "description": "send",
+            "type": "boolean"
+          },
+          "errors": {
+            "type": "array",
+            "description": "errors",
+            "items": {
+              "$ref": "#/components/schemas/ExpTrackerOutputSymptom"
+            }
+          }
+        }
+      },
+      "OutputSimpleValueBoolList": {
+        "type": "object",
+        "description": "Output simple value boolean list",
+        "properties": {
+          "list": {
+            "description": "boolean list",
+            "type": "array",
+            "items": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "OutputSimpleValueDoubleList": {
+        "type": "object",
+        "description": "Output simple value double list",
+        "properties": {
+          "list": {
+            "description": "double list",
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        }
+      },
+      "OutputSimpleValueFloatList": {
+        "type": "object",
+        "description": "Output simple value float list",
+        "properties": {
+          "list": {
+            "description": "float list",
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "float"
+            }
+          }
+        }
+      },
+      "OutputSimpleValueIntList": {
+        "type": "object",
+        "description": "Output simple value int64 list",
+        "properties": {
+          "list": {
+            "description": "int64 list",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "OutputSimpleValueStatus": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "$ref": "#/components/schemas/ExpTrackerHealth"
+          },
+          "symptoms": {
+            "description": "Symptoms",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExpTrackerOutputSymptom"
+            }
+          }
+        },
+        "description": "Status which represents the health and symptoms."
+      },
+      "OutputSimpleValueStringList": {
+        "type": "object",
+        "description": "Output simple value string list",
+        "properties": {
+          "list": {
+            "description": "string list",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "OutputSimpleValueUintList": {
+        "type": "object",
+        "description": "Output simple value uint64 list",
+        "properties": {
+          "list": {
+            "description": "uint64 list",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uint64"
+            }
+          }
+        }
+      },
+      "OutputTreeType": {
+        "type": "string",
+        "description": "Output tree type",
+        "default": "HEALTH",
+        "enum": [
+          "HEALTH",
+          "CONDITIONAL_ACTIVATE",
+          "CONDITIONAL_DEACTIVATE",
+          "CONDITIONAL_UPDATE",
+          "DYNAMIC"
+        ]
+      },
+      "OutputValues": {
+        "description": "Output values",
+        "type": "object",
+        "properties": {
+          "str": {
+            "description": "string",
+            "type": "string"
+          },
+          "fl": {
+            "type": "number",
+            "description": "float",
+            "format": "float"
+          },
+          "d": {
+            "type": "number",
+            "description": "double",
+            "format": "double"
+          },
+          "int": {
+            "type": "string",
+            "description": "int64",
+            "format": "int64"
+          },
+          "u": {
+            "type": "string",
+            "description": "uint64",
+            "format": "uint64"
+          },
+          "b": {
+            "description": "boolean",
+            "type": "boolean"
+          },
+          "strList": {
+            "$ref": "#/components/schemas/ExptrackerOutputStringList"
+          },
+          "flList": {
+            "$ref": "#/components/schemas/ExptrackerOutputFloatList"
+          },
+          "intList": {
+            "$ref": "#/components/schemas/ExptrackerOutputIntList"
+          },
+          "uintList": {
+            "$ref": "#/components/schemas/ExptrackerOutputUintList"
+          },
+          "bList": {
+            "$ref": "#/components/schemas/ExptrackerOutputBoolList"
+          },
+          "dList": {
+            "$ref": "#/components/schemas/ExptrackerOutputDoubleList"
+          }
+        }
+      },
+      "ServiceBreach": {
+        "type": "object",
+        "description": "Service Breach",
+        "properties": {
+          "serviceId": {
+            "description": "Service Id",
+            "type": "string"
+          },
+          "serviceStatus": {
+            "description": "Status of the service",
+            "type": "string"
+          },
+          "totalSessions": {
+            "description": "Total probe sessions of the service",
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalBreaches": {
+            "description": "Total session breaches of the service",
+            "type": "integer",
+            "format": "int32"
+          },
+          "fwdDelayBreaches": {
+            "description": "L3VPN Forward delay breaches count",
+            "type": "integer",
+            "format": "int32"
+          },
+          "fwdVarianceBreaches": {
+            "description": "L3VPN Forward variance breaches count",
+            "type": "integer",
+            "format": "int32"
+          },
+          "fwdLossBreaches": {
+            "description": "L2VPN/L3VPN Forward packets-lost breaches count",
+            "type": "integer",
+            "format": "int32"
+          },
+          "rvsDelayBreaches": {
+            "description": "L3VPN Reverse delay breaches count",
+            "type": "integer",
+            "format": "int32"
+          },
+          "rvsVarianceBreaches": {
+            "description": "L3VPN Reverse variance breaches count",
+            "type": "integer",
+            "format": "int32"
+          },
+          "rvsLossBreaches": {
+            "description": "L2VPN/L3VPN Reverse packets-lost breaches count",
+            "type": "integer",
+            "format": "int32"
+          },
+          "thresholdValues": {
+            "$ref": "#/components/schemas/ThresholdData"
+          }
+        }
+      },
+      "ServiceGraph": {
+        "description": "Service Graph",
+        "type": "object",
+        "properties": {
+          "subserviceDependencies": {
+            "description": "Subservice dependencies",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubserviceSGNode"
+            }
+          },
+          "softRootSubserviceNodes": {
+            "description": "List of Subservice-ids that have a soft relationship with the service node.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ServiceHealthReport": {
+        "description": "Service Health report",
+        "type": "object",
+        "properties": {
+          "healthStatus": {
+            "$ref": "#/components/schemas/HealthStatus"
+          },
+          "monitoringStatus": {
+            "$ref": "#/components/schemas/MonitoringStatus"
+          },
+          "liveMetricFeeds": {
+            "description": "Live Metric Feeds",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/LiveMetricFeed"
+            }
+          },
+          "subServiceHealthReports": {
+            "description": "subService Health Reports",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/SubServiceOperState"
+            }
+          }
+        }
+      },
+      "SimpleValueAlert": {
+        "type": "object",
+        "description": "Simple Value Alert",
+        "properties": {
+          "level": {
+            "description": "Level",
+            "type": "string"
+          },
+          "message": {
+            "description": "Message",
+            "type": "string"
+          }
+        }
+      },
+      "SubserviceConfig": {
+        "type": "object",
+        "properties": {
+          "args": {
+            "description": "List of arguments passed to this subservice.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubserviceConfigArg"
+            }
+          }
+        },
+        "description": "The Subservice Configuration."
+      },
+      "SubserviceConfigArg": {
+        "type": "object",
+        "description": "Subservice Config Arg",
+        "properties": {
+          "param": {
+            "$ref": "#/components/schemas/HPElemParam"
+          },
+          "values": {
+            "description": "Given argument could be a list of values like [Tor-A, Tor-B] for given key-name 'Devices'",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SubServiceOperState": {
+        "type": "object",
+        "description": "Subservice Oper State",
+        "properties": {
+          "healthScore": {
+            "description": "Health score",
+            "type": "integer",
+            "format": "int64"
+          },
+          "healthStatus": {
+            "$ref": "#/components/schemas/HealthStatus"
+          },
+          "liveMetricFeeds": {
+            "type": "object",
+            "description": "Live metric feeds",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/LiveMetricFeed"
+            }
+          },
+          "rootExpressionStatus": {
+            "$ref": "#/components/schemas/OutputSimpleValue"
+          },
+          "ruleTriggerConditions": {
+            "$ref": "#/components/schemas/SubserviceOperStateRuleTriggerConditions"
+          },
+          "componentErrors": {
+            "type": "object",
+            "description": "Component errors",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ComponentError"
+            }
+          },
+          "healthTs": {
+            "description": "The last time subservice health got updated.",
+            "type": "string",
+            "format": "int64"
+          },
+          "trackerTs": {
+            "description": "The last time subservice health was updated due to a health update sent by a tracker.",
+            "type": "string",
+            "format": "int64"
+          },
+          "subGraph": {
+            "$ref": "#/components/schemas/ServiceGraph"
+          },
+          "monitoringStatus": {
+            "$ref": "#/components/schemas/MonitoringStatus"
+          }
+        }
+      },
+      "SubserviceOperStateRuleTriggerConditions": {
+        "type": "object",
+        "description": "Subservice Oper State Rule Trigger Conditions",
+        "properties": {
+          "activate": {
+            "$ref": "#/components/schemas/OutputConditionals"
+          },
+          "deactivate": {
+            "$ref": "#/components/schemas/OutputConditionals"
+          },
+          "update": {
+            "$ref": "#/components/schemas/OutputConditionals"
+          },
+          "ruleTriggerParamMap": {
+            "description": "The map to store the received conditional parameters with their values.",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OutputValues"
+            }
+          },
+          "paramMapWithTimestamp": {
+            "description": "The map with the key as the parameter name and the value as the timestamp.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "SubserviceSGNode": {
+        "type": "object",
+        "description": "Subservice SG node",
+        "properties": {
+          "id": {
+            "description": "subservice-id UUID",
+            "type": "string"
+          },
+          "subServiceClass": {
+            "description": "SubserviceClass Name",
+            "type": "string"
+          },
+          "namespace": {
+            "description": "Namespace",
+            "type": "string"
+          },
+          "description": {
+            "description": "Description",
+            "type": "string"
+          },
+          "staticId": {
+            "description": "The combination of subServiceClass, namespace and config",
+            "type": "string"
+          },
+          "config": {
+            "$ref": "#/components/schemas/SubserviceConfig"
+          },
+          "dynamicSS": {
+            "description": "Flag indicating that the given subservice is dynamic.",
+            "type": "boolean"
+          },
+          "subDeps": {
+            "description": "Hard Dependencies: List of subservice-ids which are of string type.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "softSubDeps": {
+            "description": "Soft Dependencies: List of subservice-ids which are of string type.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dynamicSubDeps": {
+            "description": "List of hard and soft dynamic subservice dependencies. These lists can change dynamically independent of the rest of the Service Graph.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dynamicSoftSubDeps": {
+            "description": "Dynamic soft sub-dependencies",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ErrorModels": {
+        "type": "object",
+        "description": "Error models",
+        "properties": {
+          "code": {
+            "description": "The error code.",
+            "type": "integer"
+          },
+          "message": {
+            "description": "A human-readable error message.",
+            "type": "string"
+          },
+          "details": {
+            "description": "Additional error details.",
+            "type": "object",
+            "properties": {}
+          }
+        }
+      },
+      "ThresholdData": {
+        "description": "Threshold data",
+        "type": "object",
+        "properties": {
+          "delayThreshold": {
+            "description": "Delay threshold",
+            "type": "string",
+            "format": "int64"
+          },
+          "varianceThreshold": {
+            "description": "Variance threshold",
+            "type": "string",
+            "format": "int64"
+          },
+          "lossThreshold": {
+            "description": "Packets-lost threshold",
+            "type": "string",
+            "format": "int64"
+          }
+        }
+      },
+      "TimeLineEventsResponse": {
+        "description": "Timeline Events Response",
+        "type": "object",
+        "properties": {
+          "timeLineEvents": {
+            "type": "array",
+            "description": "Timeline Events",
+            "items": {
+              "$ref": "#/components/schemas/TimeLineEventsResponseEventOfSignificanceSummary"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/TimeLineEventsResponseStatus"
+          },
+          "error": {
+            "description": "Error details in case the request failed.",
+            "type": "string"
+          }
+        }
+      },
+      "TimeLineEventsResponseEventOfSignificanceSummary": {
+        "type": "object",
+        "properties": {
+          "eventTimestamp": {
+            "description": "The timestamp when the event of significance happened",
+            "type": "string",
+            "format": "int64"
+          },
+          "serviceId": {
+            "description": "Top level service-id",
+            "type": "string"
+          },
+          "serviceStatus": {
+            "$ref": "#/components/schemas/HealthStatus"
+          },
+          "monitoringStatus": {
+            "$ref": "#/components/schemas/MonitoringStatus"
+          },
+          "symptoms": {
+            "description": "The number of symptoms",
+            "type": "integer",
+            "format": "int32"
+          },
+          "serviceFilename": {
+            "description": "Archiver service filename with path",
+            "type": "string"
+          },
+          "deviceId": {
+            "description": "Device id",
+            "type": "string"
+          },
+          "nodeStatus": {
+            "$ref": "#/components/schemas/HealthStatus"
+          }
+        },
+        "description": "Summary of EOS data."
+      },
+      "TimeLineEventsResponseStatus": {
+        "type": "string",
+        "description": "Response - Timeline Events Status mapping",
+        "default": "UNKNOWN_STATUS",
+        "enum": [
+          "UNKNOWN_STATUS",
+          "SERVICE_DOESNT_EXIST",
+          "BAD_REQUEST_SCHEMA",
+          "SUCCESS",
+          "ERROR"
+        ]
+      },
+      "ExpTrackerHealth": {
+        "type": "string",
+        "description": "ExpTracker Health mapping",
+        "default": "ERROR",
+        "enum": [
+          "ERROR",
+          "BROKEN",
+          "DEGRADED",
+          "HEALTHY",
+          "UNKNOWN"
+        ]
+      },
+      "ExptrackerOutputBoolList": {
+        "description": "ExpTracker Output boolean list",
+        "type": "object",
+        "properties": {
+          "list": {
+            "description": "Boolean list",
+            "type": "array",
+            "items": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "ExptrackerOutputDoubleList": {
+        "type": "object",
+        "description": "ExpTracker Output double list",
+        "properties": {
+          "list": {
+            "description": "Double list",
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        }
+      },
+      "ExptrackerOutputError": {
+        "type": "object",
+        "description": "ExpTracker Output error",
+        "properties": {
+          "message": {
+            "description": "Represents a single error occurring in the computation and preventing its evaluation",
+            "type": "string"
+          },
+          "location": {
+            "description": "Location",
+            "type": "string"
+          },
+          "maintenance": {
+            "$ref": "#/components/schemas/ErrorMaintenance"
+          },
+          "uninitialized": {
+            "$ref": "#/components/schemas/ErrorUninitialized"
+          },
+          "start": {
+            "type": "string",
+            "description": "Start",
+            "format": "int64"
+          },
+          "end": {
+            "type": "string",
+            "description": "End",
+            "format": "int64"
+          }
+        }
+      },
+      "ExptrackerOutputFloatList": {
+        "type": "object",
+        "description": "ExpTracker Output float list",
+        "properties": {
+          "list": {
+            "description": "Float list",
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "float"
+            }
+          }
+        }
+      },
+      "ExptrackerOutputIntList": {
+        "type": "object",
+        "description": "ExpTracker Output int64 list",
+        "properties": {
+          "list": {
+            "description": "int64 list",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "ExptrackerOutputStringList": {
+        "type": "object",
+        "description": "ExpTracker Output string list",
+        "properties": {
+          "list": {
+            "description": "String list",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ExpTrackerOutputSymptom": {
+        "type": "object",
+        "description": "ExpTracker Output Symptom",
+        "properties": {
+          "level": {
+            "$ref": "#/components/schemas/ExpTrackerHealth"
+          },
+          "label": {
+            "description": "Label",
+            "type": "string"
+          },
+          "start": {
+            "type": "string",
+            "description": "Start",
+            "format": "int64"
+          },
+          "end": {
+            "type": "string",
+            "description": "End",
+            "format": "int64"
+          },
+          "calculations": {
+            "$ref": "#/components/schemas/OutputCalculations"
+          },
+          "symptoms": {
+            "type": "array",
+            "description": "Symptoms",
+            "items": {
+              "$ref": "#/components/schemas/OutputCalculations"
+            }
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Priority",
+            "format": "int64"
+          },
+          "nodeID": {
+            "description": "Node id",
+            "type": "string"
+          },
+          "cdgID": {
+            "description": "CDG id",
+            "type": "string"
+          }
+        }
+      },
+      "ExptrackerOutputUintList": {
+        "type": "object",
+        "description": "ExpTracker Output uint64 list",
+        "properties": {
+          "list": {
+            "description": "unt64 list",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "uint64",
+              "format": "uint64"
+            }
+          }
+        }
+      },
+      "GatewayRuntimeError": {
+        "description": "Gateway Runtime Error",
+        "type": "object",
+        "properties": {
+          "error": {
+            "description": "Error",
+            "type": "string"
+          },
+          "code": {
+            "description": "Code",
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "description": "Message",
+            "type": "string"
+          },
+          "details": {
+            "description": "Details",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/protobufAny"
+            }
+          }
+        }
+      },
+      "protobufAny": {
+        "description": "Protobuf any",
+        "type": "object",
+        "properties": {
+          "typeUrl": {
+            "description": "Type URL",
+            "type": "string"
+          },
+          "value": {
+            "description": "Value",
+            "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "apiKey",
+        "description": "Security token for authorizing requests for these APIs.",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "x-original-swagger-version": "2.0"
+}

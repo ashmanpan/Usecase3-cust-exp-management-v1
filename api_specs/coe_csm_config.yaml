@@ -1,0 +1,172 @@
+---
+swagger: "2.0"
+info:
+  description: "API for managing bandwidth pool configurations of CSM interfaces."
+  version: "7.1.0"
+  title: "CSM Config Operations API"
+  contact:
+    name: API Support
+    url: https://www.cisco.com/support
+    email: support@cisco.com
+  license:
+    name: Cisco Software License Agreement
+    url: http://www.cisco.com/public/sw-license-agreement.html
+host: "localhost:30603"
+basePath: "/crosswork/nbi/optimization/v3/restconf"
+consumes:
+- "application/yang-data+json"
+produces:
+- "application/yang-data+json"
+securityDefinitions:
+  api_key:
+    description: "Authentication: Bearer $JWT"
+    type: apiKey
+    name: api_key
+    in: header
+paths:
+  /operations/cisco-crosswork-optimization-engine-csm-config-operations:get-csm-interfaces-bandwidth-pool:
+    post:
+      operationId: "getCsmInterfacesBandwidthPool"
+      tags:
+      - "cisco-crosswork-optimization-engine-csm-config-operations"
+      summary: "Retrieve bandwidth pool configuration"
+      description: "Fetches the current bandwidth pool configuration for CSM interfaces."
+      parameters: []
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/csm.config.operations.getcsminterfacesbandwidthpool.Output"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-csm-config-operations:set-csm-interfaces-bandwidth-pool:
+    post:
+      operationId: "setCsmInterfacesBandwidthPool"
+      tags:
+      - "cisco-crosswork-optimization-engine-csm-config-operations"
+      summary: "Configure bandwidth pool"
+      description: "Allows adding, replacing, or deleting interfaces in the bandwidth pool for CSM interfaces."
+      parameters:
+      - in: "body"
+        name: "csm.config.common.SetInterfaceBandwidthPoolManagementRequest.body-param"
+        description: "Input parameters for configuring bandwidth pool."
+        required: false
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/csm.config.common.SetInterfaceBandwidthPoolManagementRequest"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/csm.config.operations.setcsminterfacesbandwidthpool.Output"
+        "204":
+          description: "No response"
+definitions:
+  csm.config.common.CsInterfaceKey:
+    type: "object"
+    properties:
+      interface:
+        type: "string"
+        description: "Name of interface"
+      node:
+        type: "string"
+        description: "Name of Node"
+  csm.config.common.CsmDeleteInterfaces:
+    type: "object"
+    properties:
+      delete-all:
+        type: "boolean"
+        description: "Remove all interfaces from interfaces bandwidth pool"
+        x-choice: "delete-type:delete-all"
+      interface-keys:
+        type: "array"
+        items:
+          $ref: "#/definitions/csm.config.common.CsInterfaceKey"
+        x-choice: "delete-type:interfaces-list"
+  csm.config.common.InterfaceBandwidthPool:
+    allOf:
+    - $ref: "#/definitions/csm.config.common.CsInterfaceKey"
+    - type: "object"
+      properties:
+        bandwidth-pool:
+          type: "integer"
+          format: "int32"
+  csm.config.common.InterfaceBandwidthPoolList:
+    type: "object"
+    properties:
+      interface-bandwidth-pools:
+        type: "array"
+        items:
+          $ref: "#/definitions/csm.config.common.InterfaceBandwidthPool"
+  csm.config.common.ResponseResultEnumeration:
+    type: "string"
+    enum:
+    - "valid"
+    - "invalid"
+    - "error"
+  csm.config.common.ResponseResultType:
+    type: "object"
+    properties:
+      response-result:
+        description: "Result of the request"
+        $ref: "#/definitions/csm.config.common.ResponseResultEnumeration"
+  csm.config.common.ResultEnumeration:
+    type: "string"
+    enum:
+    - "accepted"
+    - "rejected"
+    - "error"
+  csm.config.common.SetInterfaceBandwidthPoolManagementRequest:
+    type: "object"
+    properties:
+      interfaces-to-merge:
+        description: "Interfaces to be merged in bandwidth pool"
+        $ref: "#/definitions/csm.config.common.InterfaceBandwidthPoolList"
+        x-choice: "interface-bandwidth-pool-management:interfaces-to-merge"
+      interfaces-to-delete:
+        description: "Interfaces to be deleted from bandwidth pool"
+        $ref: "#/definitions/csm.config.common.CsmDeleteInterfaces"
+        x-choice: "interface-bandwidth-pool-management:interfaces-to-delete"
+      interfaces-to-replace:
+        description: "Interfaces to be replaced in bandwidth pool"
+        $ref: "#/definitions/csm.config.common.InterfaceBandwidthPoolList"
+        x-choice: "interface-bandwidth-pool-management:interfaces-to-replace"
+  csm.config.common.interfaceerrors.RejectedInterfaces:
+    allOf:
+    - $ref: "#/definitions/csm.config.common.CsInterfaceKey"
+    - type: "object"
+      properties:
+        error-message:
+          type: "string"
+          description: "Text description of the error"
+  csm.config.operations.getcsminterfacesbandwidthpool.Output:
+    allOf:
+    - $ref: "#/definitions/csm.config.common.ResponseResultType"
+    - properties:
+        interface-bandwidth-pools:
+          type: "array"
+          items:
+            $ref: "#/definitions/csm.config.common.InterfaceBandwidthPool"
+  csm.config.operations.setcsminterfacesbandwidthpool.Output:
+    allOf:
+    - $ref: "#/definitions/csm.config.common.ResponseResultType"
+    - properties:
+        result:
+          $ref: "#/definitions/csm.config.common.ResultEnumeration"
+        rejected-interfaces:
+          type: "array"
+          items:
+            $ref: "#/definitions/csm.config.common.interfaceerrors.RejectedInterfaces"
+

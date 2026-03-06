@@ -1,0 +1,2622 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "cisco-sr-te-cfp",
+    "description" : "SR-TE core function pack",
+    "termsOfService": "http://www.cisco.com/web/siteassets/legal/terms_condition.html",
+    "contact" : {
+      "name" : "Cisco Systems",
+      "url" : "https://www.cisco.com",
+      "email" : "support@cisco.com"
+    },
+    "license" : {
+      "name" : "Cisco Software License Agreement",
+      "url" : "http://www.cisco.com/public/sw-license-agreement.html"
+    },
+    "version" : "7.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://{cnc-host}:{cnc-port}/crosswork/proxy/nso/restconf",
+      "variables": {
+        "cnc-host": {
+          "default": "127.0.0.1",
+          "description": "host name or ip address of the target CNC Cluster"
+        },
+        "cnc-port": {
+          "default": "30603",
+          "description": "port number of the target CNC Cluster"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags" : [ {
+    "name" : "data",
+    "description" : "data resources"
+  } ],
+  "paths" : {
+    "/data/cisco-sr-te-cfp:sr-te/cisco-sr-te-cfp-sr-odn:odn/cisco-sr-te-cfp-sr-odn:odn-template={cisco-sr-te-cfp-sr-odn_odn-template-name}" : {
+      "get" : {
+        "tags" : [ "data" ],
+        "summary" : "SR-TE ODN template",
+        "description" : "SR-TE ODN template",
+        "operationId" : "data_cisco_sr_te_cfp_sr_te_cisco_sr_te_cfp_sr_odn_odn_cisco_sr_te_cfp_sr_odn_odn_template_cisco_sr_te_cfp_sr_odn_odn_template_name_get",
+        "parameters" : [ {
+          "name" : "cisco-sr-te-cfp-sr-odn_odn-template-name",
+          "in" : "path",
+          "description" : "Unique identifier for a ODN template",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "content",
+          "in" : "query",
+          "description" : "controlling descendant nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "config",
+            "enum" : [ "config", "nonconfig", "all" ]
+          }
+        }, {
+          "name" : "depth",
+          "in" : "query",
+          "description" : "limit the depth of nodes in response",
+          "schema" : {
+            "type" : "integer",
+            "format" : "uint16"
+          }
+        }, {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "optionally identify specific data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "xpath expression to filter data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "with-defaults",
+          "in" : "query",
+          "description" : "controlling default values in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "report-all",
+            "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "SR-TE ODN template",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-odn_odn_cisco-sr-te-cfp-sr-odn_odn-template_cisco-sr-te-cfp-sr-odn_odn-template-name"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "data" ],
+        "summary" : "SR-TE ODN template",
+        "description" : "SR-TE ODN template",
+        "operationId" : "data_cisco_sr_te_cfp_sr_te_cisco_sr_te_cfp_sr_odn_odn_cisco_sr_te_cfp_sr_odn_odn_template_cisco_sr_te_cfp_sr_odn_odn_template_name_put",
+        "parameters" : [ {
+          "name" : "cisco-sr-te-cfp-sr-odn_odn-template-name",
+          "in" : "path",
+          "description" : "Unique identifier for a ODN template",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "insert",
+          "in" : "query",
+          "description" : "controlling the order when adding new list elements",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "first",
+            "enum" : [ "first", "last", "before", "after" ]
+          }
+        }, {
+          "name" : "point",
+          "in" : "query",
+          "description" : "used to specify the insertion point",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "SR-TE ODN template",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-odn_odn_cisco-sr-te-cfp-sr-odn_odn-template_cisco-sr-te-cfp-sr-odn_odn-template-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "list odn-template created or replaced",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "odn-template"
+      },
+      "delete" : {
+        "tags" : [ "data" ],
+        "summary" : "SR-TE ODN template",
+        "description" : "SR-TE ODN template",
+        "operationId" : "data_cisco_sr_te_cfp_sr_te_cisco_sr_te_cfp_sr_odn_odn_cisco_sr_te_cfp_sr_odn_odn_template_cisco_sr_te_cfp_sr_odn_odn_template_name_delete",
+        "parameters" : [ {
+          "name" : "cisco-sr-te-cfp-sr-odn_odn-template-name",
+          "in" : "path",
+          "description" : "Unique identifier for a ODN template",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "responses" : {
+          "204": {
+            "description": "No Content",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "data" ],
+        "summary" : "SR-TE ODN template",
+        "description" : "SR-TE ODN template",
+        "operationId" : "data_cisco_sr_te_cfp_sr_te_cisco_sr_te_cfp_sr_odn_odn_cisco_sr_te_cfp_sr_odn_odn_template_cisco_sr_te_cfp_sr_odn_odn_template_name_patch",
+        "parameters" : [ {
+          "name" : "cisco-sr-te-cfp-sr-odn_odn-template-name",
+          "in" : "path",
+          "description" : "Unique identifier for a ODN template",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "SR-TE ODN template",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-odn_odn_cisco-sr-te-cfp-sr-odn_odn-template_cisco-sr-te-cfp-sr-odn_odn-template-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "list odn-template updated",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "odn-template"
+      }
+    },
+    "/data/cisco-sr-te-cfp:sr-te/cisco-sr-te-cfp-sr-policies:policies/cisco-sr-te-cfp-sr-policies:policy={cisco-sr-te-cfp-sr-policies_policy-name}" : {
+      "get" : {
+        "tags" : [ "data" ],
+        "summary" : "SR-Policy",
+        "description" : "SR-Policy",
+        "operationId" : "data_cisco_sr_te_cfp_sr_te_cisco_sr_te_cfp_sr_policies_policies_cisco_sr_te_cfp_sr_policies_policy_cisco_sr_te_cfp_sr_policies_policy_name_get",
+        "parameters" : [ {
+          "name" : "cisco-sr-te-cfp-sr-policies_policy-name",
+          "in" : "path",
+          "description" : "Unique identifier for a SR-Policy",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "content",
+          "in" : "query",
+          "description" : "controlling descendant nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "config",
+            "enum" : [ "config", "nonconfig", "all" ]
+          }
+        }, {
+          "name" : "depth",
+          "in" : "query",
+          "description" : "limit the depth of nodes in response",
+          "schema" : {
+            "type" : "integer",
+            "format" : "uint16"
+          }
+        }, {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "optionally identify specific data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "xpath expression to filter data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "with-defaults",
+          "in" : "query",
+          "description" : "controlling default values in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "report-all",
+            "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "SR-Policy",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-policies_policies_cisco-sr-te-cfp-sr-policies_policy_cisco-sr-te-cfp-sr-policies_policy-name"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "data" ],
+        "summary" : "SR-Policy",
+        "description" : "SR-Policy",
+        "operationId" : "data_cisco_sr_te_cfp_sr_te_cisco_sr_te_cfp_sr_policies_policies_cisco_sr_te_cfp_sr_policies_policy_cisco_sr_te_cfp_sr_policies_policy_name_put",
+        "parameters" : [ {
+          "name" : "cisco-sr-te-cfp-sr-policies_policy-name",
+          "in" : "path",
+          "description" : "Unique identifier for a SR-Policy",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "insert",
+          "in" : "query",
+          "description" : "controlling the order when adding new list elements",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "first",
+            "enum" : [ "first", "last", "before", "after" ]
+          }
+        }, {
+          "name" : "point",
+          "in" : "query",
+          "description" : "used to specify the insertion point",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "SR-Policy",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-policies_policies_cisco-sr-te-cfp-sr-policies_policy_cisco-sr-te-cfp-sr-policies_policy-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "list policy created or replaced",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "policy"
+      },
+      "delete" : {
+        "tags" : [ "data" ],
+        "summary" : "SR-Policy",
+        "description" : "SR-Policy",
+        "operationId" : "data_cisco_sr_te_cfp_sr_te_cisco_sr_te_cfp_sr_policies_policies_cisco_sr_te_cfp_sr_policies_policy_cisco_sr_te_cfp_sr_policies_policy_name_delete",
+        "parameters" : [ {
+          "name" : "cisco-sr-te-cfp-sr-policies_policy-name",
+          "in" : "path",
+          "description" : "Unique identifier for a SR-Policy",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "data" ],
+        "summary" : "SR-Policy",
+        "description" : "SR-Policy",
+        "operationId" : "data_cisco_sr_te_cfp_sr_te_cisco_sr_te_cfp_sr_policies_policies_cisco_sr_te_cfp_sr_policies_policy_cisco_sr_te_cfp_sr_policies_policy_name_patch",
+        "parameters" : [ {
+          "name" : "cisco-sr-te-cfp-sr-policies_policy-name",
+          "in" : "path",
+          "description" : "Unique identifier for a SR-Policy",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "SR-Policy",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-policies_policies_cisco-sr-te-cfp-sr-policies_policy_cisco-sr-te-cfp-sr-policies_policy-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "list policy updated",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "policy"
+      }
+    },
+    "/data/cisco-sr-te-cfp:sr-te/cisco-sr-te-cfp-sr-policies:policies/cisco-sr-te-cfp-sr-policies:sid-list={cisco-sr-te-cfp-sr-policies_sid-list-name}" : {
+      "get" : {
+        "tags" : [ "data" ],
+        "summary" : "SID list",
+        "description" : "SID list",
+        "operationId" : "data_cisco_sr_te_cfp_sr_te_cisco_sr_te_cfp_sr_policies_policies_cisco_sr_te_cfp_sr_policies_sid_list_cisco_sr_te_cfp_sr_policies_sid_list_name_get",
+        "parameters" : [ {
+          "name" : "cisco-sr-te-cfp-sr-policies_sid-list-name",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "leafref"
+          }
+        }, {
+          "name" : "content",
+          "in" : "query",
+          "description" : "controlling descendant nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "config",
+            "enum" : [ "config", "nonconfig", "all" ]
+          }
+        }, {
+          "name" : "depth",
+          "in" : "query",
+          "description" : "limit the depth of nodes in response",
+          "schema" : {
+            "type" : "integer",
+            "format" : "uint16"
+          }
+        }, {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "optionally identify specific data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "xpath expression to filter data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "with-defaults",
+          "in" : "query",
+          "description" : "controlling default values in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "report-all",
+            "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "SID list",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-policies_policies_cisco-sr-te-cfp-sr-policies_sid-list_cisco-sr-te-cfp-sr-policies_sid-list-name"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "data" ],
+        "summary" : "SID list",
+        "description" : "SID list",
+        "operationId" : "data_cisco_sr_te_cfp_sr_te_cisco_sr_te_cfp_sr_policies_policies_cisco_sr_te_cfp_sr_policies_sid_list_cisco_sr_te_cfp_sr_policies_sid_list_name_put",
+        "parameters" : [ {
+          "name" : "cisco-sr-te-cfp-sr-policies_sid-list-name",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "leafref"
+          }
+        }, {
+          "name" : "insert",
+          "in" : "query",
+          "description" : "controlling the order when adding new list elements",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "first",
+            "enum" : [ "first", "last", "before", "after" ]
+          }
+        }, {
+          "name" : "point",
+          "in" : "query",
+          "description" : "used to specify the insertion point",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "SID list",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-policies_policies_cisco-sr-te-cfp-sr-policies_sid-list_cisco-sr-te-cfp-sr-policies_sid-list-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "list sid-list created or replaced",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "sid-list"
+      },
+      "delete" : {
+        "tags" : [ "data" ],
+        "summary" : "SID list",
+        "description" : "SID list",
+        "operationId" : "data_cisco_sr_te_cfp_sr_te_cisco_sr_te_cfp_sr_policies_policies_cisco_sr_te_cfp_sr_policies_sid_list_cisco_sr_te_cfp_sr_policies_sid_list_name_delete",
+        "parameters" : [ {
+          "name" : "cisco-sr-te-cfp-sr-policies_sid-list-name",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "leafref"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "data" ],
+        "summary" : "SID list",
+        "description" : "SID list",
+        "operationId" : "data_cisco_sr_te_cfp_sr_te_cisco_sr_te_cfp_sr_policies_policies_cisco_sr_te_cfp_sr_policies_sid_list_cisco_sr_te_cfp_sr_policies_sid_list_name_patch",
+        "parameters" : [ {
+          "name" : "cisco-sr-te-cfp-sr-policies_sid-list-name",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "leafref"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "SID list",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-policies_policies_cisco-sr-te-cfp-sr-policies_sid-list_cisco-sr-te-cfp-sr-policies_sid-list-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "list sid-list updated",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "sid-list"
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-odn_odn_cisco-sr-te-cfp-sr-odn_odn-template_cisco-sr-te-cfp-sr-odn_odn-template-name" : {
+        "type" : "object",
+        "properties" : {
+          "cisco-sr-te-cfp-sr-odn:odn-template" : {
+            "type" : "array",
+            "description" : "SR-TE ODN template (list)",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "cisco-sr-te-cfp-sr-odn:head-end" : {
+                  "type" : "array",
+                  "description" : "List of headend routers (list)",
+                  "items" : {
+                    "type" : "object",
+                    "properties" : {
+                      "cisco-sr-te-cfp-sr-odn:custom-template" : {
+                        "type" : "array",
+                        "description" : "Custom templates to apply when device is ready (list)",
+                        "items" : {
+                          "type" : "object",
+                          "properties" : {
+                            "cisco-sr-te-cfp-sr-odn:iteration" : {
+                              "type" : "array",
+                              "description" : "Apply custom template multiple times with iteration (list)",
+                              "items" : {
+                                "type" : "object",
+                                "properties" : {
+                                  "cisco-sr-te-cfp-sr-odn:number" : {
+                                    "type" : "integer",
+                                    "description" : "<1-65535>;;Iteration number (leaf)",
+                                    "format" : "uint16",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  },
+                                  "cisco-sr-te-cfp-sr-odn:variable" : {
+                                    "type" : "array",
+                                    "description" : "Variables to bind when applying template in iteration (list)",
+                                    "items" : {
+                                      "type" : "object",
+                                      "properties" : {
+                                        "cisco-sr-te-cfp-sr-odn:value" : {
+                                          "type" : "string",
+                                          "description" : "Value of template variable (leaf)",
+                                          "format" : "string",
+                                          "x-yang" : {
+                                            "type" : "leaf"
+                                          }
+                                        },
+                                        "cisco-sr-te-cfp-sr-odn:name" : {
+                                          "type" : "string",
+                                          "description" : "Name of template variable (leaf)",
+                                          "format" : "string",
+                                          "x-yang" : {
+                                            "type" : "leaf"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "x-yang" : {
+                                      "type" : "list"
+                                    }
+                                  }
+                                }
+                              },
+                              "x-yang" : {
+                                "type" : "list"
+                              }
+                            },
+                            "cisco-sr-te-cfp-sr-odn:name" : {
+                              "type" : "string",
+                              "description" : "Name of template to apply (leaf)",
+                              "format" : "leafref",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            },
+                            "cisco-sr-te-cfp-sr-odn:variable" : {
+                              "type" : "array",
+                              "description" : "Variables to bind when applying template one time (list)",
+                              "items" : {
+                                "type" : "object",
+                                "properties" : {
+                                  "cisco-sr-te-cfp-sr-odn:value" : {
+                                    "type" : "string",
+                                    "description" : "Value of template variable (leaf)",
+                                    "format" : "string",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  },
+                                  "cisco-sr-te-cfp-sr-odn:name" : {
+                                    "type" : "string",
+                                    "description" : "Name of template variable (leaf)",
+                                    "format" : "string",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  }
+                                }
+                              },
+                              "x-yang" : {
+                                "type" : "list"
+                              }
+                            }
+                          }
+                        },
+                        "x-yang" : {
+                          "type" : "list"
+                        }
+                      },
+                      "cisco-sr-te-cfp-sr-odn:name" : {
+                        "type" : "string",
+                        "description" : "(leaf)",
+                        "format" : "leafref",
+                        "x-yang" : {
+                          "type" : "leaf"
+                        }
+                      }
+                    }
+                  },
+                  "x-yang" : {
+                    "type" : "list"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-odn:bandwidth" : {
+                  "type" : "integer",
+                  "description" : "<1-4294967295> Requested Bandwidth value in kbps (leaf)",
+                  "format" : "uint32",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-odn:pce-group" : {
+                  "type" : "string",
+                  "description" : "(leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-odn:custom-template" : {
+                  "type" : "array",
+                  "description" : "Custom templates to apply when device is ready (list)",
+                  "items" : {
+                    "type" : "object",
+                    "properties" : {
+                      "cisco-sr-te-cfp-sr-odn:iteration" : {
+                        "type" : "array",
+                        "description" : "Apply custom template multiple times with iteration (list)",
+                        "items" : {
+                          "type" : "object",
+                          "properties" : {
+                            "cisco-sr-te-cfp-sr-odn:number" : {
+                              "type" : "integer",
+                              "description" : "<1-65535>;;Iteration number (leaf)",
+                              "format" : "uint16",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            },
+                            "cisco-sr-te-cfp-sr-odn:variable" : {
+                              "type" : "array",
+                              "description" : "Variables to bind when applying template in iteration (list)",
+                              "items" : {
+                                "type" : "object",
+                                "properties" : {
+                                  "cisco-sr-te-cfp-sr-odn:value" : {
+                                    "type" : "string",
+                                    "description" : "Value of template variable (leaf)",
+                                    "format" : "string",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  },
+                                  "cisco-sr-te-cfp-sr-odn:name" : {
+                                    "type" : "string",
+                                    "description" : "Name of template variable (leaf)",
+                                    "format" : "string",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  }
+                                }
+                              },
+                              "x-yang" : {
+                                "type" : "list"
+                              }
+                            }
+                          }
+                        },
+                        "x-yang" : {
+                          "type" : "list"
+                        }
+                      },
+                      "cisco-sr-te-cfp-sr-odn:name" : {
+                        "type" : "string",
+                        "description" : "Name of template to apply (leaf)",
+                        "format" : "leafref",
+                        "x-yang" : {
+                          "type" : "leaf"
+                        }
+                      },
+                      "cisco-sr-te-cfp-sr-odn:variable" : {
+                        "type" : "array",
+                        "description" : "Variables to bind when applying template one time (list)",
+                        "items" : {
+                          "type" : "object",
+                          "properties" : {
+                            "cisco-sr-te-cfp-sr-odn:value" : {
+                              "type" : "string",
+                              "description" : "Value of template variable (leaf)",
+                              "format" : "string",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            },
+                            "cisco-sr-te-cfp-sr-odn:name" : {
+                              "type" : "string",
+                              "description" : "Name of template variable (leaf)",
+                              "format" : "string",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            }
+                          }
+                        },
+                        "x-yang" : {
+                          "type" : "list"
+                        }
+                      }
+                    }
+                  },
+                  "x-yang" : {
+                    "type" : "list"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-odn:dynamic" : {
+                  "type" : "object",
+                  "properties" : {
+                    "cisco-sr-te-cfp-sr-odn:metric-type" : {
+                      "type" : "string",
+                      "description" : "Metric type configuration (leaf)",
+                      "format" : "enumeration",
+                      "default" : "igp",
+                      "enum" : [ "igp", "te", "latency", "hopcount" ],
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-odn:affinity" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-odn:rule" : {
+                          "type" : "array",
+                          "description" : "(list)",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "cisco-sr-te-cfp-sr-odn:action" : {
+                                "type" : "string",
+                                "description" : "(leaf)",
+                                "format" : "enumeration",
+                                "default" : "include-any",
+                                "enum" : [ "include-any", "include-all", "exclude-any" ],
+                                "x-yang" : {
+                                  "type" : "leaf"
+                                }
+                              },
+                              "cisco-sr-te-cfp-sr-odn:color" : {
+                                "type" : "array",
+                                "items" : {
+                                  "type" : "string",
+                                  "description" : "One of affinity-map color names (leaf-list)",
+                                  "format" : "string"
+                                },
+                                "x-yang" : {
+                                  "type" : "leaf-list"
+                                }
+                              }
+                            }
+                          },
+                          "x-yang" : {
+                            "type" : "list"
+                          }
+                        }
+                      },
+                      "description" : "Compute paths with link color constraint (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-odn:segments" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-odn:sid-algorithm" : {
+                          "type" : "integer",
+                          "description" : "<128-255> - Specify the path computation metric options (leaf)",
+                          "format" : "uint16",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        }
+                      },
+                      "description" : "Path segments constraints (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-odn:flex-alg" : {
+                      "type" : "integer",
+                      "description" : "<128-255> - Prefix-SID algorithm (leaf)",
+                      "format" : "uint32",
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-odn:pce" : {
+                      "type" : "object",
+                      "properties" : { },
+                      "description" : "Delegate dynamic path computation to PCE (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-odn:metric-margin" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-odn:absolute" : {
+                          "type" : "integer",
+                          "description" : "<0-2147483647> Absolute metric margin value (leaf)",
+                          "format" : "uint32",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        }
+                      },
+                      "description" : "Metric-margin (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-odn:disjoint-path" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-odn:type" : {
+                          "type" : "string",
+                          "description" : "(leaf)",
+                          "format" : "enumeration",
+                          "default" : "link",
+                          "enum" : [ "link", "node", "srlg", "srlg-node" ],
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-odn:sub-id" : {
+                          "type" : "integer",
+                          "description" : "<1-65535> Subgroup ID number (leaf)",
+                          "format" : "uint16",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-odn:source" : {
+                          "type" : "string",
+                          "description" : "<A.B.C.D> - Association source, applicable only on XE device\nThis config is mandatory when setting association-group. (leaf)",
+                          "format" : "string",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-odn:group-id" : {
+                          "type" : "integer",
+                          "description" : "<1-65535> - Group ID (leaf)",
+                          "format" : "uint16",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        }
+                      },
+                      "description" : "Compute a path that is disjoint from another path in the same disjoint-group (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    }
+                  },
+                  "description" : "Use dynamic path computation (presence)",
+                  "x-yang" : {
+                    "is_presence" : "true",
+                    "type" : "container"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-odn:performance-measurement" : {
+                  "type" : "object",
+                  "properties" : {
+                    "cisco-sr-te-cfp-sr-odn:delay-measurement" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-odn:profile" : {
+                          "type" : "string",
+                          "description" : "Delay profile name (leaf)",
+                          "format" : "string",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-odn:logging" : {
+                          "type" : "object",
+                          "properties" : {
+                            "cisco-sr-te-cfp-sr-odn:delay-exceeded" : {
+                              "type" : "string",
+                              "description" : "Emit syslog when the delay exceeds the threshold (leaf)",
+                              "format" : "[null]",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            }
+                          },
+                          "description" : "Syslog configuration options (presence)",
+                          "x-yang" : {
+                            "is_presence" : "true",
+                            "type" : "container"
+                          }
+                        }
+                      },
+                      "description" : "Delay measurement (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-odn:reverse-path-label" : {
+                      "type" : "integer",
+                      "description" : "<16-1048575> - PM packets return to head-end using a label (leaf)",
+                      "format" : "uint32",
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    }
+                  },
+                  "description" : "Enable performance measurement (presence)",
+                  "x-yang" : {
+                    "is_presence" : "true",
+                    "type" : "container"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-odn:srv6" : {
+                  "type" : "object",
+                  "properties" : {
+                    "cisco-sr-te-cfp-sr-odn:locator" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-odn:behavior" : {
+                          "type" : "string",
+                          "description" : "SRv6 USID Behavior (leaf)",
+                          "format" : "enumeration",
+                          "default" : "ub6-insert-reduced",
+                          "enum" : [ "ub6-insert-reduced" ],
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-odn:binding-sid-type" : {
+                          "type" : "string",
+                          "description" : "Binding Segment ID type (leaf)",
+                          "format" : "enumeration",
+                          "default" : "srv6-dynamic",
+                          "enum" : [ "srv6-dynamic" ],
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-odn:locator-name" : {
+                          "type" : "string",
+                          "description" : "SRv6 locator name,\nshould match locators configured at a node-global level on each router (leaf)",
+                          "format" : "string",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        }
+                      },
+                      "description" : "SRv6 Locator options, settings under this container will override\n the settings at SR-TE or at a Global level in the headend node. (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    }
+                  },
+                  "description" : "SRv6 Options (presence)",
+                  "x-yang" : {
+                    "is_presence" : "true",
+                    "type" : "container"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-odn:color" : {
+                  "type" : "integer",
+                  "description" : "<1-4294967295> - SR policy color (leaf)",
+                  "format" : "uint32",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-odn:name" : {
+                  "type" : "string",
+                  "description" : "Unique identifier for a ODN template (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-odn:source-address" : {
+                  "type" : "string",
+                  "description" : "Source address of policy. The value set on a per-policy basis\n will override the value set globally on the device. (leaf)",
+                  "format" : "union",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-odn:maximum-sid-depth" : {
+                  "type" : "integer",
+                  "description" : "<1-255> - Maximum SID Depth (leaf)",
+                  "format" : "byte",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                }
+              }
+            },
+            "x-yang" : {
+              "type" : "list"
+            }
+          }
+        }
+      },
+      "data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-policies_policies_cisco-sr-te-cfp-sr-policies_policy_cisco-sr-te-cfp-sr-policies_policy-name" : {
+        "type" : "object",
+        "properties" : {
+          "cisco-sr-te-cfp-sr-policies:policy" : {
+            "type" : "array",
+            "description" : "SR-Policy (list)",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "cisco-sr-te-cfp-sr-policies:circuit-style" : {
+                  "type" : "object",
+                  "properties" : {
+                    "cisco-sr-te-cfp-sr-policies:restore-path" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-policies:revertive" : {
+                          "type" : "string",
+                          "description" : "Revertive protect path. Default = false (non-revertive) (leaf)",
+                          "format" : "boolean",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-policies:explicit" : {
+                          "type" : "object",
+                          "properties" : {
+                            "cisco-sr-te-cfp-sr-policies:forward-sid-list-name" : {
+                              "type" : "string",
+                              "description" : "Use a predefined forward explicit path (leaf)",
+                              "format" : "leafref",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            },
+                            "cisco-sr-te-cfp-sr-policies:constraints" : {
+                              "type" : "object",
+                              "properties" : {
+                                "cisco-sr-te-cfp-sr-policies:affinity" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "cisco-sr-te-cfp-sr-policies:rule" : {
+                                      "type" : "array",
+                                      "description" : "(list)",
+                                      "items" : {
+                                        "type" : "object",
+                                        "properties" : {
+                                          "cisco-sr-te-cfp-sr-policies:action" : {
+                                            "type" : "string",
+                                            "description" : "(leaf)",
+                                            "format" : "enumeration",
+                                            "default" : "include-any",
+                                            "enum" : [ "include-any", "include-all", "exclude-any" ],
+                                            "x-yang" : {
+                                              "type" : "leaf"
+                                            }
+                                          },
+                                          "cisco-sr-te-cfp-sr-policies:color" : {
+                                            "type" : "array",
+                                            "items" : {
+                                              "type" : "string",
+                                              "description" : "One of affinity-map color names (leaf-list)",
+                                              "format" : "string"
+                                            },
+                                            "x-yang" : {
+                                              "type" : "leaf-list"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "x-yang" : {
+                                        "type" : "list"
+                                      }
+                                    }
+                                  },
+                                  "description" : "Compute paths with link color constraint (presence)",
+                                  "x-yang" : {
+                                    "is_presence" : "true",
+                                    "type" : "container"
+                                  }
+                                },
+                                "cisco-sr-te-cfp-sr-policies:segments" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "cisco-sr-te-cfp-sr-policies:sid-algorithm" : {
+                                      "type" : "integer",
+                                      "description" : "<128-255> - Specify the path computation metric options (leaf)",
+                                      "format" : "uint16",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    }
+                                  },
+                                  "description" : "Path segments constraints (presence)",
+                                  "x-yang" : {
+                                    "is_presence" : "true",
+                                    "type" : "container"
+                                  }
+                                }
+                              },
+                              "description" : "(non-presence)",
+                              "x-yang" : {
+                                "is_presence" : "false",
+                                "type" : "container"
+                              }
+                            },
+                            "cisco-sr-te-cfp-sr-policies:reverse-sid-list-name" : {
+                              "type" : "string",
+                              "description" : "Use a predefined reverse explicit path (leaf)",
+                              "format" : "leafref",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            }
+                          },
+                          "description" : "(non-presence)",
+                          "x-yang" : {
+                            "is_presence" : "false",
+                            "type" : "container"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-policies:wait-to-revert-timer" : {
+                          "type" : "integer",
+                          "description" : "<0 - 3000> -- seconds to wait before reverting. Default = 300 (leaf)",
+                          "format" : "uint32",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        }
+                      },
+                      "description" : "Restore path (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-policies:steering" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-policies:drop-traffic-on-invalid-path" : {
+                          "type" : "string",
+                          "description" : "Drop traffic when all paths are invalid. Default = false (leaf)",
+                          "format" : "boolean",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        }
+                      },
+                      "description" : "Steering (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-policies:protect-path" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-policies:revertive" : {
+                          "type" : "string",
+                          "description" : "Revertive protect path. Default = false (non-revertive) (leaf)",
+                          "format" : "boolean",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-policies:explicit" : {
+                          "type" : "object",
+                          "properties" : {
+                            "cisco-sr-te-cfp-sr-policies:forward-sid-list-name" : {
+                              "type" : "string",
+                              "description" : "Use a predefined forward explicit path (leaf)",
+                              "format" : "leafref",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            },
+                            "cisco-sr-te-cfp-sr-policies:constraints" : {
+                              "type" : "object",
+                              "properties" : {
+                                "cisco-sr-te-cfp-sr-policies:disjoint-path" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "cisco-sr-te-cfp-sr-policies:sub-id" : {
+                                      "type" : "integer",
+                                      "description" : "<1-65535> Subgroup ID number (leaf)",
+                                      "format" : "uint16",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    },
+                                    "cisco-sr-te-cfp-sr-policies:group-id" : {
+                                      "type" : "integer",
+                                      "description" : "<1-65535> - Group ID (leaf)",
+                                      "format" : "uint16",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    },
+                                    "cisco-sr-te-cfp-sr-policies:type" : {
+                                      "type" : "string",
+                                      "description" : "(leaf)",
+                                      "format" : "enumeration",
+                                      "default" : "link",
+                                      "enum" : [ "link", "node", "srlg", "srlg-node" ],
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    }
+                                  },
+                                  "description" : "Compute a path that is disjoint from another path in the same disjoint-group (presence)",
+                                  "x-yang" : {
+                                    "is_presence" : "true",
+                                    "type" : "container"
+                                  }
+                                },
+                                "cisco-sr-te-cfp-sr-policies:affinity" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "cisco-sr-te-cfp-sr-policies:rule" : {
+                                      "type" : "array",
+                                      "description" : "(list)",
+                                      "items" : {
+                                        "type" : "object",
+                                        "properties" : {
+                                          "cisco-sr-te-cfp-sr-policies:action" : {
+                                            "type" : "string",
+                                            "description" : "(leaf)",
+                                            "format" : "enumeration",
+                                            "default" : "include-any",
+                                            "enum" : [ "include-any", "include-all", "exclude-any" ],
+                                            "x-yang" : {
+                                              "type" : "leaf"
+                                            }
+                                          },
+                                          "cisco-sr-te-cfp-sr-policies:color" : {
+                                            "type" : "array",
+                                            "items" : {
+                                              "type" : "string",
+                                              "description" : "One of affinity-map color names (leaf-list)",
+                                              "format" : "string"
+                                            },
+                                            "x-yang" : {
+                                              "type" : "leaf-list"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "x-yang" : {
+                                        "type" : "list"
+                                      }
+                                    }
+                                  },
+                                  "description" : "Compute paths with link color constraint (presence)",
+                                  "x-yang" : {
+                                    "is_presence" : "true",
+                                    "type" : "container"
+                                  }
+                                },
+                                "cisco-sr-te-cfp-sr-policies:segments" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "cisco-sr-te-cfp-sr-policies:sid-algorithm" : {
+                                      "type" : "integer",
+                                      "description" : "<128-255> - Specify the path computation metric options (leaf)",
+                                      "format" : "uint16",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    }
+                                  },
+                                  "description" : "Path segments constraints (presence)",
+                                  "x-yang" : {
+                                    "is_presence" : "true",
+                                    "type" : "container"
+                                  }
+                                }
+                              },
+                              "description" : "(non-presence)",
+                              "x-yang" : {
+                                "is_presence" : "false",
+                                "type" : "container"
+                              }
+                            },
+                            "cisco-sr-te-cfp-sr-policies:reverse-sid-list-name" : {
+                              "type" : "string",
+                              "description" : "Use a predefined reverse explicit path (leaf)",
+                              "format" : "leafref",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            }
+                          },
+                          "description" : "(non-presence)",
+                          "x-yang" : {
+                            "is_presence" : "false",
+                            "type" : "container"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-policies:wait-to-revert-timer" : {
+                          "type" : "integer",
+                          "description" : "<0 - 3000> -- seconds to wait before reverting. Default = 300 (leaf)",
+                          "format" : "uint32",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        }
+                      },
+                      "description" : "Protect path (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-policies:path-protection" : {
+                      "type" : "object",
+                      "properties" : { },
+                      "description" : "Path Protection (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-policies:working-path" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-policies:explicit" : {
+                          "type" : "object",
+                          "properties" : {
+                            "cisco-sr-te-cfp-sr-policies:forward-sid-list-name" : {
+                              "type" : "string",
+                              "description" : "Use a predefined forward explicit path (leaf)",
+                              "format" : "leafref",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            },
+                            "cisco-sr-te-cfp-sr-policies:constraints" : {
+                              "type" : "object",
+                              "properties" : {
+                                "cisco-sr-te-cfp-sr-policies:disjoint-path" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "cisco-sr-te-cfp-sr-policies:sub-id" : {
+                                      "type" : "integer",
+                                      "description" : "<1-65535> Subgroup ID number (leaf)",
+                                      "format" : "uint16",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    },
+                                    "cisco-sr-te-cfp-sr-policies:group-id" : {
+                                      "type" : "integer",
+                                      "description" : "<1-65535> - Group ID (leaf)",
+                                      "format" : "uint16",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    },
+                                    "cisco-sr-te-cfp-sr-policies:type" : {
+                                      "type" : "string",
+                                      "description" : "(leaf)",
+                                      "format" : "enumeration",
+                                      "default" : "link",
+                                      "enum" : [ "link", "node", "srlg", "srlg-node" ],
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    }
+                                  },
+                                  "description" : "Compute a path that is disjoint from another path in the same disjoint-group (presence)",
+                                  "x-yang" : {
+                                    "is_presence" : "true",
+                                    "type" : "container"
+                                  }
+                                },
+                                "cisco-sr-te-cfp-sr-policies:affinity" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "cisco-sr-te-cfp-sr-policies:rule" : {
+                                      "type" : "array",
+                                      "description" : "(list)",
+                                      "items" : {
+                                        "type" : "object",
+                                        "properties" : {
+                                          "cisco-sr-te-cfp-sr-policies:action" : {
+                                            "type" : "string",
+                                            "description" : "(leaf)",
+                                            "format" : "enumeration",
+                                            "default" : "include-any",
+                                            "enum" : [ "include-any", "include-all", "exclude-any" ],
+                                            "x-yang" : {
+                                              "type" : "leaf"
+                                            }
+                                          },
+                                          "cisco-sr-te-cfp-sr-policies:color" : {
+                                            "type" : "array",
+                                            "items" : {
+                                              "type" : "string",
+                                              "description" : "One of affinity-map color names (leaf-list)",
+                                              "format" : "string"
+                                            },
+                                            "x-yang" : {
+                                              "type" : "leaf-list"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "x-yang" : {
+                                        "type" : "list"
+                                      }
+                                    }
+                                  },
+                                  "description" : "Compute paths with link color constraint (presence)",
+                                  "x-yang" : {
+                                    "is_presence" : "true",
+                                    "type" : "container"
+                                  }
+                                },
+                                "cisco-sr-te-cfp-sr-policies:segments" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "cisco-sr-te-cfp-sr-policies:sid-algorithm" : {
+                                      "type" : "integer",
+                                      "description" : "<128-255> - Specify the path computation metric options (leaf)",
+                                      "format" : "uint16",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    }
+                                  },
+                                  "description" : "Path segments constraints (presence)",
+                                  "x-yang" : {
+                                    "is_presence" : "true",
+                                    "type" : "container"
+                                  }
+                                }
+                              },
+                              "description" : "(non-presence)",
+                              "x-yang" : {
+                                "is_presence" : "false",
+                                "type" : "container"
+                              }
+                            },
+                            "cisco-sr-te-cfp-sr-policies:reverse-sid-list-name" : {
+                              "type" : "string",
+                              "description" : "Use a predefined reverse explicit path (leaf)",
+                              "format" : "leafref",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            }
+                          },
+                          "description" : "(non-presence)",
+                          "x-yang" : {
+                            "is_presence" : "false",
+                            "type" : "container"
+                          }
+                        }
+                      },
+                      "description" : "Working path (non-presence)",
+                      "x-yang" : {
+                        "is_presence" : "false",
+                        "type" : "container"
+                      }
+                    }
+                  },
+                  "description" : "This is service to configure a SR Circuit Style policy (presence)",
+                  "x-yang" : {
+                    "is_presence" : "true",
+                    "type" : "container"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:custom-template" : {
+                  "type" : "array",
+                  "description" : "Custom templates to apply when device is ready (list)",
+                  "items" : {
+                    "type" : "object",
+                    "properties" : {
+                      "cisco-sr-te-cfp-sr-policies:name" : {
+                        "type" : "string",
+                        "description" : "Name of template to apply (leaf)",
+                        "format" : "leafref",
+                        "x-yang" : {
+                          "type" : "leaf"
+                        }
+                      },
+                      "cisco-sr-te-cfp-sr-policies:iteration" : {
+                        "type" : "array",
+                        "description" : "Apply custom template multiple times with iteration (list)",
+                        "items" : {
+                          "type" : "object",
+                          "properties" : {
+                            "cisco-sr-te-cfp-sr-policies:number" : {
+                              "type" : "integer",
+                              "description" : "<1-65535>;;Iteration number (leaf)",
+                              "format" : "uint16",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            },
+                            "cisco-sr-te-cfp-sr-policies:variable" : {
+                              "type" : "array",
+                              "description" : "Variables to bind when applying template in iteration (list)",
+                              "items" : {
+                                "type" : "object",
+                                "properties" : {
+                                  "cisco-sr-te-cfp-sr-policies:name" : {
+                                    "type" : "string",
+                                    "description" : "Name of template variable (leaf)",
+                                    "format" : "string",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  },
+                                  "cisco-sr-te-cfp-sr-policies:value" : {
+                                    "type" : "string",
+                                    "description" : "Value of template variable (leaf)",
+                                    "format" : "string",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  }
+                                }
+                              },
+                              "x-yang" : {
+                                "type" : "list"
+                              }
+                            }
+                          }
+                        },
+                        "x-yang" : {
+                          "type" : "list"
+                        }
+                      },
+                      "cisco-sr-te-cfp-sr-policies:variable" : {
+                        "type" : "array",
+                        "description" : "Variables to bind when applying template one time (list)",
+                        "items" : {
+                          "type" : "object",
+                          "properties" : {
+                            "cisco-sr-te-cfp-sr-policies:name" : {
+                              "type" : "string",
+                              "description" : "Name of template variable (leaf)",
+                              "format" : "string",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            },
+                            "cisco-sr-te-cfp-sr-policies:value" : {
+                              "type" : "string",
+                              "description" : "Value of template variable (leaf)",
+                              "format" : "string",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            }
+                          }
+                        },
+                        "x-yang" : {
+                          "type" : "list"
+                        }
+                      }
+                    }
+                  },
+                  "x-yang" : {
+                    "type" : "list"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:path" : {
+                  "type" : "array",
+                  "description" : "SR-Policy candidate paths (list)",
+                  "items" : {
+                    "type" : "object",
+                    "properties" : {
+                      "cisco-sr-te-cfp-sr-policies:preference" : {
+                        "type" : "integer",
+                        "description" : "<1-65535> - Path preference - Higher value indicates higher preference (leaf)",
+                        "format" : "uint16",
+                        "x-yang" : {
+                          "type" : "leaf"
+                        }
+                      },
+                      "cisco-sr-te-cfp-sr-policies:explicit" : {
+                        "type" : "object",
+                        "properties" : {
+                          "cisco-sr-te-cfp-sr-policies:sid-list" : {
+                            "type" : "array",
+                            "description" : "(list)",
+                            "items" : {
+                              "type" : "object",
+                              "properties" : {
+                                "cisco-sr-te-cfp-sr-policies:weight" : {
+                                  "type" : "integer",
+                                  "description" : "<1-4294967295> - SID-List weight  (leaf)",
+                                  "format" : "uint32",
+                                  "x-yang" : {
+                                    "type" : "leaf"
+                                  }
+                                },
+                                "cisco-sr-te-cfp-sr-policies:name" : {
+                                  "type" : "string",
+                                  "description" : "(leaf)",
+                                  "format" : "leafref",
+                                  "x-yang" : {
+                                    "type" : "leaf"
+                                  }
+                                }
+                              }
+                            },
+                            "x-yang" : {
+                              "type" : "list"
+                            }
+                          },
+                          "cisco-sr-te-cfp-sr-policies:constraints" : {
+                            "type" : "object",
+                            "properties" : {
+                              "cisco-sr-te-cfp-sr-policies:disjoint-path" : {
+                                "type" : "object",
+                                "properties" : {
+                                  "cisco-sr-te-cfp-sr-policies:sub-id" : {
+                                    "type" : "integer",
+                                    "description" : "<1-65535>;;Subgroup ID number (leaf)",
+                                    "format" : "uint16",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  },
+                                  "cisco-sr-te-cfp-sr-policies:group-id" : {
+                                    "type" : "integer",
+                                    "description" : "<1-65535> - Group ID (leaf)",
+                                    "format" : "uint16",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  },
+                                  "cisco-sr-te-cfp-sr-policies:type" : {
+                                    "type" : "string",
+                                    "description" : "(leaf)",
+                                    "format" : "enumeration",
+                                    "default" : "link",
+                                    "enum" : [ "link", "node", "srlg", "srlg-node" ],
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  },
+                                  "cisco-sr-te-cfp-sr-policies:source" : {
+                                    "type" : "string",
+                                    "description" : "<A.B.C.D> - Association source, applicable only on XE device\nThis config is mandatory when setting association-group. (leaf)",
+                                    "format" : "string",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  }
+                                },
+                                "description" : "Compute a path that is disjoint from another path in the same disjoint-group (presence)",
+                                "x-yang" : {
+                                  "is_presence" : "true",
+                                  "type" : "container"
+                                }
+                              },
+                              "cisco-sr-te-cfp-sr-policies:affinity" : {
+                                "type" : "object",
+                                "properties" : {
+                                  "cisco-sr-te-cfp-sr-policies:rule" : {
+                                    "type" : "array",
+                                    "description" : "(list)",
+                                    "items" : {
+                                      "type" : "object",
+                                      "properties" : {
+                                        "cisco-sr-te-cfp-sr-policies:action" : {
+                                          "type" : "string",
+                                          "description" : "(leaf)",
+                                          "format" : "enumeration",
+                                          "default" : "include-any",
+                                          "enum" : [ "include-any", "include-all", "exclude-any" ],
+                                          "x-yang" : {
+                                            "type" : "leaf"
+                                          }
+                                        },
+                                        "cisco-sr-te-cfp-sr-policies:color" : {
+                                          "type" : "array",
+                                          "items" : {
+                                            "type" : "string",
+                                            "description" : "One of affinity-map color names (leaf-list)",
+                                            "format" : "string"
+                                          },
+                                          "x-yang" : {
+                                            "type" : "leaf-list"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "x-yang" : {
+                                      "type" : "list"
+                                    }
+                                  }
+                                },
+                                "description" : "Compute paths with link color constraint (presence)",
+                                "x-yang" : {
+                                  "is_presence" : "true",
+                                  "type" : "container"
+                                }
+                              },
+                              "cisco-sr-te-cfp-sr-policies:segments" : {
+                                "type" : "object",
+                                "properties" : {
+                                  "cisco-sr-te-cfp-sr-policies:sid-algorithm" : {
+                                    "type" : "integer",
+                                    "description" : "<128-255> - Specify the path computation metric options (leaf)",
+                                    "format" : "uint16",
+                                    "x-yang" : {
+                                      "type" : "leaf"
+                                    }
+                                  }
+                                },
+                                "description" : "Path segments constraints (presence)",
+                                "x-yang" : {
+                                  "is_presence" : "true",
+                                  "type" : "container"
+                                }
+                              }
+                            },
+                            "description" : "(non-presence)",
+                            "x-yang" : {
+                              "is_presence" : "false",
+                              "type" : "container"
+                            }
+                          }
+                        },
+                        "description" : "Use a predefine explicit path (presence)",
+                        "x-yang" : {
+                          "is_presence" : "true",
+                          "type" : "container"
+                        }
+                      }
+                    }
+                  },
+                  "x-yang" : {
+                    "type" : "list"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:bandwidth" : {
+                  "type" : "integer",
+                  "description" : "<1-4294967295> Requested Bandwidth value in kbps (leaf)",
+                  "format" : "uint32",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:color" : {
+                  "type" : "integer",
+                  "description" : "<1-4294967295> - SR policy color (leaf)",
+                  "format" : "uint32",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:source-address" : {
+                  "type" : "string",
+                  "description" : "Source address of policy. The value set on a per-policy basis\n will override the value set globally on the device. (leaf)",
+                  "format" : "union",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:name" : {
+                  "type" : "string",
+                  "description" : "Unique identifier for a SR-Policy (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:binding-sid" : {
+                  "type" : "integer",
+                  "description" : "<16-1048575> - Binding SID of the SR-Policy applied at the headend (leaf)",
+                  "format" : "uint32",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:performance-measurement" : {
+                  "type" : "object",
+                  "properties" : {
+                    "cisco-sr-te-cfp-sr-policies:delay-measurement" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-policies:profile" : {
+                          "type" : "string",
+                          "description" : "Delay profile name (leaf)",
+                          "format" : "string",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-policies:logging" : {
+                          "type" : "object",
+                          "properties" : {
+                            "cisco-sr-te-cfp-sr-policies:delay-exceeded" : {
+                              "type" : "string",
+                              "description" : "Emit syslog when the delay exceeds the threshold (leaf)",
+                              "format" : "[null]",
+                              "x-yang" : {
+                                "type" : "leaf"
+                              }
+                            }
+                          },
+                          "description" : "Syslog configuration options (presence)",
+                          "x-yang" : {
+                            "is_presence" : "true",
+                            "type" : "container"
+                          }
+                        }
+                      },
+                      "description" : "Delay measurement (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-policies:reverse-path-label" : {
+                      "type" : "integer",
+                      "description" : "<16-1048575> - PM packets return to head-end using a label (leaf)",
+                      "format" : "uint32",
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    }
+                  },
+                  "description" : "Enable performance measurement (presence)",
+                  "x-yang" : {
+                    "is_presence" : "true",
+                    "type" : "container"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:auto-route" : {
+                  "type" : "object",
+                  "properties" : {
+                    "cisco-sr-te-cfp-sr-policies:force-sr-include" : {
+                      "type" : "string",
+                      "description" : "Force autoroute policy to be safe for carrying SR labelled traffic (leaf)",
+                      "format" : "[null]",
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-policies:forward-class" : {
+                      "type" : "integer",
+                      "description" : "<0-7> Specify forward class for policy based routing (leaf)",
+                      "format" : "byte",
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-policies:auto-route-metric" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-policies:metric-relative-value" : {
+                          "type" : "string",
+                          "description" : "<(-10)-10> - Autoroute relative metric (leaf)",
+                          "format" : "int32",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        }
+                      },
+                      "description" : "Autoroute metric (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    },
+                    "cisco-sr-te-cfp-sr-policies:include-prefixes" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-policies:include-prefix" : {
+                          "type" : "array",
+                          "description" : "<A.B.C.D/prefix> Autoroute IP prefix to include (list)",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "cisco-sr-te-cfp-sr-policies:prefix-address" : {
+                                "type" : "string",
+                                "description" : "<A.B.C.D/prefix> - Autoroute IP prefix to include (leaf)",
+                                "format" : "string",
+                                "x-yang" : {
+                                  "type" : "leaf"
+                                }
+                              }
+                            }
+                          },
+                          "x-yang" : {
+                            "type" : "list"
+                          }
+                        }
+                      },
+                      "description" : "Autoroute include prefix table configuration (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    }
+                  },
+                  "description" : "Enable Autoroute on this SR-policy (presence)",
+                  "x-yang" : {
+                    "is_presence" : "true",
+                    "type" : "container"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:action" : {
+                  "type" : "object",
+                  "properties" : { },
+                  "description" : "(non-presence)",
+                  "x-yang" : {
+                    "is_presence" : "false",
+                    "type" : "container"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:head-end" : {
+                  "type" : "array",
+                  "description" : "Policy headend router. Only one headend can be given for a policy service (list)",
+                  "items" : {
+                    "type" : "object",
+                    "properties" : {
+                      "cisco-sr-te-cfp-sr-policies:name" : {
+                        "type" : "string",
+                        "description" : "(leaf)",
+                        "format" : "leafref",
+                        "x-yang" : {
+                          "type" : "leaf"
+                        }
+                      }
+                    }
+                  },
+                  "x-yang" : {
+                    "type" : "list"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:tail-end" : {
+                  "type" : "string",
+                  "description" : "<A.B.C.D or X:X::X> - Router-Id of the tail-end device of the SR policy (leaf)",
+                  "format" : "union",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:srv6" : {
+                  "type" : "object",
+                  "properties" : {
+                    "cisco-sr-te-cfp-sr-policies:locator" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-sr-te-cfp-sr-policies:behavior" : {
+                          "type" : "string",
+                          "description" : "SRv6 USID Behavior (leaf)",
+                          "format" : "enumeration",
+                          "default" : "ub6-insert-reduced",
+                          "enum" : [ "ub6-insert-reduced" ],
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-policies:binding-sid-type" : {
+                          "type" : "string",
+                          "description" : "Binding Segment ID type (leaf)",
+                          "format" : "enumeration",
+                          "default" : "srv6-dynamic",
+                          "enum" : [ "srv6-dynamic" ],
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "cisco-sr-te-cfp-sr-policies:locator-name" : {
+                          "type" : "string",
+                          "description" : "SRv6 locator name,\nshould match locators configured at a node-global level on each router (leaf)",
+                          "format" : "string",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        }
+                      },
+                      "description" : "SRv6 Locator options, settings under this container will override\n the settings at SR-TE or at a Global level in the headend node. (presence)",
+                      "x-yang" : {
+                        "is_presence" : "true",
+                        "type" : "container"
+                      }
+                    }
+                  },
+                  "description" : "SRv6 Options (presence)",
+                  "x-yang" : {
+                    "is_presence" : "true",
+                    "type" : "container"
+                  }
+                }
+              }
+            },
+            "x-yang" : {
+              "type" : "list"
+            }
+          }
+        }
+      },
+      "data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-policies_policies_cisco-sr-te-cfp-sr-policies_sid-list_cisco-sr-te-cfp-sr-policies_sid-list-name" : {
+        "type" : "object",
+        "properties" : {
+          "cisco-sr-te-cfp-sr-policies:sid-list" : {
+            "type" : "array",
+            "description" : "SID list (list)",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "cisco-sr-te-cfp-sr-policies:name" : {
+                  "type" : "string",
+                  "description" : "Unique list id (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "cisco-sr-te-cfp-sr-policies:sid" : {
+                  "type" : "array",
+                  "description" : "List of SID Index. (list)",
+                  "items" : {
+                    "type" : "object",
+                    "properties" : {
+                      "cisco-sr-te-cfp-sr-policies:index" : {
+                        "type" : "integer",
+                        "description" : "<1-65535> - Sid Index (leaf)",
+                        "format" : "uint32",
+                        "x-yang" : {
+                          "type" : "leaf"
+                        }
+                      },
+                      "cisco-sr-te-cfp-sr-policies:mpls" : {
+                        "type" : "object",
+                        "properties" : {
+                          "cisco-sr-te-cfp-sr-policies:label" : {
+                            "type" : "integer",
+                            "description" : "<0-1048575> - MPLS label configuration (leaf)",
+                            "format" : "uint32",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          }
+                        },
+                        "description" : "(non-presence)",
+                        "x-yang" : {
+                          "is_presence" : "false",
+                          "type" : "container"
+                        }
+                      }
+                    }
+                  },
+                  "x-yang" : {
+                    "type" : "list"
+                  }
+                }
+              }
+            },
+            "x-yang" : {
+              "type" : "list"
+            }
+          }
+        }
+      }
+    },
+    "responses" : {
+      "200" : {
+        "description" : "OK",
+        "content" : { }
+      },
+      "201" : {
+        "description" : "Created",
+        "content" : { }
+      },
+      "400" : {
+        "description" : "Bad Request",
+        "content" : { }
+      },
+      "401" : {
+        "description" : "Unauthorized",
+        "content" : { }
+      },
+      "204" : {
+        "description" : "No Content",
+        "content" : { }
+      },
+      "404" : {
+        "description" : "Not Found",
+        "content" : { }
+      },
+      "405" : {
+        "description" : "Method Not Allowed",
+        "content" : { }
+      },
+      "409" : {
+        "description" : "Conflict",
+        "content" : { }
+      }
+    },
+    "parameters" : {
+      "cisco-sr-te-cfp-sr-policies_sid-list-name" : {
+        "name" : "cisco-sr-te-cfp-sr-policies_sid-list-name",
+        "in" : "path",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "leafref"
+        }
+      },
+      "cisco-sr-te-cfp-sr-policies_policy-name" : {
+        "name" : "cisco-sr-te-cfp-sr-policies_policy-name",
+        "in" : "path",
+        "description" : "Unique identifier for a SR-Policy",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "fields" : {
+        "name" : "fields",
+        "in" : "query",
+        "description" : "optionally identify specific data nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "content" : {
+        "name" : "content",
+        "in" : "query",
+        "description" : "controlling descendant nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "config",
+          "enum" : [ "config", "nonconfig", "all" ]
+        }
+      },
+      "cisco-sr-te-cfp-sr-odn_odn-template-name" : {
+        "name" : "cisco-sr-te-cfp-sr-odn_odn-template-name",
+        "in" : "path",
+        "description" : "Unique identifier for a ODN template",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "filter" : {
+        "name" : "filter",
+        "in" : "query",
+        "description" : "xpath expression to filter data nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "depth" : {
+        "name" : "depth",
+        "in" : "query",
+        "description" : "limit the depth of nodes in response",
+        "schema" : {
+          "type" : "integer",
+          "format" : "uint16"
+        }
+      },
+      "insert" : {
+        "name" : "insert",
+        "in" : "query",
+        "description" : "controlling the order when adding new list elements",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "first",
+          "enum" : [ "first", "last", "before", "after" ]
+        }
+      },
+      "point" : {
+        "name" : "point",
+        "in" : "query",
+        "description" : "used to specify the insertion point",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "with-defaults" : {
+        "name" : "with-defaults",
+        "in" : "query",
+        "description" : "controlling default values in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "report-all",
+          "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+        }
+      }
+    },
+    "requestBodies" : {
+      "data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-odn_odn_cisco-sr-te-cfp-sr-odn_odn-template_cisco-sr-te-cfp-sr-odn_odn-template-name" : {
+        "description" : "SR-TE ODN template",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-odn_odn_cisco-sr-te-cfp-sr-odn_odn-template_cisco-sr-te-cfp-sr-odn_odn-template-name"
+            }
+          }
+        },
+        "required" : true
+      },
+      "data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-policies_policies_cisco-sr-te-cfp-sr-policies_policy_cisco-sr-te-cfp-sr-policies_policy-name" : {
+        "description" : "SR-Policy",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-policies_policies_cisco-sr-te-cfp-sr-policies_policy_cisco-sr-te-cfp-sr-policies_policy-name"
+            }
+          }
+        },
+        "required" : true
+      },
+      "data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-policies_policies_cisco-sr-te-cfp-sr-policies_sid-list_cisco-sr-te-cfp-sr-policies_sid-list-name" : {
+        "description" : "SID list",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/data_cisco-sr-te-cfp_sr-te_cisco-sr-te-cfp-sr-policies_policies_cisco-sr-te-cfp-sr-policies_sid-list_cisco-sr-te-cfp-sr-policies_sid-list-name"
+            }
+          }
+        },
+        "required" : true
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "x-original-swagger-version" : "2.0"
+}

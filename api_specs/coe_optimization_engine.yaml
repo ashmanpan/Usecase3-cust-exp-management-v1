@@ -1,0 +1,568 @@
+---
+swagger: "2.0"
+info:
+  description: "This API provides operations for managing Segment Routing (SR) policies, retrieving optimization plans, and configuring notifications for SR policy paths."
+  version: "7.1.0"
+  title: "Cisco Crosswork Optimization Engine Operations API"
+  contact:
+    name: API Support
+    url: https://www.cisco.com/support
+    email: support@cisco.com
+  license:
+    name: Cisco Software License Agreement
+    url: http://www.cisco.com/public/sw-license-agreement.html
+host: "localhost:30603"
+basePath: "/crosswork/nbi/optimization/v3/restconf"
+consumes:
+- "application/yang-data+json"
+produces:
+- "application/yang-data+json"
+securityDefinitions:
+  api_key:
+    description: "Authentication: Bearer $JWT"
+    type: apiKey
+    name: api_key
+    in: header
+paths:
+  /operations/cisco-crosswork-optimization-engine-operations:get-interface-sr-policy-paths-notification-state:
+    post:
+      operationId: getInterfaceSrPolicyPathsNotificationState
+      tags:
+      - "cisco-crosswork-optimization-engine-operations"
+      summary: "Retrieve SR policy path notification state"
+      description: "Retrieves the current state of interface SR policy path notifications."
+      parameters: []
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/operations.getinterfacesrpolicypathsnotificationstate.Output"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-operations:get-plan:
+    post:
+      operationId: getPlan
+      tags:
+      - "cisco-crosswork-optimization-engine-operations"
+      summary: "Retrieve optimization plan"
+      description: "Fetches the optimization plan in the specified format and version."
+      parameters:
+      - in: "body"
+        name: "operations.getplan.Input.body-param"
+        required: false
+        description: "Request body containing the format and version of the optimization plan."
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/operations.getplan.Input"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/operations.getplan.Output"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-operations:set-interface-sr-policy-paths-notification-state:
+    post:
+      operationId: setInterfaceSrPolicyPathsNotificationState
+      tags:
+      - "cisco-crosswork-optimization-engine-operations"
+      summary: "Enable or disable SR policy path notifications"
+      description: "Enables or disables notifications for interface SR policy paths."
+      parameters:
+      - in: "body"
+        name: "operations.setinterfacesrpolicypathsnotificationstate.Input.body-param"
+        required: false
+        description: "Request body to enable or disable interface SR policy path notifications."
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/operations.setinterfacesrpolicypathsnotificationstate.Input"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/common.RequestResult"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-operations:sr-policies-on-interface:
+    post:
+      operationId: getSrPoliciesOnInterface
+      tags:
+      - "cisco-crosswork-optimization-engine-operations"
+      summary: "Retrieve SR policies on interface"
+      description: "Fetches Segment Routing (SR) policies associated with a specific interface."
+      parameters:
+      - in: "body"
+        name: "common.InterfaceKeyList.body-param"
+        required: false
+        description: "Request body containing the list of interfaces to fetch SR policies for."
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/common.InterfaceKeyList"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/operations.srpoliciesoninterface.Output"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-operations:sr-policies-on-node:
+    post:
+      operationId: getSrPoliciesOnNode
+      tags:
+      - "cisco-crosswork-optimization-engine-operations"
+      summary: "Retrieve SR policies on node"
+      description: "Fetches Segment Routing (SR) policies associated with a specific node."
+      parameters:
+      - in: "body"
+        name: "operations.srpoliciesonnode.Input.body-param"
+        required: false
+        description: "Request body containing the node list and filters to fetch SR policies."
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/operations.srpoliciesonnode.Input"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/operations.srpoliciesonnode.Output"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-operations:sr-policy-metrics:
+    post:
+      operationId: getSrPolicyMetrics
+      tags:
+      - "cisco-crosswork-optimization-engine-operations"
+      summary: "Retrieve SR policy metrics"
+      description: "Fetches metrics for specified Segment Routing (SR) policies."
+      parameters:
+      - in: "body"
+        name: "sr.policy.common.SrPolicyKeyList.body-param"
+        required: false
+        description: "Request body containing the list of SR policies to fetch metrics for."
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/sr.policy.common.SrPolicyKeyList"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/operations.srpolicymetrics.Output"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-operations:sr-policy-route-preview:
+    post:
+      operationId: getSrPolicyRoutePreview
+      tags:
+      - "cisco-crosswork-optimization-engine-operations"
+      summary: "Preview SR policy route"
+      description: "Provides a preview of the route for a specified Segment Routing (SR) policy."
+      parameters:
+      - in: "body"
+        name: "operations.srpolicyroutepreview.Input.body-param"
+        required: false
+        description: "Request body containing the SR policy details for route preview."
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/operations.srpolicyroutepreview.Input"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/operations.srpolicyroutepreview.Output"
+        "204":
+          description: "No response"
+  /operations/cisco-crosswork-optimization-engine-operations:sr-policy-routes:
+    post:
+      operationId: getSrPolicyRoutes
+      tags:
+      - "cisco-crosswork-optimization-engine-operations"
+      summary: "Retrieve SR policy routes"
+      description: "Fetches routes for specified Segment Routing (SR) policies."
+      parameters:
+      - in: "body"
+        name: "sr.policy.common.SrPolicyKeyList.body-param"
+        required: false
+        description: "Request body containing the list of SR policies to fetch routes for."
+        schema:
+          type: "object"
+          properties:
+            input:
+              $ref: "#/definitions/sr.policy.common.SrPolicyKeyList"
+      responses:
+        "400":
+          description: "Internal error"
+        "200":
+          description: "Correct response"
+          schema:
+            type: "object"
+            properties:
+              output:
+                $ref: "#/definitions/operations.srpolicyroutes.Output"
+        "204":
+          description: "No response"
+definitions:
+  common.InterfaceKeyFields:
+    type: "object"
+    properties:
+      interface:
+        type: "string"
+        description: "The name of the interface"
+      node:
+        type: "string"
+        description: "The hostname of the source-node for the interface"
+  common.InterfaceKeyList:
+    type: "object"
+    properties:
+      interfaces:
+        type: "array"
+        items:
+          $ref: "#/definitions/common.InterfaceKeyFields"
+  common.InterfaceUseDetail:
+    allOf:
+    - $ref: "#/definitions/common.InterfaceKeyFields"
+    - type: "object"
+      properties:
+        interface-use:
+          type: "integer"
+          format: "int32"
+          description: "Route portion using that interface, ranges from 0 to 1"
+  common.NodeKeyList:
+    type: "object"
+    properties:
+      nodes:
+        type: "array"
+        items:
+          $ref: "#/definitions/common.nodekeylist.Nodes"
+  common.PathComputationStatusEnumeration:
+    type: "string"
+    enum:
+    - "success"
+    - "failure"
+  common.PathStatus:
+    type: "object"
+    properties:
+      path-computation-status:
+        description: "The IGP path computation status for an SR policy"
+        $ref: "#/definitions/common.PathComputationStatusEnumeration"
+  common.RequestResult:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+        description: "The details of status above"
+      status:
+        description: "Enumeration of the request state"
+        $ref: "#/definitions/common.RequestStatus"
+  common.RequestStatus:
+    type: "string"
+    enum:
+    - "error"
+    - "accepted"
+    - "rejected"
+  common.nodekeylist.Nodes:
+    type: "object"
+    properties:
+      node:
+        type: "string"
+        description: "The hostname of the node"
+  operations.FilterEnumeration:
+    type: "string"
+    enum:
+    - "through-nodes"
+    - "nodes-as-source"
+    - "nodes-as-destination"
+    - "nodes-as-source-or-destination"
+  operations.Format:
+    type: "string"
+    enum:
+    - "pln"
+    - "txt"
+  operations.getinterfacesrpolicypathsnotificationstate.Output:
+    allOf:
+    - $ref: "#/definitions/common.RequestResult"
+    - type: "object"
+      properties:
+        enabled:
+          type: "boolean"
+          description: "Interface SR Policy path notifications enabled state"
+  operations.getplan.Input:
+    type: "object"
+    properties:
+      format:
+        description: "Format of the output plan."
+        $ref: "#/definitions/operations.Format"
+      version:
+        type: "string"
+        description: "Version of output plan."
+        default: "current"
+  operations.getplan.Output:
+    allOf:
+    - $ref: "#/definitions/common.RequestResult"
+    - type: "object"
+      properties:
+        planfile-content:
+          type: "string"
+  operations.interfacesrpolicies.InterfaceSrPolicies:
+    allOf:
+    - $ref: "#/definitions/sr.policy.common.SrPolicyKeyList"
+    - properties:
+        interface:
+          type: "string"
+          description: "The name of the interface"
+        node:
+          type: "string"
+          description: "The hostname of the source-node for the interface"
+        message:
+          type: "string"
+  operations.nodesrpolicies.NodeSrPolicies:
+    allOf:
+    - $ref: "#/definitions/sr.policy.common.SrPolicyKeyList"
+    - type: "object"
+      properties:
+        message:
+          type: "string"
+        node:
+          type: "string"
+          description: "The hostname of the node"
+  operations.setinterfacesrpolicypathsnotificationstate.Input:
+    type: "object"
+    properties:
+      enabled:
+        type: "boolean"
+        description: "Enable or disable interface SR Policy path notifications"
+  operations.srpoliciesoninterface.Output:
+    allOf:
+    - $ref: "#/definitions/common.RequestResult"
+    - properties:
+        interface-sr-policies:
+          type: "array"
+          items:
+            $ref: "#/definitions/operations.interfacesrpolicies.InterfaceSrPolicies"
+  operations.srpoliciesonnode.Input:
+    allOf:
+    - $ref: "#/definitions/common.NodeKeyList"
+    - type: "object"
+      properties:
+        filter:
+          description: "The SR policy filters to apply on the node list above"
+          $ref: "#/definitions/operations.FilterEnumeration"
+  operations.srpoliciesonnode.Output:
+    allOf:
+    - $ref: "#/definitions/common.RequestResult"
+    - properties:
+        node-sr-policies:
+          type: "array"
+          items:
+            $ref: "#/definitions/operations.nodesrpolicies.NodeSrPolicies"
+  operations.srpolicymetrics.Output:
+    allOf:
+    - $ref: "#/definitions/common.RequestResult"
+    - type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/definitions/operations.srpolicymetrics.output.Results"
+  operations.srpolicymetrics.output.Results:
+    allOf:
+    - $ref: "#/definitions/common.PathStatus"
+    - properties:
+        color:
+          type: "integer"
+          format: "int64"
+          description: "The color for the SR policy"
+        head-end:
+          type: "string"
+          description: "The IP address of the SR policy source"
+        end-point:
+          type: "string"
+          description: "The IP address of the SR policy destination"
+        igp-metric:
+          type: "integer"
+          format: "int64"
+          description: "The cumulative IGP metric for the SR Policy"
+        delay:
+          type: "integer"
+          format: "int64"
+          description: "The end to end simulated delay for the SR Policy"
+        te-metric:
+          type: "integer"
+          format: "int64"
+          description: "The cumulative TE metric for the SR Policy"
+  operations.srpolicyroutepreview.Input:
+    type: "object"
+    properties:
+      head-end:
+        type: "string"
+        description: "The IP address of the SR policy source."
+      sr-policy-path:
+        description: "The explicit path hops for the SR policy"
+        $ref: "#/definitions/sr.policy.common.SrPolicyExplicitPath"
+      end-point:
+        type: "string"
+        description: "The IP address of the SR policy destination."
+  operations.srpolicyroutepreview.Output:
+    allOf:
+    - $ref: "#/definitions/common.RequestResult"
+    - properties:
+        igp-route:
+          type: "array"
+          items:
+            $ref: "#/definitions/common.InterfaceUseDetail"
+        path-computation-status:
+          description: "The IGP path computation status for an SR policy"
+          $ref: "#/definitions/common.PathComputationStatusEnumeration"
+  operations.srpolicyroutes.Output:
+    allOf:
+    - $ref: "#/definitions/common.RequestResult"
+    - type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/definitions/operations.srpolicyroutes.output.Results"
+  operations.srpolicyroutes.output.Results:
+    allOf:
+    - $ref: "#/definitions/common.PathStatus"
+    - properties:
+        igp-route:
+          type: "array"
+          items:
+            $ref: "#/definitions/common.InterfaceUseDetail"
+        color:
+          type: "integer"
+          format: "int64"
+          description: "The color for the SR policy"
+        head-end:
+          type: "string"
+          description: "The IP address of the SR policy source"
+        end-point:
+          type: "string"
+          description: "The IP address of the SR policy destination"
+  sr.policy.common.SrPolicyEndPoints:
+    type: "object"
+    properties:
+      head-end:
+        type: "string"
+        description: "The IP address of the SR policy source"
+      end-point:
+        type: "string"
+        description: "The IP address of the SR policy destination"
+  sr.policy.common.SrPolicyExplicitPath:
+    type: "object"
+    properties:
+      hops:
+        type: "array"
+        items:
+          $ref: "#/definitions/sr.policy.common.srpolicyexplicitpath.Hops"
+  sr.policy.common.SrPolicyKeyFields:
+    allOf:
+    - $ref: "#/definitions/sr.policy.common.SrPolicyEndPoints"
+    - type: "object"
+      properties:
+        color:
+          type: "integer"
+          format: "int64"
+          description: "The color for the SR policy"
+  sr.policy.common.SrPolicyKeyList:
+    type: "object"
+    properties:
+      sr-policies:
+        type: "array"
+        items:
+          $ref: "#/definitions/sr.policy.common.SrPolicyKeyFields"
+  sr.policy.common.srpolicyexplicitpath.Hops:
+    type: "object"
+    properties:
+      hop:
+        $ref: "#/definitions/sr.policy.common.srpolicyexplicitpath.hops.Hop"
+      step:
+        type: "integer"
+        format: "int64"
+        description: "The representation of the hop order in the path"
+  sr.policy.common.srpolicyexplicitpath.hops.Hop:
+    type: "object"
+    properties:
+      adjacency-ipv6-address:
+        type: "string"
+        description: "The IPv6 adjacency address"
+        x-choice: "hop:adjacency-ipv6-hop"
+      adjacency-ipv4-sid:
+        type: "integer"
+        format: "int64"
+        description: "The IPv4 adjacency segment identifier"
+        x-choice: "hop:adjacency-ipv4-hop"
+      node-ipv6-address:
+        type: "string"
+        description: "The IPv6 node address"
+        x-choice: "hop:node-ipv6-hop"
+      node-ipv4-address:
+        type: "string"
+        description: "The IPv4 node address"
+        x-choice: "hop:node-ipv4-hop"
+      adjacency-ipv6-sid:
+        type: "integer"
+        format: "int64"
+        description: "The IPv6 adjacency segment identifier"
+        x-choice: "hop:adjacency-ipv6-hop"
+      adjacency-ipv4-address:
+        type: "string"
+        description: "The IPv4 adjacency address"
+        x-choice: "hop:adjacency-ipv4-hop"
+      node-ipv6-sid:
+        type: "integer"
+        format: "int64"
+        description: "The IPv6 node segment identifier"
+        x-choice: "hop:node-ipv6-hop"
+      node-ipv4-sid:
+        type: "integer"
+        format: "int64"
+        description: "The IPv4 node segment identifier"
+        x-choice: "hop:node-ipv4-hop"

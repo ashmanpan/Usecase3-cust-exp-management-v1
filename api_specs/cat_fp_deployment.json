@@ -1,0 +1,520 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "cat-fp-deployment-manager service APIs",
+        "description": "APIs exposed by cat-fp-deployment-manager service",
+        "termsOfService": "http://www.cisco.com/web/siteassets/legal/terms_condition.html",
+        "contact": {
+            "name": "Cisco Systems",
+            "url": "https://www.cisco.com",
+            "email": "support@cisco.com"
+        },
+        "license": {
+            "name": "Cisco Software License Agreement",
+            "url": "http://www.cisco.com/public/sw-license-agreement.html"
+        },
+        "version": "7.1.0"
+    },
+    "servers": [
+        {
+            "url": "https://{cnc-host}:{cnc-port}/crosswork/cat/cat-fp-deployment-manager-service/v1",
+            "variables": {
+                "cnc-host": {
+                    "default": "127.0.0.1",
+                    "description": "host name or ip address of the target CNC Cluster"
+                },
+                "cnc-port": {
+                    "default": "30603",
+                    "description": "port number of the target CNC Cluster"
+                }
+            }
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    "paths": {
+        "/twophasecommitrunner/undeployPackages": {
+            "post": {
+                "tags": [
+                    "cat-fp-deployer"
+                ],
+                "summary": "Undeploy cat-function-packs",
+                "description": "Undeploys the specified package by removing it and running the 2 phase commit. The undeployed package is backed up in the optional archive area for possible future redeployment.",
+                "operationId": "undeployPackages",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JsonNode"
+                            },
+                            "example": "{\"packages\":[\"ietf-l2vpn-nm-tsdn-fp-package-5.0.15-bin.tar.gz\",\"ietf-l3vpn-nm-tsdn-fp-package-5.0.15-bin.tar.gz\"]}"
+                        } 
+                    },
+                    "description": "packages names",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"deployment_result\":\"CNC Function Packs DEPLOYED At time: 2023-06-14_09-52-39\",\"status\":\"Following archives were moved to optional_packages: [ietf-te-fp-package-7.0.10-SNAPSHOT-bin.tar.gz]\"}"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/twophasecommitrunner/undeployCustomFiles": {
+            "post": {
+                "tags": [
+                    "cat-fp-deployer"
+                ],
+                "summary": "Undeploy custom files",
+                "description": "Undeploys the specified custom file by removing it and running the 2 phase commit to undeploy it.",
+                "operationId": "undeployCustomFiles",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JsonNode"
+                            },
+                            "example": "{\"customFiles\":[\"bla.custom.json\",\"foo.custom.json\"]}"
+                        }
+                    },
+                    "description": "JSON file with custom file names to undeploy",
+                    
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"deployment_result\":\"CNC Function Packs DEPLOYED At time: 2023-06-14_09-16-25\",\"status\":\"Following custom files were deleted: [testcustom.json]\"}"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/twophasecommitrunner/deploy": {
+            "post": {
+                "tags": [
+                    "cat-fp-deployer"
+                ],
+                "summary": "Deploy cat-function-packs",
+                "description": "Deploys or redeploys the cat function packages specified that are in packages directory by running the 2 phase commit.",
+                "operationId": "deploy",
+                "responses": {
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"deployment_result\":\"CNC Function Packs DEPLOYED At time: 2023-06-13_19-08-32\",\"status\":\"OK\"}"
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/twophasecommitrunner/uploadPackages": {
+            "patch": {
+                "tags": [
+                    "cat-fp-deployer"
+                ],
+                "summary": "Upload and deploys cat-function-packs",
+                "description": "Uploads and deploys a cat function pack. The uploaded packages are copied to the packages area and the 2 phase commit is run to deploy it.",
+                "operationId": "uploadPackages",
+                "parameters": [
+                    {
+                        "name": "packages",
+                        "in": "query",
+                        "description": "Function Package to uploaded and deployed",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "binary"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"deployment_result\":\"CNC Function Packs DEPLOYED At time: 2023-06-14_09-41-13\",\"status\":\"Upload of packages succeeded\"}"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/twophasecommitrunner/uploadCustomFiles": {
+            "patch": {
+                "tags": [
+                    "cat-fp-deployer"
+                ],
+                "summary": "Upload and deploys custom files",
+                "description": "Uploads and deploys a set of specified custom files. Each uploaded file is copied to the custom files area and the 2 phase commit is run.",
+                "operationId": "uploadCustomFiles",
+                "parameters": [
+                    {
+                        "name": "customFiles",
+                        "in": "query",
+                        "description": "Custom files to be uploaded and deployed",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "binary"
+                            }
+                        },
+                        "example": {
+                            "something": [
+                                "foo"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"deployment_result\":\"CNC Function Packs DEPLOYED At time: 2023-06-14_08-23-25\",\"status\":\"Upload of customFiles succeeded\"}"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/twophasecommitrunner/staticFiles": {
+            "get": {
+                "tags": [
+                    "cat-fp-deployer"
+                ],
+                "summary": "Get list of uploaded custom files",
+                "description": "Returns a list of static system provided and user provided custom files if such exist in the static folder, empty list otherwise",
+                "operationId": "getStaticFiles",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"Custom static files\":[],\"System static files\":[\"service-point-configuration.json\"]}"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/twophasecommitrunner/staticFile": {
+            "get": {
+                "tags": [
+                    "cat-fp-deployer"
+                ],
+                "summary": "Get content of a uploaded custom file",
+                "description": "Returns the content of a static file, either system or user provided custom file",
+                "operationId": "getStaticFileContent",
+                "parameters": [
+                    {
+                        "name": "fileName",
+                        "in": "query",
+                        "description": "The static file name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "myCustomFile.JSON"
+                    },
+                    {
+                        "name": "customfile",
+                        "in": "query",
+                        "description": "True for user custom file, false for system",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        },
+                        "example": "True/False"
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"nsoYangPathsToInclude\":[\"/my-l2vpn:my-l2vpn-services/my-l2vpn\"]}"
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/twophasecommitrunner/packages": {
+            "get": {
+                "tags": [
+                    "cat-fp-deployer"
+                ],
+                "summary": "Get details of cat-function-packs.",
+                "description": "Returns a list of package info. For each list various parameters are added including service path, resources, model version, etc.",
+                "operationId": "getPackages",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"packagesInfo\":[{\"namespace\":\"http://cisco.com/ns/nso/fp/examples/cisco-l3vpn-routing-policy\",\"resources\":[{\"path\":\"cisco-l3vpn-routing-policy:l3vpn-routing-policy/policy-definitions/policy-definition\",\"resourceIdField\":\"name\",\"resourceIdFields\":[\"name\"],\"scope\":\"SERVICE\",\"label\":\"Routing Policy\",\"additionalTargetTopics\":[]},{\"path\":\"cisco-l3vpn-routing-policy:l3vpn-routing-policy/defined-sets/prefix-sets/source-prefix-set\",\"resourceIdField\":\"name\",\"resourceIdFields\":[\"name\"],\"scope\":\"SERVICE\",\"label\":\"Routing Policy Source Prefix\",\"additionalTargetTopics\":[]},{\"path\":\"cisco-l3vpn-routing-policy:l3vpn-routing-policy/defined-sets/prefix-sets/dest-prefix-set\",\"resourceIdField\":\"name\",\"resourceIdFields\":[\"name\"],\"scope\":\"SERVICE\",\"label\":\"Routing Policy Destination Prefix\",\"additionalTargetTopics\":[]},{\"path\":\"cisco-l3vpn-routing-policy:l3vpn-routing-policy/defined-sets/tag-sets/tag-set\",\"resourceIdField\":\"name\",\"resourceIdFields\":[\"name\"],\"scope\":\"SERVICE\",\"label\":\"Routing Policy Tag\",\"additionalTargetTopics\":[]}],\"model-version\":\"2022-11-03\"},{\"namespace\":\"http://cisco.com/ns/nso/fp/examples/cisco-l2vpn-routing-policy\",\"resources\":[{\"path\":\"cisco-l2vpn-routing-policy:l2vpn-routing-policy/policy-definitions/policy-definition\",\"resourceIdField\":\"name\",\"resourceIdFields\":[\"name\"],\"scope\":\"SERVICE\",\"label\":\"Routing Policy\",\"additionalTargetTopics\":[]},{\"path\":\"cisco-l2vpn-routing-policy:l2vpn-routing-policy/defined-sets/rd-sets/rd-set\",\"resourceIdField\":\"name\",\"resourceIdFields\":[\"name\"],\"scope\":\"SERVICE\",\"label\":\"Routing Policy Route Distinguisher\",\"additionalTargetTopics\":[]},{\"path\":\"cisco-l2vpn-routing-policy:l2vpn-routing-policy/defined-sets/evpn-route-type-sets/evpn-route-type-set\",\"resourceIdField\":\"name\",\"resourceIdFields\":[\"name\"],\"scope\":\"SERVICE\",\"label\":\"Routing Policy Evpn Route Type\",\"additionalTargetTopics\":[]},{\"path\":\"cisco-l2vpn-routing-policy:l2vpn-routing-policy/defined-sets/tag-sets/tag-set\",\"resourceIdField\":\"name\",\"resourceIdFields\":[\"name\"],\"scope\":\"SERVICE\",\"label\":\"Routing Policy Tag\",\"additionalTargetTopics\":[]}],\"model-version\":\"2022-11-03\"},{\"namespace\":\"http://tail-f.com/pkg/resource-allocator\",\"resources\":[{\"path\":\"resource-allocator:resource-pools/id-allocator:id-pool\",\"resourceIdField\":\"name\",\"resourceIdFields\":[\"name\"],\"scope\":\"GLOBAL\",\"yangContainerPath\":\"ralloc:resource-pools/idalloc:id-pool\",\"label\":\"Resource Pool\",\"additionalTargetTopics\":[]}],\"model-version\":\"2022-01-12\"},{\"namespace\":\"http://cisco.com/ns/nso/fp/examples/cisco-l2vpn-ntw\",\"resources\":[{\"path\":\"ietf-l2vpn-ntw:l2vpn-ntw/cisco-l2vpn-ntw:id-pools\",\"resourceIdField\":\"evi-id-pool-name\",\"resourceIdFields\":[\"evi-id-pool-name\"],\"scope\":\"SERVICE\",\"yangContainerPath\":\"l2vpn-ntw-cisco:l2vpn-ntw/cisco-l2vpn-ntw:id-pools\",\"label\":\"ID-Pools\",\"additionalTargetTopics\":[]}],\"model-version\":\"2022-08-03\"},{\"namespace\":\"http://cisco.com/ns/nso/cfp/cisco-tsdn-sr-te-sr-odn\",\"service-layer\":\"TRANSPORT\",\"resources\":[],\"model-version\":\"2022-01-12\",\"service-path\":\"cisco-sr-te-cfp:sr-te/cisco-sr-te-cfp-sr-odn:odn/odn-template\",\"plan-path\":\"cisco-sr-te-cfp:sr-te/cisco-sr-te-cfp-sr-odn:odn/odn-template-plan\"},{\"namespace\":\"http://cisco.com/ns/nso/cfp/cisco-tsdn-sr-te-sr-policies\",\"service-layer\":\"TRANSPORT\",\"resources\":[{\"path\":\"cisco-sr-te-cfp:sr-te/cisco-sr-te-cfp-sr-policies:policies/sid-list\",\"resourceIdField\":\"name\",\"resourceIdFields\":[\"name\"],\"scope\":\"SERVICE\",\"label\":\"SID-List\",\"additionalTargetTopics\":[]}],\"model-version\":\"2022-01-12\",\"service-path\":\"cisco-sr-te-cfp:sr-te/cisco-sr-te-cfp-sr-policies:policies/policy\",\"plan-path\":\"cisco-sr-te-cfp:sr-te/cisco-sr-te-cfp-sr-policies:policies/policy-plan\"},{\"namespace\":\"http://cisco.com/ns/nso/cfp/cisco-cs-sr-te-cfp\",\"service-layer\":\"TRANSPORT\",\"resources\":[{\"path\":\"cisco-cs-sr-te-cfp:cs-sr-te-resource-pools\",\"resourceIdField\":\"color-pool-name\",\"resourceIdFields\":[\"color-pool-name\"],\"scope\":\"SERVICE\",\"yangContainerPath\":\"cisco-cs-sr-te-cfp:cs-sr-te-resource-pools\",\"label\":\"Circuit-Style resource-pool\",\"additionalTargetTopics\":[]}],\"model-version\":\"2021-12-03\",\"service-path\":\"cisco-cs-sr-te-cfp:cs-sr-te-policy\",\"plan-path\":\"cisco-cs-sr-te-cfp:cs-sr-te-plan\"},{\"namespace\":\"urn:ietf:params:xml:ns:yang:ietf-te\",\"service-layer\":\"TRANSPORT\",\"resources\":[],\"model-version\":\"2022-01-13\",\"service-path\":\"ietf-te:te/tunnels/tunnel\",\"plan-path\":\"ietf-te:te/tunnels/cisco-te:tunnel-plan\"},{\"namespace\":\"urn:ietf:params:xml:ns:yang:ietf-l2vpn-ntw\",\"service-layer\":\"VPN\",\"resources\":[{\"path\":\"ietf-l2vpn-ntw:l2vpn-ntw/vpn-profiles/valid-provider-identifiers/routing-profile-identifier\",\"resourceIdField\":\"id\",\"resourceIdFields\":[\"id\"],\"scope\":\"SERVICE\",\"yangContainerPath\":\"l2vpn-ntw:l2vpn-ntw/vpn-profiles/valid-provider-identifiers/routing-profile-identifier\",\"label\":\"VPN Profiles\",\"additionalTargetTopics\":[]}],\"model-version\":\"2022-07-26\",\"service-path\":\"ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service\",\"plan-path\":\"ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/cisco-l2vpn-ntw:vpn-service-plan\"},{\"namespace\":\"urn:ietf:params:xml:ns:yang:ietf-l3vpn-ntw\",\"service-layer\":\"VPN\",\"resources\":[{\"path\":\"ietf-l3vpn-ntw:l3vpn-ntw/vpn-profiles/valid-provider-identifiers/routing-profile-identifier\",\"resourceIdField\":\"id\",\"resourceIdFields\":[\"id\"],\"scope\":\"SERVICE\",\"yangContainerPath\":\"l3nm:l3vpn-ntw/vpn-profiles/valid-provider-identifiers/routing-profile-identifier\",\"label\":\"VPN Profiles\",\"additionalTargetTopics\":[]}],\"model-version\":\"2021-12-03\",\"service-path\":\"ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service\",\"plan-path\":\"ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/cisco-l3vpn-ntw:vpn-service-plan\"},{\"namespace\":\"urn:ietf:params:xml:ns:yang:ietf-network-slice-service\",\"service-layer\":\"NETWORK_SLICE\",\"resources\":[{\"path\":\"ietf-network-slice-service:network-slice-services/slo-sle-templates/slo-sle-template\",\"resourceIdField\":\"id\",\"resourceIdFields\":[\"id\"],\"scope\":\"SERVICE\",\"yangContainerPath\":\"ietf-nss:network-slice-services/slo-sle-templates/slo-sle-template\",\"label\":\"slo-sle-templates\",\"additionalTargetTopics\":[]}],\"model-version\":\"2022-06-10\",\"service-path\":\"ietf-network-slice-service:network-slice-services/slice-service\",\"plan-path\":\"ietf-network-slice-service:network-slice-services/cisco-network-slice-service:slice-service-plan\"}]}"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/twophasecommitrunner/getDeploymentInfo": {
+            "get": {
+                "tags": [
+                    "cat-fp-deployer"
+                ],
+                "summary": "Get cat-function-packs deployment status",
+                "description": "Get cat function package deployment details",
+                "operationId": "getDeploymentInfo",
+                "parameters": [
+                    {
+                        "name": "extended",
+                        "in": "query",
+                        "description": "If extended data is needed",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"deploymentInfo\":{\"deploymentState\":\"DEPLOYED\",\"etcdCfpArchiveVersion\":\"6.0.9\",\"etcdPodVersion\":\"6.0.0-735-39f51a077-velop_release-230529\",\"deploymentTime\":\"2023-06-12_07-27-58\"}}"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/twophasecommitrunner/getConsumers": {
+            "get": {
+                "tags": [
+                    "cat-fp-deployer"
+                ],
+                "summary": "Get cat-function-pack consumers",
+                "description": "Get function pack deployment active consumers and nodes.",
+                "operationId": "getConsumers",
+                "responses": {
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"nodes\":{\"/cat-fp-deployment-manager/cat-inventory-0\":\"DEPLOYED\",\"/cat-fp-deployment-manager_data/cat-service-overlay-1\":\"{\\\"serviceName\\\":\\\"cat-service-overlay\\\",\\\"host\\\":\\\"cat-service-overlay-1\\\",\\\"shouldRestart\\\":true}\",\"/cat-fp-deployment-manager/cat-restconf-0\":\"DEPLOYED\",\"/cat-fp-deployment-manager/cat-service-overlay-0\":\"DEPLOYED\",\"/cat-fp-deployment-manager_data/cat-service-overlay-0\":\"{\\\"serviceName\\\":\\\"cat-service-overlay\\\",\\\"host\\\":\\\"cat-service-overlay-0\\\",\\\"shouldRestart\\\":true}\",\"/cat-fp-deployment-manager\":\"DEPLOYED At time: 2023-06-13_19-08-32\",\"/cat-fp-deployment-manager/cat-inventory-1\":\"DEPLOYED\",\"/cat-fp-deployment-manager/version\":\"{\\\"cfpArchiveVersion\\\":\\\"6.0.9\\\",\\\"podVersion\\\":\\\"6.0.0-735-39f51a077-velop_release-230529\\\",\\\"lastSucceedDeployTime\\\":1686683312241,\\\"lastBeginCommitTime\\\":1686683244006}\",\"/cat-fp-deployment-manager_data/nso-connector-0\":\"{\\\"serviceName\\\":\\\"nso-connector\\\",\\\"host\\\":\\\"nso-connector-0\\\",\\\"shouldRestart\\\":false}\",\"/cat-fp-deployment-manager/cat-service-overlay-1\":\"DEPLOYED\",\"/cat-fp-deployment-manager/nso-connector-0\":\"DEPLOYED\",\"/cat-fp-deployment-manager/nso-connector-1\":\"DEPLOYED\",\"/cat-fp-deployment-manager/cat-ui-service-0\":\"DEPLOYED\",\"/cat-fp-deployment-manager/cat-ui-service-1\":\"DEPLOYED\",\"/cat-fp-deployment-manager_data/cat-restconf-1\":\"{\\\"serviceName\\\":\\\"cat-restconf\\\",\\\"host\\\":\\\"cat-restconf-1\\\",\\\"shouldRestart\\\":true}\",\"/cat-fp-deployment-manager_data/cat-restconf-0\":\"{\\\"serviceName\\\":\\\"cat-restconf\\\",\\\"host\\\":\\\"cat-restconf-0\\\",\\\"shouldRestart\\\":true}\",\"/cat-fp-deployment-manager/restart\":\"DEPLOYED\",\"/cat-fp-deployment-manager_data\":\"{}\",\"/cat-fp-deployment-manager_data/cat-inventory-1\":\"{\\\"serviceName\\\":\\\"cat-inventory\\\",\\\"host\\\":\\\"cat-inventory-1\\\",\\\"shouldRestart\\\":false}\",\"/cat-fp-deployment-manager_data/cat-ui-service-1\":\"{\\\"serviceName\\\":\\\"cat-ui-service\\\",\\\"host\\\":\\\"cat-ui-service-1\\\",\\\"shouldRestart\\\":true}\",\"/cat-fp-deployment-manager_data/cat-inventory-0\":\"{\\\"serviceName\\\":\\\"cat-inventory\\\",\\\"host\\\":\\\"cat-inventory-0\\\",\\\"shouldRestart\\\":false}\",\"/cat-fp-deployment-manager_data/cat-ui-service-0\":\"{\\\"serviceName\\\":\\\"cat-ui-service\\\",\\\"host\\\":\\\"cat-ui-service-0\\\",\\\"shouldRestart\\\":true}\",\"/cat-fp-deployment-manager/result\":\"CNC Function Packs DEPLOYED At time: 2023-06-13_19-08-32\",\"/cat-fp-deployment-manager/cat-restconf-1\":\"DEPLOYED\"}}"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "JsonNode": {
+                "type": "object",
+                "description": "JSON file with custom file names to undeploy",
+                "properties": {
+                    "array": {
+                        "type": "boolean"
+                    },
+                    "bigDecimal": {
+                        "type": "boolean"
+                    },
+                    "bigInteger": {
+                        "type": "boolean"
+                    },
+                    "binary": {
+                        "type": "boolean"
+                    },
+                    "boolean": {
+                        "type": "boolean"
+                    },
+                    "containerNode": {
+                        "type": "boolean"
+                    },
+                    "double": {
+                        "type": "boolean"
+                    },
+                    "float": {
+                        "type": "boolean"
+                    },
+                    "floatingPointNumber": {
+                        "type": "boolean"
+                    },
+                    "int": {
+                        "type": "boolean"
+                    },
+                    "integralNumber": {
+                        "type": "boolean"
+                    },
+                    "long": {
+                        "type": "boolean"
+                    },
+                    "missingNode": {
+                        "type": "boolean"
+                    },
+                    "nodeType": {
+                        "type": "string",
+                        "enum": [
+                            "ARRAY",
+                            "BINARY",
+                            "BOOLEAN",
+                            "MISSING",
+                            "NULL",
+                            "NUMBER",
+                            "OBJECT",
+                            "POJO",
+                            "STRING"
+                        ]
+                    },
+                    "null": {
+                        "type": "boolean"
+                    },
+                    "number": {
+                        "type": "boolean"
+                    },
+                    "object": {
+                        "type": "boolean"
+                    },
+                    "pojo": {
+                        "type": "boolean"
+                    },
+                    "short": {
+                        "type": "boolean"
+                    },
+                    "textual": {
+                        "type": "boolean"
+                    },
+                    "valueNode": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

@@ -1,0 +1,699 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "ietf-te",
+    "description" : "YANG data module for TE configuration, state, and RPCs.\nThe model fully conforms to the Network Management\nDatastore Architecture (NMDA).\nCopyright (c) 2022 IETF Trust and the persons identified as\nauthors of the code.  All rights reserved.\n\nRedistribution and use in source and binary forms, with or\nwithout modification, is permitted pursuant to, and subject to\nthe license terms contained in, the Revised BSD License set\nforth in Section 4.c of the IETF Trust's Legal Provisions\nRelating to IETF Documents\n(https://trustee.ietf.org/license-info).\n\nThis version of this YANG module is part of RFC XXXX\n(https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself\nfor full legal notices.",
+    "termsOfService": "http://www.cisco.com/web/siteassets/legal/terms_condition.html",
+    "contact" : {
+      "name" : "Cisco Systems",
+      "url" : "https://www.cisco.com",
+      "email" : "support@cisco.com"
+    },
+    "license" : {
+      "name" : "Cisco Software License Agreement",
+      "url" : "http://www.cisco.com/public/sw-license-agreement.html"
+    },
+    "version" : "7.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://{cnc-host}:{cnc-port}/crosswork/proxy/nso/restconf",
+      "variables": {
+        "cnc-host": {
+          "default": "127.0.0.1",
+          "description": "host name or ip address of the target CNC Cluster"
+        },
+        "cnc-port": {
+          "default": "30603",
+          "description": "port number of the target CNC Cluster"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags" : [ {
+    "name" : "data",
+    "description" : "data resources"
+  } ],
+  "paths" : {
+    "/data/ietf-te:te/tunnels/tunnel={tunnel-name}" : {
+      "get" : {
+        "tags" : [ "data" ],
+        "summary" : "The list of TE tunnels.",
+        "description" : "The list of TE tunnels.",
+        "operationId" : "data_ietf_te_te_tunnels_tunnel_tunnel_name_get",
+        "parameters" : [ {
+          "name" : "tunnel-name",
+          "in" : "path",
+          "description" : "TE tunnel name.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "content",
+          "in" : "query",
+          "description" : "controlling descendant nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "config",
+            "enum" : [ "config", "nonconfig", "all" ]
+          }
+        }, {
+          "name" : "depth",
+          "in" : "query",
+          "description" : "limit the depth of nodes in response",
+          "schema" : {
+            "type" : "integer",
+            "format" : "uint16"
+          }
+        }, {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "optionally identify specific data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "xpath expression to filter data nodes in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "with-defaults",
+          "in" : "query",
+          "description" : "controlling default values in response",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "report-all",
+            "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The list of TE tunnels.",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_ietf-te_te_tunnels_tunnel_tunnel-name"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "data" ],
+        "summary" : "The list of TE tunnels.",
+        "description" : "The list of TE tunnels.",
+        "operationId" : "data_ietf_te_te_tunnels_tunnel_tunnel_name_put",
+        "parameters" : [ {
+          "name" : "tunnel-name",
+          "in" : "path",
+          "description" : "TE tunnel name.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "insert",
+          "in" : "query",
+          "description" : "controlling the order when adding new list elements",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "default" : "first",
+            "enum" : [ "first", "last", "before", "after" ]
+          }
+        }, {
+          "name" : "point",
+          "in" : "query",
+          "description" : "used to specify the insertion point",
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The list of TE tunnels.",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_ietf-te_te_tunnels_tunnel_tunnel-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "list tunnel created or replaced",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "tunnel"
+      },
+      "delete" : {
+        "tags" : [ "data" ],
+        "summary" : "The list of TE tunnels.",
+        "description" : "The list of TE tunnels.",
+        "operationId" : "data_ietf_te_te_tunnels_tunnel_tunnel_name_delete",
+        "parameters" : [ {
+          "name" : "tunnel-name",
+          "in" : "path",
+          "description" : "TE tunnel name.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "data" ],
+        "summary" : "The list of TE tunnels.",
+        "description" : "The list of TE tunnels.",
+        "operationId" : "data_ietf_te_te_tunnels_tunnel_tunnel_name_patch",
+        "parameters" : [ {
+          "name" : "tunnel-name",
+          "in" : "path",
+          "description" : "TE tunnel name.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The list of TE tunnels.",
+          "content" : {
+            "application/yang-data+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/data_ietf-te_te_tunnels_tunnel_tunnel-name"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "list tunnel updated",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "tunnel"
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "data_ietf-te_te_tunnels_tunnel_tunnel-name" : {
+        "type" : "object",
+        "properties" : {
+          "ietf-te:tunnel" : {
+            "type" : "array",
+            "description" : "The list of TE tunnels. (list)",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "identifier" : {
+                  "type" : "integer",
+                  "description" : "TE tunnel Identifier. (leaf)",
+                  "format" : "uint32",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "signaling-type" : {
+                  "type" : "string",
+                  "description" : "TE tunnel path signaling type. (leaf)",
+                  "format" : "identityref",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "bidirectional" : {
+                  "type" : "string",
+                  "description" : "Indicates a bidirectional co-routed LSP. (leaf)",
+                  "format" : "boolean",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "te-bandwidth" : {
+                  "type" : "object",
+                  "properties" : {
+                    "generic" : {
+                      "type" : "string",
+                      "description" : "Bandwidth specified in a generic format. (leaf)",
+                      "format" : "string",
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    }
+                  },
+                  "description" : "Container that specifies TE bandwidth.  The choices\ncan be augmented for specific data-plane technologies. (non-presence)",
+                  "x-yang" : {
+                    "is_presence" : "false",
+                    "type" : "container"
+                  }
+                },
+                "name" : {
+                  "type" : "string",
+                  "description" : "TE tunnel name. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "destination" : {
+                  "type" : "string",
+                  "description" : "TE tunnel destination node identifier. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "description" : {
+                  "type" : "string",
+                  "description" : "Textual description for this TE tunnel. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "primary-paths" : {
+                  "type" : "object",
+                  "properties" : {
+                    "primary-path" : {
+                      "type" : "array",
+                      "description" : "List of primary paths for this tunnel. (list)",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "preference" : {
+                            "type" : "integer",
+                            "description" : "Specifies a preference for this path. The lower the number\nhigher the preference. (leaf)",
+                            "format" : "byte",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "name" : {
+                            "type" : "string",
+                            "description" : "TE path name. (leaf)",
+                            "format" : "string",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "explicit-route-objects-always" : {
+                            "type" : "object",
+                            "properties" : {
+                              "route-object-include-exclude" : {
+                                "type" : "array",
+                                "description" : "List of route objects to include or exclude in the path\ncomputation. (list)",
+                                "items" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "explicit-route-usage" : {
+                                      "type" : "string",
+                                      "description" : "Indicates whether to include or exclude the\nroute object.  The default is to include it. (leaf)",
+                                      "format" : "identityref",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    },
+                                    "index" : {
+                                      "type" : "integer",
+                                      "description" : "Route object include-exclude index.  The index is used\nto identify an entry in the list.  The order of entries\nis defined by the user without relying on key values. (leaf)",
+                                      "format" : "uint32",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    },
+                                    "numbered-node-hop" : {
+                                      "type" : "object",
+                                      "properties" : {
+                                        "node-id" : {
+                                          "type" : "string",
+                                          "description" : "The identifier of a node in the TE topology. (leaf)",
+                                          "format" : "string",
+                                          "x-yang" : {
+                                            "type" : "leaf"
+                                          }
+                                        },
+                                        "hop-type" : {
+                                          "type" : "string",
+                                          "description" : "Strict or loose hop. (leaf)",
+                                          "format" : "enumeration",
+                                          "default" : "loose",
+                                          "enum" : [ "loose", "strict" ],
+                                          "x-yang" : {
+                                            "type" : "leaf"
+                                          }
+                                        }
+                                      },
+                                      "description" : "Numbered node route hop. (non-presence)",
+                                      "x-yang" : {
+                                        "is_presence" : "false",
+                                        "type" : "container"
+                                      }
+                                    }
+                                  }
+                                },
+                                "x-yang" : {
+                                  "type" : "list"
+                                }
+                              }
+                            },
+                            "description" : "Container for the 'exclude route' object list. (non-presence)",
+                            "x-yang" : {
+                              "is_presence" : "false",
+                              "type" : "container"
+                            }
+                          },
+                          "path-computation-method" : {
+                            "type" : "string",
+                            "description" : "The method used for computing the path, either\nlocally computed, queried from a server or not\ncomputed at all (explicitly configured). (leaf)",
+                            "format" : "identityref",
+                            "x-yang" : {
+                              "type" : "leaf"
+                            }
+                          },
+                          "optimizations" : {
+                            "type" : "object",
+                            "properties" : {
+                              "optimization-metric" : {
+                                "type" : "array",
+                                "description" : "TE path metric type. (list)",
+                                "items" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "metric-type" : {
+                                      "type" : "string",
+                                      "description" : "Identifies the 'metric-type' that the path computation\nprocess uses for optimization. (leaf)",
+                                      "format" : "identityref",
+                                      "x-yang" : {
+                                        "type" : "leaf"
+                                      }
+                                    }
+                                  }
+                                },
+                                "x-yang" : {
+                                  "type" : "list"
+                                }
+                              }
+                            },
+                            "description" : "The objective function container that includes\nattributes to impose when computing a TE path. (non-presence)",
+                            "x-yang" : {
+                              "is_presence" : "false",
+                              "type" : "container"
+                            }
+                          }
+                        }
+                      },
+                      "x-yang" : {
+                        "type" : "list"
+                      }
+                    }
+                  },
+                  "description" : "The set of primary paths. (non-presence)",
+                  "x-yang" : {
+                    "is_presence" : "false",
+                    "type" : "container"
+                  }
+                },
+                "source" : {
+                  "type" : "string",
+                  "description" : "TE tunnel source node ID. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "setup-priority" : {
+                  "type" : "integer",
+                  "description" : "TE LSP requested setup priority. (leaf)",
+                  "format" : "byte",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "hold-priority" : {
+                  "type" : "integer",
+                  "description" : "TE LSP requested hold priority. (leaf)",
+                  "format" : "byte",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                }
+              }
+            },
+            "x-yang" : {
+              "type" : "list"
+            }
+          }
+        }
+      }
+    },
+    "responses" : {
+      "200" : {
+        "description" : "OK",
+        "content" : { }
+      },
+      "201" : {
+        "description" : "Created",
+        "content" : { }
+      },
+      "400" : {
+        "description" : "Bad Request",
+        "content" : { }
+      },
+      "401" : {
+        "description" : "Unauthorized",
+        "content" : { }
+      },
+      "204" : {
+        "description" : "No Content",
+        "content" : { }
+      },
+      "404" : {
+        "description" : "Not Found",
+        "content" : { }
+      },
+      "405" : {
+        "description" : "Method Not Allowed",
+        "content" : { }
+      },
+      "409" : {
+        "description" : "Conflict",
+        "content" : { }
+      }
+    },
+    "parameters" : {
+      "fields" : {
+        "name" : "fields",
+        "in" : "query",
+        "description" : "optionally identify specific data nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "insert" : {
+        "name" : "insert",
+        "in" : "query",
+        "description" : "controlling the order when adding new list elements",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "first",
+          "enum" : [ "first", "last", "before", "after" ]
+        }
+      },
+      "content" : {
+        "name" : "content",
+        "in" : "query",
+        "description" : "controlling descendant nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "config",
+          "enum" : [ "config", "nonconfig", "all" ]
+        }
+      },
+      "point" : {
+        "name" : "point",
+        "in" : "query",
+        "description" : "used to specify the insertion point",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "with-defaults" : {
+        "name" : "with-defaults",
+        "in" : "query",
+        "description" : "controlling default values in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "report-all",
+          "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+        }
+      },
+      "filter" : {
+        "name" : "filter",
+        "in" : "query",
+        "description" : "xpath expression to filter data nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "depth" : {
+        "name" : "depth",
+        "in" : "query",
+        "description" : "limit the depth of nodes in response",
+        "schema" : {
+          "type" : "integer",
+          "format" : "uint16"
+        }
+      },
+      "tunnel-name" : {
+        "name" : "tunnel-name",
+        "in" : "path",
+        "description" : "TE tunnel name.",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      }
+    },
+    "requestBodies" : {
+      "data_ietf-te_te_tunnels_tunnel_tunnel-name" : {
+        "description" : "The list of TE tunnels.",
+        "content" : {
+          "application/yang-data+json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/data_ietf-te_te_tunnels_tunnel_tunnel-name"
+            }
+          }
+        },
+        "required" : true
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "x-original-swagger-version" : "2.0"
+}

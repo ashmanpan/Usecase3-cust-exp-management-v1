@@ -3,6 +3,7 @@ from .pca_client import PCASLAClient, get_pca_client
 from .hold_timer import HoldTimerManager, get_hold_timer_manager
 from .cutover import GradualCutover, get_cutover_manager
 from .tunnel_deleter import TunnelDeleter, get_tunnel_deleter
+from .service_health_client import ServiceHealthClient, get_service_health_client
 
 __all__ = [
     "PCASLAClient",
@@ -13,4 +14,6 @@ __all__ = [
     "get_cutover_manager",
     "TunnelDeleter",
     "get_tunnel_deleter",
+    "ServiceHealthClient",
+    "get_service_health_client",
 ]

@@ -1,0 +1,1725 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "RSVP-TE LSP Details",
+    "description": "This module defines a Data Model for reporting the operational state of RSVP TE tunnel.",
+    "contact": {
+      "name": "Crosswork Team, Cisco",
+      "email": "support@cisco.com"
+    },
+    "license": {
+      "name": "Cisco Software License Agreement",
+      "url": "http://www.cisco.com/public/sw-license-agreement.html"
+    },
+    "version": "7.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://{cnc-host}:{cnc-port}/crosswork/nbi/topology/v3/restconf",
+      "variables": {
+        "cnc-host": {
+          "default": "127.0.0.1",
+          "description": "host name or ip address of the target CNC Cluster"
+        },
+        "cnc-port": {
+          "default": "30603",
+          "description": "port number of the target CNC Cluster"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name" : "Operational data",
+      "description" : "Operational data resources"
+    }
+  ],
+  "paths": {
+    "/data/cisco-crosswork-rsvp-te-tunnel:rsvp-te-tunnels": {
+      "get": {
+        "tags": [
+          "Operational data", "Since 5.0"
+        ],
+        "summary": "Retrieve RSVP-TE tunnels operational data",
+        "description": "Container of RSVP TE Tunnels",
+        "operationId": "data_cisco_crosswork_rsvp_te_tunnel_rsvp_te_tunnels_get",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Used by the client to specify the number of list elements to skip before returning the requested set of list entries.  The value is an integer greater than or equal to 0.",
+            "schema": {
+              "type": "integer",
+              "format": "uint32"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Used by the client to specify a limited set of list entries to retrieve. The value is an integer greater than or equal to 1",
+            "schema": {
+              "type": "integer",
+              "format": "uint16"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container of RSVP TE Tunnels",
+            "content": {
+              "application/yang-data+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cisco-crosswork-rsvp-te-tunnel:rsvp-te-tunnels": {
+                      "type": "object",
+                      "properties": {
+                        "rsvp-te-tunnel": {
+                          "type": "array",
+                          "description": "(list)",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "headend": {
+                                "type": "string",
+                                "description": "Head end IP address (leaf)",
+                                "format": "union"
+                              },
+                              "endpoint": {
+                                "type": "string",
+                                "description": "End point IP address (leaf)",
+                                "format": "union"
+                              },
+                              "tunnel-id": {
+                                "type": "integer",
+                                "description": "Tunnel ID associated with the TE Tunnel (leaf)",
+                                "format": "uint32"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "RSVP TE tunnel description (leaf)",
+                                "format": "string"
+                              },
+                              "admin-state": {
+                                "type": "string",
+                                "description": "Administrative state of the RSVP TE Tunnel (leaf)",
+                                "format": "enumeration",
+                                "default": "UP",
+                                "enum": [
+                                  "UP",
+                                  "DOWN"
+                                ]
+                              },
+                              "oper-state": {
+                                "type": "string",
+                                "description": "Operational state of the RSVP TE Tunnel (leaf)",
+                                "format": "enumeration",
+                                "default": "UP",
+                                "enum": [
+                                  "UP",
+                                  "DOWN",
+                                  "ACTIVE"
+                                ]
+                              },
+                              "rsvp-te-tunnel-type": {
+                                "type": "string",
+                                "description": "The Crosswork RSVP TE tunnel config type (leaf)",
+                                "format": "enumeration",
+                                "default": "CW-CONFIGURED",
+                                "enum": [
+                                  "CW-CONFIGURED",
+                                  "OTHER"
+                                ]
+                              },
+                              "tunnel-details": {
+                                "type": "object",
+                                "properties": {
+                                  "binding-label": {
+                                    "type": "integer",
+                                    "description": "Binding label assigned to the RSVP TE tunnel (leaf)",
+                                    "format": "uint32"
+                                  },
+                                  "signaled-bandwidth-mbps": {
+                                    "type": "integer",
+                                    "description": "Signaled bandwidth in mega-bits-per-sec (leaf)",
+                                    "format": "uint64"
+                                  },
+                                  "setup-priority": {
+                                    "type": "integer",
+                                    "description": "Setup priority (leaf)",
+                                    "format": "uint32"
+                                  },
+                                  "hold-priority": {
+                                    "type": "integer",
+                                    "description": "Hold priority (leaf)",
+                                    "format": "uint32"
+                                  },
+                                  "pce-controlled": {
+                                    "type": "string",
+                                    "description": "If true, the TE Tunnel can be re-optimized by PCE (leaf)",
+                                    "format": "boolean"
+                                  },
+                                  "delegated-pce": {
+                                    "type": "string",
+                                    "description": "IPv4 or IPv6 address of the delegated PCE (leaf)",
+                                    "format": "union"
+                                  },
+                                  "sub-delegated-pce": {
+                                    "type": "string",
+                                    "description": "IPv4 or IPv6 address of the sub-delegated PCE (leaf)",
+                                    "format": "union"
+                                  },
+                                  "pcc-address": {
+                                    "type": "string",
+                                    "description": "IPv4 or IPv6 address of PCC (Path Compute Client) (leaf)",
+                                    "format": "union"
+                                  },
+                                  "non-delegated-pces": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string",
+                                      "description": "IPv4 or IPv6 address of one of the non-delegated PCE (leaf-list)",
+                                      "format": "union"
+                                    }
+                                  },
+                                  "pcep-info": {
+                                    "type": "object",
+                                    "properties": {
+                                      "pcep-id": {
+                                        "type": "integer",
+                                        "description": "PCE protocol identifier (leaf)",
+                                        "format": "uint32"
+                                      },
+                                      "pcep-flag-d": {
+                                        "type": "string",
+                                        "description": "PCEP LSP delegation flag (leaf)",
+                                        "format": "boolean"
+                                      },
+                                      "pcep-flag-s": {
+                                        "type": "string",
+                                        "description": "PCEP LSP state-sync flag (leaf)",
+                                        "format": "boolean"
+                                      },
+                                      "pcep-flag-r": {
+                                        "type": "string",
+                                        "description": "PCEP LSP remove flag (leaf)",
+                                        "format": "boolean"
+                                      },
+                                      "pcep-flag-a": {
+                                        "type": "string",
+                                        "description": "PCEP LSP admin flag (leaf)",
+                                        "format": "boolean"
+                                      },
+                                      "pcep-flag-o": {
+                                        "type": "integer",
+                                        "description": "PCEP LSP operation flag (leaf)",
+                                        "format": "byte"
+                                      },
+                                      "pcep-flag-c": {
+                                        "type": "integer",
+                                        "description": "PCEP LSP initiated flag (leaf)",
+                                        "format": "byte"
+                                      }
+                                    },
+                                    "description": "PCEP connection details (non-presence)"
+                                  },
+                                  "update-time": {
+                                    "type": "integer",
+                                    "description": "The time stamp of the most recent update to the RSVP TE Tunnel in the Crosswork database. (leaf)",
+                                    "format": "uint64"
+                                  },
+                                  "path": {
+                                    "type": "array",
+                                    "description": "List of paths associated with the RSVP TE tunnel.\nCurrently, Crosswork only supports a single path. (list)",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "path-name": {
+                                          "type": "string",
+                                          "description": "Path Name for the RSVP TE tunnel (leaf)",
+                                          "format": "string"
+                                        },
+                                        "path-type": {
+                                          "type": "string",
+                                          "description": "Path type (explicit or dynamic) (leaf)",
+                                          "format": "enumeration",
+                                          "default": "PT-UNKNOWN",
+                                          "enum": [
+                                            "PT-UNKNOWN",
+                                            "PT-EXPLICIT",
+                                            "PT-DYNAMIC"
+                                          ]
+                                        },
+                                        "path-oper-state": {
+                                          "type": "string",
+                                          "description": "Operational state of the RSVP TE Tunnel path (leaf)",
+                                          "format": "enumeration",
+                                          "default": "UP",
+                                          "enum": [
+                                            "UP",
+                                            "DOWN",
+                                            "ACTIVE"
+                                          ]
+                                        },
+                                        "optimization-metric": {
+                                          "type": "object",
+                                          "properties": {
+                                            "metric-type": {
+                                              "type": "string",
+                                              "description": "Metric type to optimize for this path (leaf)",
+                                              "format": "enumeration",
+                                              "default": "IGP-METRIC",
+                                              "enum": [
+                                                "IGP-METRIC",
+                                                "TE-METRIC",
+                                                "DELAY"
+                                              ]
+                                            },
+                                            "metric-value": {
+                                              "type": "integer",
+                                              "description": "Cumulative metric value for the path (leaf)",
+                                              "format": "uint32"
+                                            }
+                                          },
+                                          "description": "(non-presence)"
+                                        },
+                                        "constraints": {
+                                          "type": "object",
+                                          "properties": {
+                                            "affinity": {
+                                              "type": "object",
+                                              "properties": {
+                                                "exclude-any": {
+                                                  "type": "integer",
+                                                  "description": "Exclude-any attribute flags (leaf)",
+                                                  "format": "uint32"
+                                                },
+                                                "include-any": {
+                                                  "type": "integer",
+                                                  "description": "Include-any attribute flags (leaf)",
+                                                  "format": "uint32"
+                                                },
+                                                "include-all": {
+                                                  "type": "integer",
+                                                  "description": "Include-all attribute flags (leaf)",
+                                                  "format": "uint32"
+                                                }
+                                              },
+                                              "description": "Affinity information (non-presence)"
+                                            },
+                                            "association-info": {
+                                              "type": "object",
+                                              "properties": {
+                                                "assoc-source": {
+                                                  "type": "string",
+                                                  "description": "Association Source (leaf)",
+                                                  "format": "union"
+                                                },
+                                                "assoc-type": {
+                                                  "type": "string",
+                                                  "description": "Association Type (leaf)",
+                                                  "format": "enumeration",
+                                                  "default": "LINK-DISJOINTNESS",
+                                                  "enum": [
+                                                    "LINK-DISJOINTNESS",
+                                                    "NODE-DISJOINTNESS",
+                                                    "SRLG-DISJOINTNESS",
+                                                    "SRLG-NODE-DISJOINTNESS"
+                                                  ]
+                                                },
+                                                "assoc-id": {
+                                                  "type": "integer",
+                                                  "description": "Association ID (Disjoint Group ID) (leaf)",
+                                                  "format": "uint32"
+                                                }
+                                              },
+                                              "description": "Association (Disjoint Group) information (non-presence)"
+                                            }
+                                          },
+                                          "description": "(non-presence)"
+                                        },
+                                        "computed-time": {
+                                          "type": "integer",
+                                          "description": "Time stamp when the path was computed (leaf)",
+                                          "format": "uint64"
+                                        },
+                                        "ero-hop": {
+                                          "type": "array",
+                                          "description": "Explicit Route Object hop list for this path (list)",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "index": {
+                                                "type": "integer",
+                                                "description": "Hop index is used to identify an entry in the list. (leaf)",
+                                                "format": "uint32"
+                                              },
+                                              "node-id": {
+                                                "type": "string",
+                                                "description": "The identifier of a node in the TE topology. (leaf)",
+                                                "format": "string"
+                                              },
+                                              "ip-address": {
+                                                "type": "string",
+                                                "description": "Node IP address (leaf)",
+                                                "format": "union"
+                                              },
+                                              "interface-name": {
+                                                "type": "string",
+                                                "description": "Name of the interface. (leaf)",
+                                                "format": "string"
+                                              },
+                                              "te-hop-type": {
+                                                "type": "string",
+                                                "description": "Specifying loose or strict paths.. (leaf)",
+                                                "format": "enumeration",
+                                                "default": "loose",
+                                                "enum": [
+                                                  "loose",
+                                                  "strict"
+                                                ]
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "rro-hop": {
+                                          "type": "array",
+                                          "description": "Record Route Object hop list for this path (list)",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "index": {
+                                                "type": "integer",
+                                                "description": "Hop index is used to identify an entry in the list. (leaf)",
+                                                "format": "uint32"
+                                              },
+                                              "node-id": {
+                                                "type": "string",
+                                                "description": "The identifier of a node in the TE topology. (leaf)",
+                                                "format": "string"
+                                              },
+                                              "ip-address": {
+                                                "type": "string",
+                                                "description": "Node IP address (leaf)",
+                                                "format": "union"
+                                              },
+                                              "interface-name": {
+                                                "type": "string",
+                                                "description": "Name of the interface. (leaf)",
+                                                "format": "string"
+                                              },
+                                              "te-hop-type": {
+                                                "type": "string",
+                                                "description": "Specifying loose or strict paths.. (leaf)",
+                                                "format": "enumeration",
+                                                "default": "loose",
+                                                "enum": [
+                                                  "loose",
+                                                  "strict"
+                                                ]
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "description": "RSVP TE Tunnel details (non-presence)"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "description": "Container of RSVP TE Tunnels (non-presence)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {}
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    },
+    "/data/cisco-crosswork-rsvp-te-tunnel:rsvp-te-tunnels/rsvp-te-tunnel={rsvp-te-tunnel-headend},{rsvp-te-tunnel-endpoint},{rsvp-te-tunnel-tunnel-id}": {
+      "get": {
+        "tags": [
+          "Operational data", "Since 5.0"
+        ],
+        "summary": "Retrieve a RSVP-TE tunnel operational data",
+        "description": "Container for a single RSVP TE Tunnel",
+        "operationId": "data_cisco_crosswork_rsvp_te_tunnel_rsvp_te_tunnels_rsvp_te_tunnel_rsvp_te_tunnel_headend_rsvp_te_tunnel_endpoint_rsvp_te_tunnel_tunnel_id_get",
+        "parameters": [
+          {
+            "name": "rsvp-te-tunnel-headend",
+            "in": "path",
+            "description": "Head end IP address",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "union"
+            }
+          },
+          {
+            "name": "rsvp-te-tunnel-endpoint",
+            "in": "path",
+            "description": "End point IP address",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "union"
+            }
+          },
+          {
+            "name": "rsvp-te-tunnel-tunnel-id",
+            "in": "path",
+            "description": "Tunnel ID associated with the TE Tunnel",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "uint32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/yang-data+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cisco-crosswork-rsvp-te-tunnel:rsvp-te-tunnel": {
+                      "type": "array",
+                      "description": "(list)",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "headend": {
+                            "type": "string",
+                            "description": "Head end IP address (leaf)",
+                            "format": "union"
+                          },
+                          "endpoint": {
+                            "type": "string",
+                            "description": "End point IP address (leaf)",
+                            "format": "union"
+                          },
+                          "tunnel-id": {
+                            "type": "integer",
+                            "description": "Tunnel ID associated with the TE Tunnel (leaf)",
+                            "format": "uint32"
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "RSVP TE tunnel description (leaf)",
+                            "format": "string"
+                          },
+                          "admin-state": {
+                            "type": "string",
+                            "description": "Administrative state of the RSVP TE Tunnel (leaf)",
+                            "format": "enumeration",
+                            "default": "UP",
+                            "enum": [
+                              "UP",
+                              "DOWN"
+                            ]
+                          },
+                          "oper-state": {
+                            "type": "string",
+                            "description": "Operational state of the RSVP TE Tunnel (leaf)",
+                            "format": "enumeration",
+                            "default": "UP",
+                            "enum": [
+                              "UP",
+                              "DOWN",
+                              "ACTIVE"
+                            ]
+                          },
+                          "rsvp-te-tunnel-type": {
+                            "type": "string",
+                            "description": "The Crosswork RSVP TE tunnel config type (leaf)",
+                            "format": "enumeration",
+                            "default": "CW-CONFIGURED",
+                            "enum": [
+                              "CW-CONFIGURED",
+                              "OTHER"
+                            ]
+                          },
+                          "tunnel-details": {
+                            "type": "object",
+                            "properties": {
+                              "binding-label": {
+                                "type": "integer",
+                                "description": "Binding label assigned to the RSVP TE tunnel (leaf)",
+                                "format": "uint32"
+                              },
+                              "signaled-bandwidth-mbps": {
+                                "type": "integer",
+                                "description": "Signaled bandwidth in mega-bits-per-sec (leaf)",
+                                "format": "uint64"
+                              },
+                              "setup-priority": {
+                                "type": "integer",
+                                "description": "Setup priority (leaf)",
+                                "format": "uint32"
+                              },
+                              "hold-priority": {
+                                "type": "integer",
+                                "description": "Hold priority (leaf)",
+                                "format": "uint32"
+                              },
+                              "pce-controlled": {
+                                "type": "string",
+                                "description": "If true, the TE Tunnel can be re-optimized by PCE (leaf)",
+                                "format": "boolean"
+                              },
+                              "delegated-pce": {
+                                "type": "string",
+                                "description": "IPv4 or IPv6 address of the delegated PCE (leaf)",
+                                "format": "union"
+                              },
+                              "sub-delegated-pce": {
+                                "type": "string",
+                                "description": "IPv4 or IPv6 address of the sub-delegated PCE (leaf)",
+                                "format": "union"
+                              },
+                              "pcc-address": {
+                                "type": "string",
+                                "description": "IPv4 or IPv6 address of PCC (Path Compute Client) (leaf)",
+                                "format": "union"
+                              },
+                              "non-delegated-pces": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "description": "IPv4 or IPv6 address of one of the non-delegated PCE (leaf-list)",
+                                  "format": "union"
+                                }
+                              },
+                              "pcep-info": {
+                                "type": "object",
+                                "properties": {
+                                  "pcep-id": {
+                                    "type": "integer",
+                                    "description": "PCE protocol identifier (leaf)",
+                                    "format": "uint32"
+                                  },
+                                  "pcep-flag-d": {
+                                    "type": "string",
+                                    "description": "PCEP LSP delegation flag (leaf)",
+                                    "format": "boolean"
+                                  },
+                                  "pcep-flag-s": {
+                                    "type": "string",
+                                    "description": "PCEP LSP state-sync flag (leaf)",
+                                    "format": "boolean"
+                                  },
+                                  "pcep-flag-r": {
+                                    "type": "string",
+                                    "description": "PCEP LSP remove flag (leaf)",
+                                    "format": "boolean"
+                                  },
+                                  "pcep-flag-a": {
+                                    "type": "string",
+                                    "description": "PCEP LSP admin flag (leaf)",
+                                    "format": "boolean"
+                                  },
+                                  "pcep-flag-o": {
+                                    "type": "integer",
+                                    "description": "PCEP LSP operation flag (leaf)",
+                                    "format": "byte"
+                                  },
+                                  "pcep-flag-c": {
+                                    "type": "integer",
+                                    "description": "PCEP LSP initiated flag (leaf)",
+                                    "format": "byte"
+                                  }
+                                },
+                                "description": "PCEP connection details (non-presence)"
+                              },
+                              "update-time": {
+                                "type": "integer",
+                                "description": "The time stamp of the most recent update to the RSVP TE Tunnel in the Crosswork database. (leaf)",
+                                "format": "uint64"
+                              },
+                              "path": {
+                                "type": "array",
+                                "description": "List of paths associated with the RSVP TE tunnel.\nCurrently, Crosswork only supports a single path. (list)",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "path-name": {
+                                      "type": "string",
+                                      "description": "Path Name for the RSVP TE tunnel (leaf)",
+                                      "format": "string"
+                                    },
+                                    "path-type": {
+                                      "type": "string",
+                                      "description": "Path type (explicit or dynamic) (leaf)",
+                                      "format": "enumeration",
+                                      "default": "PT-UNKNOWN",
+                                      "enum": [
+                                        "PT-UNKNOWN",
+                                        "PT-EXPLICIT",
+                                        "PT-DYNAMIC"
+                                      ]
+                                    },
+                                    "path-oper-state": {
+                                      "type": "string",
+                                      "description": "Operational state of the RSVP TE Tunnel path (leaf)",
+                                      "format": "enumeration",
+                                      "default": "UP",
+                                      "enum": [
+                                        "UP",
+                                        "DOWN",
+                                        "ACTIVE"
+                                      ]
+                                    },
+                                    "optimization-metric": {
+                                      "type": "object",
+                                      "properties": {
+                                        "metric-type": {
+                                          "type": "string",
+                                          "description": "Metric type to optimize for this path (leaf)",
+                                          "format": "enumeration",
+                                          "default": "IGP-METRIC",
+                                          "enum": [
+                                            "IGP-METRIC",
+                                            "TE-METRIC",
+                                            "DELAY"
+                                          ]
+                                        },
+                                        "metric-value": {
+                                          "type": "integer",
+                                          "description": "Cumulative metric value for the path (leaf)",
+                                          "format": "uint32"
+                                        }
+                                      },
+                                      "description": "(non-presence)"
+                                    },
+                                    "constraints": {
+                                      "type": "object",
+                                      "properties": {
+                                        "affinity": {
+                                          "type": "object",
+                                          "properties": {
+                                            "exclude-any": {
+                                              "type": "integer",
+                                              "description": "Exclude-any attribute flags (leaf)",
+                                              "format": "uint32"
+                                            },
+                                            "include-any": {
+                                              "type": "integer",
+                                              "description": "Include-any attribute flags (leaf)",
+                                              "format": "uint32"
+                                            },
+                                            "include-all": {
+                                              "type": "integer",
+                                              "description": "Include-all attribute flags (leaf)",
+                                              "format": "uint32"
+                                            }
+                                          },
+                                          "description": "Affinity information (non-presence)"
+                                        },
+                                        "association-info": {
+                                          "type": "object",
+                                          "properties": {
+                                            "assoc-source": {
+                                              "type": "string",
+                                              "description": "Association Source (leaf)",
+                                              "format": "union"
+                                            },
+                                            "assoc-type": {
+                                              "type": "string",
+                                              "description": "Association Type (leaf)",
+                                              "format": "enumeration",
+                                              "default": "LINK-DISJOINTNESS",
+                                              "enum": [
+                                                "LINK-DISJOINTNESS",
+                                                "NODE-DISJOINTNESS",
+                                                "SRLG-DISJOINTNESS",
+                                                "SRLG-NODE-DISJOINTNESS"
+                                              ]
+                                            },
+                                            "assoc-id": {
+                                              "type": "integer",
+                                              "description": "Association ID (Disjoint Group ID) (leaf)",
+                                              "format": "uint32"
+                                            }
+                                          },
+                                          "description": "Association (Disjoint Group) information (non-presence)"
+                                        }
+                                      },
+                                      "description": "(non-presence)"
+                                    },
+                                    "computed-time": {
+                                      "type": "integer",
+                                      "description": "Time stamp when the path was computed (leaf)",
+                                      "format": "uint64"
+                                    },
+                                    "ero-hop": {
+                                      "type": "array",
+                                      "description": "Explicit Route Object hop list for this path (list)",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "index": {
+                                            "type": "integer",
+                                            "description": "Hop index is used to identify an entry in the list. (leaf)",
+                                            "format": "uint32"
+                                          },
+                                          "node-id": {
+                                            "type": "string",
+                                            "description": "The identifier of a node in the TE topology. (leaf)",
+                                            "format": "string"
+                                          },
+                                          "ip-address": {
+                                            "type": "string",
+                                            "description": "Node IP address (leaf)",
+                                            "format": "union"
+                                          },
+                                          "interface-name": {
+                                            "type": "string",
+                                            "description": "Name of the interface. (leaf)",
+                                            "format": "string"
+                                          },
+                                          "te-hop-type": {
+                                            "type": "string",
+                                            "description": "Specifying loose or strict paths.. (leaf)",
+                                            "format": "enumeration",
+                                            "default": "loose",
+                                            "enum": [
+                                              "loose",
+                                              "strict"
+                                            ]
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "rro-hop": {
+                                      "type": "array",
+                                      "description": "Record Route Object hop list for this path (list)",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "index": {
+                                            "type": "integer",
+                                            "description": "Hop index is used to identify an entry in the list. (leaf)",
+                                            "format": "uint32"
+                                          },
+                                          "node-id": {
+                                            "type": "string",
+                                            "description": "The identifier of a node in the TE topology. (leaf)",
+                                            "format": "string"
+                                          },
+                                          "ip-address": {
+                                            "type": "string",
+                                            "description": "Node IP address (leaf)",
+                                            "format": "union"
+                                          },
+                                          "interface-name": {
+                                            "type": "string",
+                                            "description": "Name of the interface. (leaf)",
+                                            "format": "string"
+                                          },
+                                          "te-hop-type": {
+                                            "type": "string",
+                                            "description": "Specifying loose or strict paths.. (leaf)",
+                                            "format": "enumeration",
+                                            "default": "loose",
+                                            "enum": [
+                                              "loose",
+                                              "strict"
+                                            ]
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "description": "RSVP TE Tunnel details (non-presence)"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": {}
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "data_cisco-crosswork-rsvp-te-tunnel_rsvp-te-tunnels": {
+        "description": "RSVP TE Tunnel details (non-presence)",
+        "type": "object",
+        "properties": {
+          "cisco-crosswork-rsvp-te-tunnel:rsvp-te-tunnels": {
+            "type": "object",
+            "properties": {
+              "rsvp-te-tunnel": {
+                "type": "array",
+                "description": "(list)",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "headend": {
+                      "type": "string",
+                      "description": "Head end IP address (leaf)",
+                      "format": "union"
+                    },
+                    "endpoint": {
+                      "type": "string",
+                      "description": "End point IP address (leaf)",
+                      "format": "union"
+                    },
+                    "tunnel-id": {
+                      "type": "integer",
+                      "description": "Tunnel ID associated with the TE Tunnel (leaf)",
+                      "format": "uint32"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "RSVP TE tunnel description (leaf)",
+                      "format": "string"
+                    },
+                    "admin-state": {
+                      "type": "string",
+                      "description": "Administrative state of the RSVP TE Tunnel (leaf)",
+                      "format": "enumeration",
+                      "default": "UP",
+                      "enum": [
+                        "UP",
+                        "DOWN"
+                      ]
+                    },
+                    "oper-state": {
+                      "type": "string",
+                      "description": "Operational state of the RSVP TE Tunnel (leaf)",
+                      "format": "enumeration",
+                      "default": "UP",
+                      "enum": [
+                        "UP",
+                        "DOWN",
+                        "ACTIVE"
+                      ]
+                    },
+                    "rsvp-te-tunnel-type": {
+                      "type": "string",
+                      "description": "The Crosswork RSVP TE tunnel config type (leaf)",
+                      "format": "enumeration",
+                      "default": "CW-CONFIGURED",
+                      "enum": [
+                        "CW-CONFIGURED",
+                        "OTHER"
+                      ]
+                    },
+                    "tunnel-details": {
+                      "type": "object",
+                      "properties": {
+                        "binding-label": {
+                          "type": "integer",
+                          "description": "Binding label assigned to the RSVP TE tunnel (leaf)",
+                          "format": "uint32"
+                        },
+                        "signaled-bandwidth-mbps": {
+                          "type": "integer",
+                          "description": "Signaled bandwidth in mega-bits-per-sec (leaf)",
+                          "format": "uint64"
+                        },
+                        "setup-priority": {
+                          "type": "integer",
+                          "description": "Setup priority (leaf)",
+                          "format": "uint32"
+                        },
+                        "hold-priority": {
+                          "type": "integer",
+                          "description": "Hold priority (leaf)",
+                          "format": "uint32"
+                        },
+                        "pce-controlled": {
+                          "type": "string",
+                          "description": "If true, the TE Tunnel can be re-optimized by PCE (leaf)",
+                          "format": "boolean"
+                        },
+                        "delegated-pce": {
+                          "type": "string",
+                          "description": "IPv4 or IPv6 address of the delegated PCE (leaf)",
+                          "format": "union"
+                        },
+                        "sub-delegated-pce": {
+                          "type": "string",
+                          "description": "IPv4 or IPv6 address of the sub-delegated PCE (leaf)",
+                          "format": "union"
+                        },
+                        "pcc-address": {
+                          "type": "string",
+                          "description": "IPv4 or IPv6 address of PCC (Path Compute Client) (leaf)",
+                          "format": "union"
+                        },
+                        "non-delegated-pces": {
+                          "description": "non delegated pces",
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "description": "IPv4 or IPv6 address of one of the non-delegated PCE (leaf-list)",
+                            "format": "union"
+                          }
+                        },
+                        "pcep-info": {
+                          "type": "object",
+                          "properties": {
+                            "pcep-id": {
+                              "type": "integer",
+                              "description": "PCE protocol identifier (leaf)",
+                              "format": "uint32"
+                            },
+                            "pcep-flag-d": {
+                              "type": "string",
+                              "description": "PCEP LSP delegation flag (leaf)",
+                              "format": "boolean"
+                            },
+                            "pcep-flag-s": {
+                              "type": "string",
+                              "description": "PCEP LSP state-sync flag (leaf)",
+                              "format": "boolean"
+                            },
+                            "pcep-flag-r": {
+                              "type": "string",
+                              "description": "PCEP LSP remove flag (leaf)",
+                              "format": "boolean"
+                            },
+                            "pcep-flag-a": {
+                              "type": "string",
+                              "description": "PCEP LSP admin flag (leaf)",
+                              "format": "boolean"
+                            },
+                            "pcep-flag-o": {
+                              "type": "integer",
+                              "description": "PCEP LSP operation flag (leaf)",
+                              "format": "byte"
+                            },
+                            "pcep-flag-c": {
+                              "type": "integer",
+                              "description": "PCEP LSP initiated flag (leaf)",
+                              "format": "byte"
+                            }
+                          },
+                          "description": "PCEP connection details (non-presence)"
+                        },
+                        "update-time": {
+                          "type": "integer",
+                          "description": "The time stamp of the most recent update to the RSVP TE Tunnel in the Crosswork database. (leaf)",
+                          "format": "uint64"
+                        },
+                        "path": {
+                          "type": "array",
+                          "description": "List of paths associated with the RSVP TE tunnel.\nCurrently, Crosswork only supports a single path. (list)",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "path-name": {
+                                "type": "string",
+                                "description": "Path Name for the RSVP TE tunnel (leaf)",
+                                "format": "string"
+                              },
+                              "path-type": {
+                                "type": "string",
+                                "description": "Path type (explicit or dynamic) (leaf)",
+                                "format": "enumeration",
+                                "default": "PT-UNKNOWN",
+                                "enum": [
+                                  "PT-UNKNOWN",
+                                  "PT-EXPLICIT",
+                                  "PT-DYNAMIC"
+                                ]
+                              },
+                              "path-oper-state": {
+                                "type": "string",
+                                "description": "Operational state of the RSVP TE Tunnel path (leaf)",
+                                "format": "enumeration",
+                                "default": "UP",
+                                "enum": [
+                                  "UP",
+                                  "DOWN",
+                                  "ACTIVE"
+                                ]
+                              },
+                              "optimization-metric": {
+                                "type": "object",
+                                "properties": {
+                                  "metric-type": {
+                                    "type": "string",
+                                    "description": "Metric type to optimize for this path (leaf)",
+                                    "format": "enumeration",
+                                    "default": "IGP-METRIC",
+                                    "enum": [
+                                      "IGP-METRIC",
+                                      "TE-METRIC",
+                                      "DELAY"
+                                    ]
+                                  },
+                                  "metric-value": {
+                                    "type": "integer",
+                                    "description": "Cumulative metric value for the path (leaf)",
+                                    "format": "uint32"
+                                  }
+                                },
+                                "description": "(non-presence)"
+                              },
+                              "constraints": {
+                                "type": "object",
+                                "properties": {
+                                  "affinity": {
+                                    "type": "object",
+                                    "properties": {
+                                      "exclude-any": {
+                                        "type": "integer",
+                                        "description": "Exclude-any attribute flags (leaf)",
+                                        "format": "uint32"
+                                      },
+                                      "include-any": {
+                                        "type": "integer",
+                                        "description": "Include-any attribute flags (leaf)",
+                                        "format": "uint32"
+                                      },
+                                      "include-all": {
+                                        "type": "integer",
+                                        "description": "Include-all attribute flags (leaf)",
+                                        "format": "uint32"
+                                      }
+                                    },
+                                    "description": "Affinity information (non-presence)"
+                                  },
+                                  "association-info": {
+                                    "type": "object",
+                                    "properties": {
+                                      "assoc-source": {
+                                        "type": "string",
+                                        "description": "Association Source (leaf)",
+                                        "format": "union"
+                                      },
+                                      "assoc-type": {
+                                        "type": "string",
+                                        "description": "Association Type (leaf)",
+                                        "format": "enumeration",
+                                        "default": "LINK-DISJOINTNESS",
+                                        "enum": [
+                                          "LINK-DISJOINTNESS",
+                                          "NODE-DISJOINTNESS",
+                                          "SRLG-DISJOINTNESS",
+                                          "SRLG-NODE-DISJOINTNESS"
+                                        ]
+                                      },
+                                      "assoc-id": {
+                                        "type": "integer",
+                                        "description": "Association ID (Disjoint Group ID) (leaf)",
+                                        "format": "uint32"
+                                      }
+                                    },
+                                    "description": "Association (Disjoint Group) information (non-presence)"
+                                  }
+                                },
+                                "description": "(non-presence)"
+                              },
+                              "computed-time": {
+                                "type": "integer",
+                                "description": "Time stamp when the path was computed (leaf)",
+                                "format": "uint64"
+                              },
+                              "ero-hop": {
+                                "type": "array",
+                                "description": "Explicit Route Object hop list for this path (list)",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "index": {
+                                      "type": "integer",
+                                      "description": "Hop index is used to identify an entry in the list. (leaf)",
+                                      "format": "uint32"
+                                    },
+                                    "node-id": {
+                                      "type": "string",
+                                      "description": "The identifier of a node in the TE topology. (leaf)",
+                                      "format": "string"
+                                    },
+                                    "ip-address": {
+                                      "type": "string",
+                                      "description": "Node IP address (leaf)",
+                                      "format": "union"
+                                    },
+                                    "interface-name": {
+                                      "type": "string",
+                                      "description": "Name of the interface. (leaf)",
+                                      "format": "string"
+                                    },
+                                    "te-hop-type": {
+                                      "type": "string",
+                                      "description": "Specifying loose or strict paths.. (leaf)",
+                                      "format": "enumeration",
+                                      "default": "loose",
+                                      "enum": [
+                                        "loose",
+                                        "strict"
+                                      ]
+                                    }
+                                  }
+                                }
+                              },
+                              "rro-hop": {
+                                "type": "array",
+                                "description": "Record Route Object hop list for this path (list)",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "index": {
+                                      "type": "integer",
+                                      "description": "Hop index is used to identify an entry in the list. (leaf)",
+                                      "format": "uint32"
+                                    },
+                                    "node-id": {
+                                      "type": "string",
+                                      "description": "The identifier of a node in the TE topology. (leaf)",
+                                      "format": "string"
+                                    },
+                                    "ip-address": {
+                                      "type": "string",
+                                      "description": "Node IP address (leaf)",
+                                      "format": "union"
+                                    },
+                                    "interface-name": {
+                                      "type": "string",
+                                      "description": "Name of the interface. (leaf)",
+                                      "format": "string"
+                                    },
+                                    "te-hop-type": {
+                                      "type": "string",
+                                      "description": "Specifying loose or strict paths.. (leaf)",
+                                      "format": "enumeration",
+                                      "default": "loose",
+                                      "enum": [
+                                        "loose",
+                                        "strict"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "description": "RSVP TE Tunnel details (non-presence)"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Container of RSVP TE Tunnels (non-presence)"
+          }
+        }
+      },
+      "data_cisco-crosswork-rsvp-te-tunnel_rsvp-te-tunnels_rsvp-te-tunnel_rsvp-te-tunnel-headend_rsvp-te-tunnel-endpoint_rsvp-te-tunnel-tunnel-id": {
+        "description": "rsvp te tunnels",
+        "type": "object",
+        "properties": {
+          "cisco-crosswork-rsvp-te-tunnel:rsvp-te-tunnel": {
+            "type": "array",
+            "description": "(list)",
+            "items": {
+              "type": "object",
+              "properties": {
+                "headend": {
+                  "type": "string",
+                  "description": "Head end IP address (leaf)",
+                  "format": "union"
+                },
+                "endpoint": {
+                  "type": "string",
+                  "description": "End point IP address (leaf)",
+                  "format": "union"
+                },
+                "tunnel-id": {
+                  "type": "integer",
+                  "description": "Tunnel ID associated with the TE Tunnel (leaf)",
+                  "format": "uint32"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "RSVP TE tunnel description (leaf)",
+                  "format": "string"
+                },
+                "admin-state": {
+                  "type": "string",
+                  "description": "Administrative state of the RSVP TE Tunnel (leaf)",
+                  "format": "enumeration",
+                  "default": "UP",
+                  "enum": [
+                    "UP",
+                    "DOWN"
+                  ]
+                },
+                "oper-state": {
+                  "type": "string",
+                  "description": "Operational state of the RSVP TE Tunnel (leaf)",
+                  "format": "enumeration",
+                  "default": "UP",
+                  "enum": [
+                    "UP",
+                    "DOWN",
+                    "ACTIVE"
+                  ]
+                },
+                "rsvp-te-tunnel-type": {
+                  "type": "string",
+                  "description": "The Crosswork RSVP TE tunnel config type (leaf)",
+                  "format": "enumeration",
+                  "default": "CW-CONFIGURED",
+                  "enum": [
+                    "CW-CONFIGURED",
+                    "OTHER"
+                  ]
+                },
+                "tunnel-details": {
+                  "type": "object",
+                  "properties": {
+                    "binding-label": {
+                      "type": "integer",
+                      "description": "Binding label assigned to the RSVP TE tunnel (leaf)",
+                      "format": "uint32"
+                    },
+                    "signaled-bandwidth-mbps": {
+                      "type": "integer",
+                      "description": "Signaled bandwidth in mega-bits-per-sec (leaf)",
+                      "format": "uint64"
+                    },
+                    "setup-priority": {
+                      "type": "integer",
+                      "description": "Setup priority (leaf)",
+                      "format": "uint32"
+                    },
+                    "hold-priority": {
+                      "type": "integer",
+                      "description": "Hold priority (leaf)",
+                      "format": "uint32"
+                    },
+                    "pce-controlled": {
+                      "type": "string",
+                      "description": "If true, the TE Tunnel can be re-optimized by PCE (leaf)",
+                      "format": "boolean"
+                    },
+                    "delegated-pce": {
+                      "type": "string",
+                      "description": "IPv4 or IPv6 address of the delegated PCE (leaf)",
+                      "format": "union"
+                    },
+                    "sub-delegated-pce": {
+                      "type": "string",
+                      "description": "IPv4 or IPv6 address of the sub-delegated PCE (leaf)",
+                      "format": "union"
+                    },
+                    "pcc-address": {
+                      "type": "string",
+                      "description": "IPv4 or IPv6 address of PCC (Path Compute Client) (leaf)",
+                      "format": "union"
+                    },
+                    "non-delegated-pces": {
+                      "description": "non delegated pces",
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "description": "IPv4 or IPv6 address of one of the non-delegated PCE (leaf-list)",
+                        "format": "union"
+                      }
+                    },
+                    "pcep-info": {
+                      "type": "object",
+                      "properties": {
+                        "pcep-id": {
+                          "type": "integer",
+                          "description": "PCE protocol identifier (leaf)",
+                          "format": "uint32"
+                        },
+                        "pcep-flag-d": {
+                          "type": "string",
+                          "description": "PCEP LSP delegation flag (leaf)",
+                          "format": "boolean"
+                        },
+                        "pcep-flag-s": {
+                          "type": "string",
+                          "description": "PCEP LSP state-sync flag (leaf)",
+                          "format": "boolean"
+                        },
+                        "pcep-flag-r": {
+                          "type": "string",
+                          "description": "PCEP LSP remove flag (leaf)",
+                          "format": "boolean"
+                        },
+                        "pcep-flag-a": {
+                          "type": "string",
+                          "description": "PCEP LSP admin flag (leaf)",
+                          "format": "boolean"
+                        },
+                        "pcep-flag-o": {
+                          "type": "integer",
+                          "description": "PCEP LSP operation flag (leaf)",
+                          "format": "byte"
+                        },
+                        "pcep-flag-c": {
+                          "type": "integer",
+                          "description": "PCEP LSP initiated flag (leaf)",
+                          "format": "byte"
+                        }
+                      },
+                      "description": "PCEP connection details (non-presence)"
+                    },
+                    "update-time": {
+                      "type": "integer",
+                      "description": "The time stamp of the most recent update to the RSVP TE Tunnel in the Crosswork database. (leaf)",
+                      "format": "uint64"
+                    },
+                    "path": {
+                      "type": "array",
+                      "description": "List of paths associated with the RSVP TE tunnel.\nCurrently, Crosswork only supports a single path. (list)",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path-name": {
+                            "type": "string",
+                            "description": "Path Name for the RSVP TE tunnel (leaf)",
+                            "format": "string"
+                          },
+                          "path-type": {
+                            "type": "string",
+                            "description": "Path type (explicit or dynamic) (leaf)",
+                            "format": "enumeration",
+                            "default": "PT-UNKNOWN",
+                            "enum": [
+                              "PT-UNKNOWN",
+                              "PT-EXPLICIT",
+                              "PT-DYNAMIC"
+                            ]
+                          },
+                          "path-oper-state": {
+                            "type": "string",
+                            "description": "Operational state of the RSVP TE Tunnel path (leaf)",
+                            "format": "enumeration",
+                            "default": "UP",
+                            "enum": [
+                              "UP",
+                              "DOWN",
+                              "ACTIVE"
+                            ]
+                          },
+                          "optimization-metric": {
+                            "type": "object",
+                            "properties": {
+                              "metric-type": {
+                                "type": "string",
+                                "description": "Metric type to optimize for this path (leaf)",
+                                "format": "enumeration",
+                                "default": "IGP-METRIC",
+                                "enum": [
+                                  "IGP-METRIC",
+                                  "TE-METRIC",
+                                  "DELAY"
+                                ]
+                              },
+                              "metric-value": {
+                                "type": "integer",
+                                "description": "Cumulative metric value for the path (leaf)",
+                                "format": "uint32"
+                              }
+                            },
+                            "description": "(non-presence)"
+                          },
+                          "constraints": {
+                            "type": "object",
+                            "properties": {
+                              "affinity": {
+                                "type": "object",
+                                "properties": {
+                                  "exclude-any": {
+                                    "type": "integer",
+                                    "description": "Exclude-any attribute flags (leaf)",
+                                    "format": "uint32"
+                                  },
+                                  "include-any": {
+                                    "type": "integer",
+                                    "description": "Include-any attribute flags (leaf)",
+                                    "format": "uint32"
+                                  },
+                                  "include-all": {
+                                    "type": "integer",
+                                    "description": "Include-all attribute flags (leaf)",
+                                    "format": "uint32"
+                                  }
+                                },
+                                "description": "Affinity information (non-presence)"
+                              },
+                              "association-info": {
+                                "type": "object",
+                                "properties": {
+                                  "assoc-source": {
+                                    "type": "string",
+                                    "description": "Association Source (leaf)",
+                                    "format": "union"
+                                  },
+                                  "assoc-type": {
+                                    "type": "string",
+                                    "description": "Association Type (leaf)",
+                                    "format": "enumeration",
+                                    "default": "LINK-DISJOINTNESS",
+                                    "enum": [
+                                      "LINK-DISJOINTNESS",
+                                      "NODE-DISJOINTNESS",
+                                      "SRLG-DISJOINTNESS",
+                                      "SRLG-NODE-DISJOINTNESS"
+                                    ]
+                                  },
+                                  "assoc-id": {
+                                    "type": "integer",
+                                    "description": "Association ID (Disjoint Group ID) (leaf)",
+                                    "format": "uint32"
+                                  }
+                                },
+                                "description": "Association (Disjoint Group) information (non-presence)"
+                              }
+                            },
+                            "description": "(non-presence)"
+                          },
+                          "computed-time": {
+                            "type": "integer",
+                            "description": "Time stamp when the path was computed (leaf)",
+                            "format": "uint64"
+                          },
+                          "ero-hop": {
+                            "type": "array",
+                            "description": "Explicit Route Object hop list for this path (list)",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "index": {
+                                  "type": "integer",
+                                  "description": "Hop index is used to identify an entry in the list. (leaf)",
+                                  "format": "uint32"
+                                },
+                                "node-id": {
+                                  "type": "string",
+                                  "description": "The identifier of a node in the TE topology. (leaf)",
+                                  "format": "string"
+                                },
+                                "ip-address": {
+                                  "type": "string",
+                                  "description": "Node IP address (leaf)",
+                                  "format": "union"
+                                },
+                                "interface-name": {
+                                  "type": "string",
+                                  "description": "Name of the interface. (leaf)",
+                                  "format": "string"
+                                },
+                                "te-hop-type": {
+                                  "type": "string",
+                                  "description": "Specifying loose or strict paths.. (leaf)",
+                                  "format": "enumeration",
+                                  "default": "loose",
+                                  "enum": [
+                                    "loose",
+                                    "strict"
+                                  ]
+                                }
+                              }
+                            }
+                          },
+                          "rro-hop": {
+                            "type": "array",
+                            "description": "Record Route Object hop list for this path (list)",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "index": {
+                                  "type": "integer",
+                                  "description": "Hop index is used to identify an entry in the list. (leaf)",
+                                  "format": "uint32"
+                                },
+                                "node-id": {
+                                  "type": "string",
+                                  "description": "The identifier of a node in the TE topology. (leaf)",
+                                  "format": "string"
+                                },
+                                "ip-address": {
+                                  "type": "string",
+                                  "description": "Node IP address (leaf)",
+                                  "format": "union"
+                                },
+                                "interface-name": {
+                                  "type": "string",
+                                  "description": "Name of the interface. (leaf)",
+                                  "format": "string"
+                                },
+                                "te-hop-type": {
+                                  "type": "string",
+                                  "description": "Specifying loose or strict paths.. (leaf)",
+                                  "format": "enumeration",
+                                  "default": "loose",
+                                  "enum": [
+                                    "loose",
+                                    "strict"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "description": "RSVP TE Tunnel details (non-presence)"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "OK",
+        "content": {}
+      },
+      "201": {
+        "description": "Created",
+        "content": {}
+      },
+      "204": {
+        "description": "No Content",
+        "content": {}
+      },
+      "400": {
+        "description": "Bad Request",
+        "content": {}
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {}
+      },
+      "404": {
+        "description": "Not Found",
+        "content": {}
+      },
+      "405": {
+        "description": "Method Not Allowed",
+        "content": {}
+      },
+      "409": {
+        "description": "Conflict",
+        "content": {}
+      }
+    },
+    "parameters": {
+      "rsvp-te-tunnel-tunnel-id": {
+        "name": "rsvp-te-tunnel-tunnel-id",
+        "in": "path",
+        "description": "Tunnel ID associated with the TE Tunnel",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "uint32"
+        }
+      },
+      "rsvp-te-tunnel-headend": {
+        "name": "rsvp-te-tunnel-headend",
+        "in": "path",
+        "description": "Head end IP address",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "union"
+        }
+      },
+      "rsvp-te-tunnel-endpoint": {
+        "name": "rsvp-te-tunnel-endpoint",
+        "in": "path",
+        "description": "End point IP address",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "union"
+        }
+      }
+    },
+    "securitySchemes": {
+      "basicAuth": {
+        "type": "http",
+        "description": "Basic Authentication",
+        "scheme": "basic"
+      }
+    }
+  },
+  "x-original-swagger-version": "2.0"
+}

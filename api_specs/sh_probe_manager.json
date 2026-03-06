@@ -1,0 +1,367 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Service Health Probe Manager APIs",
+      "description": "Probe Manager related APIs for the Crosswork Service Health application.",
+      "contact": {
+        "name": "Crosswork Team, Cisco",
+        "email": "support@cisco.com"
+      },
+      "license": {
+        "name": "Cisco Software License Agreement",
+        "url": "http://www.cisco.com/public/sw-license-agreement.html"
+      },
+      "version": "7.1.0"
+    },
+    "servers": [
+      {
+        "url": "/crosswork/probemgr/v1/"
+      }
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "paths": {
+      "/probeStatusReport": {
+      "post": {
+          "tags": [
+              "AaProbeManager"
+          ],
+          "summary": "Use probeStatusReport to get probe status.",
+          "operationId": "AaProbeManager_GetProbeStatusReport",
+          "requestBody": {
+              "description": "The Probe Status request parameter.",
+              "content": {
+                  "application/json": {
+                      "schema": {
+                          "$ref": "#/components/schemas/ProbeStatusRequest"
+                      },
+                      "example": {"serviceId":"ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service=L3VPN_5EP_10"}
+                  }
+              },
+              "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK. The request was successful. The result is contained in the response body.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProbeStatusResponse"
+                  },
+                  "example": {
+                    "data": [
+                      {
+                        "serviceId": "ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service=L3NM-PROBES-45-2-3-hub-spoke",
+                        "enableReactivate": true,
+                        "status": 3,
+                        "endpointStatus": [
+                          {
+                            "id": "def",
+                            "vpnNeId": "Node3",
+                            "agentVLAN": 22,
+                            "agentIPAddr": "30.1.3.252",
+                            "interfaceName": "GigabitEthernet0/0/0/1",
+                            "status": 2
+                          }
+                        ],
+                        "sessionStatus": [
+                          {
+                            "id": "0f701fff-91ec-557e-9cf1-737c67125d3c",
+                            "sender": "def",
+                            "reflector": "abc",
+                            "status": 3
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "An empty response.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/runtimeError"
+                  },
+                  "example": {
+                    "data": [
+                      {
+                        "status": "SUCCESS"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "x-codegen-request-body-name": "body"
+        }
+      },
+      "/reactivateProbe": {
+        "post": {
+          "tags": [
+            "AaProbeManager"
+          ],
+          "summary": "Use this API to reactivate a probe.",
+          "operationId": "AaProbeManager_ReactivateProbeRequest",
+          "requestBody": {
+            "description": "The Probe Reactivate request parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProbeReactivateRequest"
+                },
+                "example": {"serviceId":"ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service=L3VPN_5EP_10"}
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK. The request was successful. The result is contained in the response body.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProbeReactivateResponse"
+                  },
+                  "example": {
+                    "data": [
+                      {
+                        "status": 1
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "An unexpected error response.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/runtimeError"
+                  },
+                  "example": {
+                    "data": [
+                      {
+                        "status": 0
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "x-codegen-request-body-name": "body"
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "ProbeEndpointStatus": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "This is the key ID of the endpoint in the service configuration payload.",
+              "type": "string"
+            },
+            "vpnNeId": {
+              "type": "string",
+              "description": "VPN Node ID"
+            },
+            "agentVLAN": {
+              "type": "integer",
+              "description": "Agent VLAN",
+              "format": "int64"
+            },
+            "agentIPAddr": {
+              "type": "string",
+              "description": "Agent IP Addr"
+            },
+            "interfaceName": {
+              "type": "string",
+              "description": "Interface Name"
+            },
+            "status": {
+              "$ref": "#/components/schemas/ProbeStatus"
+            },
+            "error": {
+              "description": "Error message",
+              "type": "string"
+            }
+          },
+          "description": "Probe endpoint status report."
+        },
+        "ProbeReactivateRequest": {
+          "type": "object",
+          "properties": {
+            "serviceId": {
+              "type": "string",
+              "description": "Service ID."
+            }
+          },
+          "description": "Use ProbeReactivateRequest to re-activate a service probe that has an error."
+        },
+        "ProbeReactivateResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "$ref": "#/components/schemas/Status"
+            },
+            "error": {
+              "description": "Error message",
+              "type": "string"
+            }
+          },
+          "description": "Response to the request to re-activate the probe."
+        },
+        "ProbeSessionStatus": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "Session ID. This is the UUID that the Probe Manager used to create the session in the Accedian server.",
+              "type": "string"
+            },
+            "sender": {
+              "description": "Sender endpoint of the session. This is the key ID of the endpoint in the service configuration payload.",
+              "type": "string"
+            },
+            "reflector": {
+              "description": "Reflector endpoint of the session. This is the key ID of the endpoint in the service configuration payload.",
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/ProbeStatus"
+            },
+            "error": {
+              "description": "Error message",
+              "type": "string"
+            }
+          },
+          "description": "Probe session status report"
+        },
+        "ProbeStatus": {
+          "type": "string",
+          "description": "Status of probe/endpoint/session",
+          "default": "PROBE_STATUS_UNKNOWN",
+          "enum": [
+            "PROBE_STATUS_UNKNOWN",
+            "PROBE_STATUS_PENDING",
+            "PROBE_STATUS_SUCCESS",
+            "PROBE_STATUS_ERROR"
+          ]
+        },
+        "ProbeStatusRequest": {
+          "type": "object",
+          "properties": {
+            "serviceId": {
+              "description": "Service ID.",
+              "type": "string"
+            }
+          },
+          "description": "Use ProbeStatusRequest to fetch a detailed probe status for a service."
+        },
+        "ProbeStatusResponse": {
+          "type": "object",
+          "properties": {
+            "serviceId": {
+              "type": "string",
+              "description": "Service id"
+            },
+            "enableReactivate": {
+              "description": "True if the probe re-activate button needs to be enabled in the UI",
+              "type": "boolean"
+            },
+            "status": {
+              "$ref": "#/components/schemas/ProbeStatus"
+            },
+            "endpointStatus": {
+              "description": "Detailed status of all endpoints",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ProbeEndpointStatus"
+              }
+            },
+            "sessionStatus": {
+              "description": "Detailed status of all sessions",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ProbeSessionStatus"
+              }
+            },
+            "error": {
+              "description": "Error message",
+              "type": "string"
+            }
+          },
+          "description": "Probe status response"
+        },
+        "Status": {
+          "type": "string",
+          "description": "Status of Probe Activation Response",
+          "default": "RESP_STATUS_UNKNOWN",
+          "enum": [
+            "RESP_STATUS_UNKNOWN",
+            "RESP_STATUS_SUCCESS",
+            "RESP_STATUS_ERROR"
+          ]
+        },
+        "protobufAny": {
+          "type": "object",
+          "description": "ProtobufAny",
+          "properties": {
+            "type_url": {
+              "type": "string",
+              "description": "Type-url of ProtobufAny."
+            },
+            "value": {
+              "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+              "type": "string",
+              "description": "Value of ProtobufAny.",
+              "format": "byte"
+            }
+          }
+        },
+        "runtimeError": {
+          "type": "object",
+          "description": "Run-time error.",
+          "properties": {
+            "error": {
+              "type": "string",
+              "description": "Error of Run-time error."
+            },
+            "code": {
+              "type": "integer",
+              "description": "Code of Run-time error.",
+              "format": "int32"
+            },
+            "message": {
+              "type": "string",
+              "description": "Message of Run-time error."
+            },
+            "details": {
+              "type": "array",
+              "description": "Details of Run-time error.",
+              "items": {
+                "$ref": "#/components/schemas/protobufAny"
+              }
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "apiKey",
+          "description": "Security token for authorizing requests for these APIs.",
+          "name": "Authorization",
+          "in": "header"
+        }
+      }
+    },
+    "x-original-swagger-version": "2.0"
+  }

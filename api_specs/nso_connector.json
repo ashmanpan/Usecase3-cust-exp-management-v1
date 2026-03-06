@@ -1,0 +1,229 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "nso-connector service APIs",
+        "description": "APIs exposed by nso-connector service",
+        "termsOfService": "http://www.cisco.com/web/siteassets/legal/terms_condition.html",
+        "contact": {
+            "name": "Cisco Systems",
+            "url": "https://www.cisco.com",
+            "email": "support@cisco.com"
+        },
+        "license": {
+            "name": "Cisco Software License Agreement",
+            "url": "http://www.cisco.com/public/sw-license-agreement.html"
+        },
+        "version": "7.1.0"
+    },
+    "servers": [
+        {
+            "url": "https://{cnc-host}:{cnc-port}/crosswork/cat/nso-connector/v1",
+            "variables": {
+                "cnc-host": {
+                    "default": "127.0.0.1",
+                    "description": "host name or ip address of the target CNC Cluster"
+                },
+                "cnc-port": {
+                    "default": "30603",
+                    "description": "port number of the target CNC Cluster"
+                }
+            }
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    "paths": {
+        "/api/typeResync": {
+            "post": {
+                "tags": [
+                    "1. Resync"
+                ],
+                "summary": "Resync by service-type.",
+                "description": "Resyncs the service, service-plan, and resources of this service type.",
+                "operationId": "typeResync",
+                "parameters": [
+                    {
+                        "name": "typePath",
+                        "in": "query",
+                        "description": "This parameter is lenient. For the path value, can refer to serviceStatus with extended=true parameter: model_entities entry. We recommend that you use the full path as shown in the following example:",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service"
+                    },
+                    {
+                        "name": "force",
+                        "in": "query",
+                        "description": "Deprecated. Not used.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": false
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"syncResponse\":{\"syncDescription\":\"Succeeded, type sync was executed in the background for type= ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service\",\"syncStatus\":\"SUCCESS\"},\"status\":\"OK\"}"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/serviceResync": {
+            "post": {
+                "tags": [
+                    "1. Resync"
+                ],
+                "summary": "Resync service by service-type and service-key.",
+                "description": "Resyncs the service and  service-plan of this service.",
+                "operationId": "serviceResync",
+                "parameters": [
+                    {
+                        "name": "typePath",
+                        "in": "query",
+                        "description": "This parameter is lenient. For the path value, can refer to serviceStatus with extended=true parameter: model_entities entry. We recommend that you use the full path as shown in the following example.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service"
+                    },
+                    {
+                        "name": "serviceName",
+                        "in": "query",
+                        "description": "The encoded key of the service, as defined as service key.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"syncResponse\":{\"syncDescription\":\"Succeeded, service sync was executed in the background for type= ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service, and serviceName= L2VPN_NM-ELAN-270\",\"syncStatus\":\"SUCCESS\"},\"status\":\"OK\"}"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/log/changeLogLevel": {
+            "post": {
+                "tags": [
+                    "3. Log"
+                ],
+                "summary": "Change log level",
+                "description": "Change log verbosity. Used mainly for development and debugging purposes. Use with cation.",
+                "operationId": "changeLogLevel",
+                "parameters": [
+                    {
+                        "name": "level",
+                        "in": "query",
+                        "description": "Log level to change to.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "INFO"
+                    },
+                    {
+                        "name": "loggerName",
+                        "in": "query",
+                        "description": "Log name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal server error"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"status\":\"OK\"}"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/fullResync": {
+            "post": {
+                "tags": [
+                    "1. Resync"
+                ],
+                "summary": "Perform full resync for all service-types.",
+                "description": "re-create the collection jobs. Delete and re-create the jobs. Using the persistent jobs configuration. Use with caution.",
+                "operationId": "fullResync",
+                "parameters": [
+                    {
+                        "name": "force",
+                        "in": "query",
+                        "description": "Deprecated. Not used.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "{\"syncResponse\":{\"syncDescription\":\"Succeeded, full sync was executed in the background\",\"syncStatus\":\"SUCCESS\"},\"status\":\"OK\"}"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

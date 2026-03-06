@@ -1,0 +1,681 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "ietf-l3vpn-ntw - operational data",
+    "description" : "This YANG module defines a generic network-oriented model\nfor the configuration of Layer 3 Virtual Private Networks.\n\nCopyright (c) 2022 IETF Trust and the persons identified as\nauthors of the code.  All rights reserved.\n\nRedistribution and use in source and binary forms, with or\nwithout modification, is permitted pursuant to, and subject\nto the license terms contained in, the Revised BSD License\nset forth in Section 4.c of the IETF Trust's Legal Provisions\nRelating to IETF Documents\n(https://trustee.ietf.org/license-info).\n\nThis version of this YANG module is part of RFC 9182; see the\nRFC itself for full legal notices.",
+    "termsOfService": "http://www.cisco.com/web/siteassets/legal/terms_condition.html",
+    "contact" : {
+      "name" : "Cisco Systems",
+      "url" : "https://www.cisco.com",
+      "email" : "support@cisco.com"
+    },
+    "license" : {
+      "name" : "Cisco Software License Agreement",
+      "url" : "http://www.cisco.com/public/sw-license-agreement.html"
+    },
+    "version" : "7.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://{cnc-host}:{cnc-port}/crosswork/nbi/cat-inventory/v1/restconf",
+      "variables": {
+        "cnc-host": {
+          "default": "127.0.0.1",
+          "description": "host name or ip address of the target CNC Cluster"
+        },
+        "cnc-port": {
+          "default": "30603",
+          "description": "port number of the target CNC Cluster"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags" : [ {
+    "name" : "Operational data",
+    "description" : "Operational data resources"
+  } ],
+  "paths" : {
+    "/data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service" : {
+      "get" : {
+        "tags" : [  "Operational data", "Since 7.1.0" ],
+        "summary" : "Operational data of VPN services in batch.",
+        "description" : "Operational data that includs service health status and discovered underlay references of VPN services in a batch using offset and limit query params.",
+        "operationId" : "data_ietf_l3vpn_ntw_l3vpn_ntw_vpn_services_vpn_service_vpn_service_list_get",
+        "parameters" : [ {
+          "name" : "content",
+          "in" : "query",
+          "description" : "required to return the operational(non config) data under the vpn service container",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "enum" : [ "nonconfig"]
+          }
+        } ,
+        {
+          "name": "offset",
+          "in": "query",
+          "description": "Used by the client to specify the number of list elements to skip before returning the requested set of list entries.  The value is an integer greater than or equal to 0.",
+          "schema": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "Used by the client to specify a limited set of list entries to retrieve. The value is an integer greater than or equal to 1",
+          "schema": {
+            "type": "integer",
+            "format": "uint16"
+          }
+        }],
+        "responses" : {
+          "200" : {
+            "description" : "List of VPN service Containers with Oper data.",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_ietf-l3vpn-ntw_l3vpn-ntw_vpn-services_vpn-service_vpn-service-vpn-id"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service={vpn-service-vpn-id}" : {
+      "get" : {
+        "tags" : [  "Operational data", "Since 7.1.0" ],
+        "summary" : "Operational data of VPN service instance.",
+        "description" : "Operational data that includs service health status and discovered underlay references of a VPN service instance.",
+        "operationId" : "data_ietf_l3vpn_ntw_l3vpn_ntw_vpn_services_vpn_service_vpn_service_vpn_id_get",
+        "parameters" : [ {
+          "name" : "vpn-service-vpn-id",
+          "in" : "path",
+          "description" : "A VPN identifier that uniquely identifies a VPN.\nThis identifier has a local meaning, e.g., within\na service provider network.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "string"
+          }
+        }, {
+          "name" : "content",
+          "in" : "query",
+          "description" : "required to return the operational(non config) data under the vpn service container",
+          "schema" : {
+            "type" : "string",
+            "format" : "enumeration",
+            "enum" : [ "nonconfig"]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "VPN service Container with Oper data.",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_ietf-l3vpn-ntw_l3vpn-ntw_vpn-services_vpn-service_vpn-service-vpn-id"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service={vpn-service-vpn-id}/underlay-transport/cisco-l3vpn-ntw:discovered-underlay-transport" : {
+      "get" : {
+        "tags" : [ "Operational data", "Since 7.0.0" ],
+        "summary" : "Get discovered underlay-transport references of a Vpn-service",
+        "description" : "Get discovered underlay transport references of a VPN Service",
+        "operationId" : "data_ietf_l3vpn_ntw_l3vpn_ntw_vpn_services_vpn_service_vpn_service_vpn_id_underlay_transport_cisco_l3vpn_ntw_discovered_underlay_transport_get",
+        "parameters": [
+          {
+            "name": "vpn-service-vpn-id",
+            "in": "path",
+            "description": "A VPN identifier that uniquely identifies a VPN.\nThis identifier has a local meaning, e.g., within\na service provider network.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          }
+        ],
+        "responses" : {
+          "200" : {
+            "description" : "Discovered underlay transport references of a VPN Service",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_ietf-l3vpn-ntw_l3vpn-ntw_vpn-services_vpn-service_vpn-service-vpn-id_underlay-transport_cisco-l3vpn-ntw_discovered-underlay-transport"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/data/ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service={vpn-service-vpn-id}/status/oper-status" : {
+      "get" : {
+        "tags" : [ "Operational data", "Since 3.0.0" ],
+        "summary" : "Service health status.",
+        "description" : "Service health status.",
+        "operationId" : "data_ietf_l3vpn_ntw_l3vpn_ntw_vpn_services_vpn_service_vpn_service_vpn_id_status_oper_status_get",
+        "parameters": [
+          {
+            "name": "vpn-service-vpn-id",
+            "in": "path",
+            "description": "A VPN identifier that uniquely identifies a VPN.\nThis identifier has a local meaning, e.g., within\na service provider network.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          }
+        ],
+        "responses" : {
+          "200" : {
+            "description" : "Service health status.",
+            "content" : {
+              "application/yang-data+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/data_ietf-l3vpn-ntw_l3vpn-ntw_vpn-services_vpn-service_vpn-service-vpn-id_status_oper-status"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : { }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : { }
+          },
+          "204" : {
+            "description" : "No Content",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : { }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "content" : { }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "data_ietf-l3vpn-ntw_l3vpn-ntw_vpn-services_vpn-service_vpn-service-vpn-id_underlay-transport_cisco-l3vpn-ntw_discovered-underlay-transport" : {
+        "type" : "object",
+        "properties" : {
+          "cisco-l3vpn-ntw:discovered-underlay-transport" : {
+            "type" : "object",
+            "properties" : {
+              "cisco-l3vpn-ntw:sr-policy-ref" : {
+                "type" : "array",
+                "description" : "List of sr-policies (static or dynamically created) (list)",
+                "items" : {
+                  "type" : "object",
+                  "properties" : {
+                    "cisco-l3vpn-ntw:headend" : {
+                      "type" : "string",
+                      "description" : "SR policy Headend Device ID (leaf)",
+                      "format" : "string",
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    },
+                    "cisco-l3vpn-ntw:endpoint" : {
+                      "type" : "string",
+                      "description" : "SR policy Endopint IP (leaf)",
+                      "format" : "union",
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    },
+                    "cisco-l3vpn-ntw:color" : {
+                      "type" : "integer",
+                      "description" : "<1-4294967295> - SR policy color (leaf)",
+                      "format" : "uint32",
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    }
+                  }
+                },
+                "x-yang" : {
+                  "type" : "list"
+                }
+              },
+              "cisco-l3vpn-ntw:te-tunnel-ref" : {
+                "type" : "array",
+                "description" : "List of rsvp-te tunnels (list)",
+                "items" : {
+                  "type" : "object",
+                  "properties" : {
+                    "cisco-l3vpn-ntw:tunnel-id" : {
+                      "type" : "string",
+                      "description" : "TE tunnel Identifier (leaf)",
+                      "format" : "string",
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    },
+                    "cisco-l3vpn-ntw:destination" : {
+                      "type" : "string",
+                      "description" : "TE tunnel Destination IP (leaf)",
+                      "format" : "union",
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    },
+                    "cisco-l3vpn-ntw:source" : {
+                      "type" : "string",
+                      "description" : "TE tunnel Source IP (leaf)",
+                      "format" : "union",
+                      "x-yang" : {
+                        "type" : "leaf"
+                      }
+                    }
+                  }
+                },
+                "x-yang" : {
+                  "type" : "list"
+                }
+              }
+            },
+            "description" : "HCO service to underlay transport mapping (non-presence)",
+            "x-yang" : {
+              "is_presence" : "false",
+              "type" : "container"
+            }
+          }
+        }
+      },
+      "data_ietf-l3vpn-ntw_l3vpn-ntw_vpn-services_vpn-service_vpn-service-vpn-id" : {
+        "type" : "object",
+        "properties" : {
+          "ietf-l3vpn-ntw:vpn-service" : {
+            "type" : "array",
+            "description" : "List of VPN services. (list)",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "vpn-id" : {
+                  "type" : "string",
+                  "description" : "A VPN identifier that uniquely identifies a VPN.\nThis identifier has a local meaning, e.g., within\na service provider network. (leaf)",
+                  "format" : "string",
+                  "x-yang" : {
+                    "type" : "leaf"
+                  }
+                },
+                "underlay-transport" : {
+                  "type" : "object",
+                  "properties" : {
+                    "cisco-l3vpn-ntw:discovered-underlay-transport" : {
+                      "type" : "object",
+                      "properties" : {
+                        "cisco-l3vpn-ntw:sr-policy-ref" : {
+                          "type" : "array",
+                          "description" : "List of sr-policies (static or dynamically created) (list)",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "cisco-l3vpn-ntw:headend" : {
+                                "type" : "string",
+                                "description" : "SR policy Headend Device ID (leaf)",
+                                "format" : "string",
+                                "x-yang" : {
+                                  "type" : "leaf"
+                                }
+                              },
+                              "cisco-l3vpn-ntw:endpoint" : {
+                                "type" : "string",
+                                "description" : "SR policy Endopint IP (leaf)",
+                                "format" : "union",
+                                "x-yang" : {
+                                  "type" : "leaf"
+                                }
+                              },
+                              "cisco-l3vpn-ntw:color" : {
+                                "type" : "integer",
+                                "description" : "<1-4294967295> - SR policy color (leaf)",
+                                "format" : "uint32",
+                                "x-yang" : {
+                                  "type" : "leaf"
+                                }
+                              }
+                            }
+                          },
+                          "x-yang" : {
+                            "type" : "list"
+                          }
+                        },
+                        "cisco-l3vpn-ntw:te-tunnel-ref" : {
+                          "type" : "array",
+                          "description" : "List of rsvp-te tunnels (list)",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "cisco-l3vpn-ntw:tunnel-id" : {
+                                "type" : "string",
+                                "description" : "TE tunnel Identifier (leaf)",
+                                "format" : "string",
+                                "x-yang" : {
+                                  "type" : "leaf"
+                                }
+                              },
+                              "cisco-l3vpn-ntw:destination" : {
+                                "type" : "string",
+                                "description" : "TE tunnel Destination IP (leaf)",
+                                "format" : "union",
+                                "x-yang" : {
+                                  "type" : "leaf"
+                                }
+                              },
+                              "cisco-l3vpn-ntw:source" : {
+                                "type" : "string",
+                                "description" : "TE tunnel Source IP (leaf)",
+                                "format" : "union",
+                                "x-yang" : {
+                                  "type" : "leaf"
+                                }
+                              }
+                            }
+                          },
+                          "x-yang" : {
+                            "type" : "list"
+                          }
+                        }
+                      },
+                      "description" : "HCO service to underlay transport mapping (non-presence)",
+                      "x-yang" : {
+                        "is_presence" : "false",
+                        "type" : "container"
+                      }
+                    }
+                  },
+                  "description" : "Container for the underlay transport. (non-presence)",
+                  "x-yang" : {
+                    "is_presence" : "false",
+                    "type" : "container"
+                  }
+                },
+                "status" : {
+                  "type" : "object",
+                  "properties" : {
+                    "oper-status" : {
+                      "type" : "object",
+                      "properties" : {
+                        "last-change" : {
+                          "type" : "string",
+                          "description" : "Indicates the actual date and time of the service status\nchange. (leaf)",
+                          "format" : "string",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        },
+                        "status" : {
+                          "type" : "string",
+                          "description" : "Operational status. (leaf)",
+                          "format" : "identityref",
+                          "x-yang" : {
+                            "type" : "leaf"
+                          }
+                        }
+                      },
+                      "description" : "Operational service status. (non-presence)",
+                      "x-yang" : {
+                        "is_presence" : "false",
+                        "type" : "container"
+                      }
+                    }
+                  },
+                  "description" : "Service status. (non-presence)",
+                  "x-yang" : {
+                    "is_presence" : "false",
+                    "type" : "container"
+                  }
+                }
+              }
+            },
+            "x-yang" : {
+              "type" : "list"
+            }
+          }
+        }
+      },
+      "data_ietf-l3vpn-ntw_l3vpn-ntw_vpn-services_vpn-service_vpn-service-vpn-id_status_oper-status" : {
+        "type" : "object",
+        "properties" : {
+          "ietf-l3vpn-ntw:oper-status" : {
+            "type" : "object",
+            "properties" : {
+              "last-change" : {
+                "type" : "string",
+                "description" : "Indicates the actual date and time of the service status\nchange. (leaf)",
+                "format" : "string",
+                "x-yang" : {
+                  "type" : "leaf"
+                }
+              },
+              "status" : {
+                "type" : "string",
+                "description" : "Operational status. (leaf)",
+                "format" : "identityref",
+                "x-yang" : {
+                  "type" : "leaf"
+                }
+              }
+            },
+            "description" : "Operational service status. (non-presence)",
+            "x-yang" : {
+              "is_presence" : "false",
+              "type" : "container"
+            }
+          }
+        }
+      }
+    },
+    "responses" : {
+      "200" : {
+        "description" : "OK",
+        "content" : { }
+      },
+      "201" : {
+        "description" : "Created",
+        "content" : { }
+      },
+      "400" : {
+        "description" : "Bad Request",
+        "content" : { }
+      },
+      "401" : {
+        "description" : "Unauthorized",
+        "content" : { }
+      },
+      "204" : {
+        "description" : "No Content",
+        "content" : { }
+      },
+      "404" : {
+        "description" : "Not Found",
+        "content" : { }
+      },
+      "405" : {
+        "description" : "Method Not Allowed",
+        "content" : { }
+      },
+      "409" : {
+        "description" : "Conflict",
+        "content" : { }
+      }
+    },
+    "parameters" : {
+      "content" : {
+        "name" : "content",
+        "in" : "query",
+        "description" : "controlling descendant nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "config",
+          "enum" : [ "config", "nonconfig", "all" ]
+        }
+      },
+      "with-defaults" : {
+        "name" : "with-defaults",
+        "in" : "query",
+        "description" : "controlling default values in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "enumeration",
+          "default" : "report-all",
+          "enum" : [ "report-all", "trim", "explicit", "report-all-tagged" ]
+        }
+      },
+      "vpn-service-vpn-id" : {
+        "name" : "vpn-service-vpn-id",
+        "in" : "path",
+        "description" : "A VPN identifier that uniquely identifies a VPN.\nThis identifier has a local meaning, e.g., within\na service provider network.",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "filter" : {
+        "name" : "filter",
+        "in" : "query",
+        "description" : "xpath expression to filter data nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      },
+      "depth" : {
+        "name" : "depth",
+        "in" : "query",
+        "description" : "limit the depth of nodes in response",
+        "schema" : {
+          "type" : "integer",
+          "format" : "uint16"
+        }
+      },
+      "fields" : {
+        "name" : "fields",
+        "in" : "query",
+        "description" : "optionally identify specific data nodes in response",
+        "schema" : {
+          "type" : "string",
+          "format" : "string"
+        }
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }      
+    }
+  },
+  "x-original-swagger-version" : "2.0"
+}

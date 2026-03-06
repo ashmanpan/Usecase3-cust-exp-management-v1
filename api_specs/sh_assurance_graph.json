@@ -1,0 +1,1490 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Service Health Assurance Graph APIs",
+      "description": "APIs for requesting assurance-graph data stored in the Crosswork Service Health application.",
+      "contact": {
+        "name": "Crosswork Team, Cisco",
+        "email": "support@cisco.com"
+      },
+      "license": {
+        "name": "Cisco Software License Agreement",
+        "url": "http://www.cisco.com/public/sw-license-agreement.html"
+      },
+      "version": "7.1.0"
+    },
+    "servers": [
+      {
+        "url": "/crosswork/aa/agmgr/v1/"
+      }
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "paths": {
+      "/impactedServices": {
+        "post": {
+          "tags": [
+            "AaAssuranceGraph"
+          ],
+          "summary": "Get impacted services list for a subservice. ",
+          "operationId": "AaAssuranceGraph_GetImpactedServices",
+          "requestBody": {
+            "description": "The RequestImpactedServices parameter. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestImpactedServices"
+                },
+                "example": { "subservice_id":"ss-418316d7-fea9-4249-a476-333a658e6cb6" }
+                }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK. The request was successful. The result is contained in the response body.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ResponseImpactedServices"
+                  },
+                  "example": {
+                    "status": "SUCCESS",
+                    "services": [
+                      {
+                        "service_id": "ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service=ETREE-IGP-1338-CL2-PE-A-CL2-PE-B",
+                        "service_type": "ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "An unexpected error response.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayruntimeError"
+                  },
+                  "example": {
+                    "data": [
+                      {
+                        "subservice_id": "ss-30503849-912b-478f-aa79-ae8df54f6726",
+                        "status": "SUBxSERVICE_DOESNT_EXIST"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "x-codegen-request-body-name": "body"
+        }
+      },
+      "/matchingSubservices": {
+        "post": {
+          "tags": [
+            "AaAssuranceGraph"
+          ],
+          "summary": "Get matching subservices for a service. ",
+          "operationId": "AaAssuranceGraph_GetMatchingSubservices",
+          "requestBody": {
+            "description": "RequestSubservices parameter. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestSubservices"
+                },
+                "example":{"service_id":"ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service=L3VPN_5EP_10","type":"TAGGED_SUBSERVICES","tags":["PROBE_SESSION"]}
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK. The request was successful. The result is contained in the response body.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ResponseSubservices"
+                  },
+                  "example": {
+                    "data": [
+                      {
+                        "subservices": [
+                          {
+                            "id": "ss-368097b7-7b57-49b4-87c6-452f4e793fb6",
+                            "subservice_class": "subservice.probe.session.health",
+                            "namespace": "custom",
+                            "static_id": "subservice.probe.session.health.custom.args",
+                            "config": {
+                              "args": []
+                            },
+                            "oper": {
+                              "health_score": 100,
+                              "health_status": "SERVICE_UP",
+                              "rootExpressionStatus": {},
+                              "health_ts": "1689990432386480864",
+                              "tracker_ts": "1689990432373866549"
+                            },
+                            "create_timestamp": "1689990419952293227",
+                            "update_timestamp": "1689990432373866549"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "An unexpected error response.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayruntimeError"
+                  },
+                  "example": {
+                    "data": [
+                      {
+                        "status": "ERROR",
+                        "error": "empty tags provided"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "x-codegen-request-body-name": "body"
+        }
+      },
+      "/serviceDetails": {
+        "post": {
+          "tags": [
+            "AaAssuranceGraph"
+          ],
+          "summary": "Get service details for a service. ",
+          "operationId": "AaAssuranceGraph_GetServiceDetails",
+          "requestBody": {
+            "description": "AssuranceReportRequest parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssuranceReportRequest"
+                },
+                "example": {"service_id":"ietf-l3vpn-ntw:l3vpn-ntw/vpn-services/vpn-service=L3VPN_5EP_10","degraded_paths_only":false,"vpn_node_ids":[]}
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK. The request was successful. The result is contained in the response body.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/assuranceReportResponse"
+                  },
+                  "example": {
+                    "data": [
+                      {
+                        "service_id": "ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service=L2VPN_NM-EVPN-VPWS-SR",
+                        "degraded_paths_only": true,
+                        "status": "SUCCESS",
+                        "assurance_graph": {
+                          "SubserviceDependencies": []
+                        },
+                        "health_report": {
+                          "health_status": "SERVICE_DEGRADED",
+                          "subservice_health_reports": {}
+                        },
+                        "rootSubservices": [
+                          "subservice.path.reachability.to.peer.system.6921f1c7d8e2c18bbcb22c21d1226c01475c818d915ca6a4094b41f336419ed3"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "An unexpected error response.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayruntimeError"
+                  },
+                  "example": {
+                    "data": [
+                      {
+                        "service_id": "ietf-l2vpn-ntw:l2vpn-ntw/vpn-services/vpn-service=l2nm-p2p-a-b-1731",
+                        "status": "SERVICE_DOESNT_EXIST",
+                        "error": "no service exists for the given Service ID"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "x-codegen-request-body-name": "body"
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "AssuranceReportRequest": {
+          "type": "object",
+          "description": "Assurance Report Request",
+          "properties": {
+            "serviceId": {
+              "description": "Service-id",
+              "type": "string"
+            },
+            "degradedPathsOnly": {
+              "type": "boolean",
+              "description": "When a Crosswork user selects the check box in UI to show 'Down and Degraded only', the UI makes a query with this flag set to true. When set to true, the response will include only those subservices that are either in the down or degraded state, or those that are present in the path between the given service node and any of its subservice nodes that are in down or degraded state. When set to false, the response will include all the subservice nodes serving this given service instance."
+            },
+            "vpnNodeIds": {
+              "description": "Device Ids on the service",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "graph_only": {
+              "description": "When set to true will return graph minimal data for consumers like UI to render VPN graph",
+              "type": "boolean"
+            }
+          }
+        },
+        "errorModels": {
+          "type": "object",
+          "description": "Error models",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "description": "The error code."
+            },
+            "message": {
+              "type": "string",
+              "description": "A human-readable error message."
+            },
+            "details": {
+              "type": "object",
+              "properties": {},
+              "description": "Additional error details."
+            }
+          }
+        },
+        "assuranceReportResponse": {
+          "type": "object",
+          "description": "Assurance Report Response",
+          "properties": {
+            "serviceId": {
+              "description": "Service-id",
+              "type": "string"
+            },
+            "ruleId": {
+              "type": "string",
+              "description": "The rule used by the service."
+            },
+            "profileId": {
+              "type": "string",
+              "description": "The profile used by the service."
+            },
+            "monitoringType": {
+              "type": "string",
+              "description": "The monitoring type used for the service."
+            },
+            "degradedPathsOnly": {
+              "type": "boolean",
+              "description": "The response for down and degraded services. Refer to AssuranceReportRequest for details."
+            },
+            "status": {
+              "$ref": "#/components/schemas/assuranceReportResponseStatus"
+            },
+            "error": {
+              "type": "array",
+              "description": "Error details in case the request failed.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "assuranceGraph": {
+              "$ref": "#/components/schemas/serviceGraph"
+            },
+            "healthReport": {
+              "$ref": "#/components/schemas/ServiceHealthReport"
+            },
+            "rootSubservices": {
+              "description": "List of IDs of the subservice nodes that are directly connected to the Service node.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "fragment_id": {
+              "description": "Kafka message chunking fragment ID",
+              "type": "integer",
+              "format": "int32"
+            },
+            "more_fragments": {
+              "description": "Flag to indicate if more Kafka message chunking fragments are available.",
+              "type": "boolean"
+            }
+          }
+        },
+        "assuranceReportResponseStatus": {
+          "type": "string",
+          "description": "Service assurance report is shared via NB using below schema.",
+          "default": "UNKNOWN_STATUS",
+          "enum": [
+            "UNKNOWN_STATUS",
+            "SERVICE_DOESNT_EXIST",
+            "BAD_REQUEST_SCHEMA",
+            "SUCCESS",
+            "ERROR",
+            "REACHED_MAX_CAPACITY_OF_NODES"
+          ]
+        },
+        "componentError": {
+          "type": "object",
+          "description": "Each component's list of error messages",
+          "properties": {
+            "errorMsgs": {
+              "type": "array",
+              "description": "List if Error messages",
+              "items": {
+                "$ref": "#/components/schemas/componentErrorError"
+              }
+            }
+          }
+        },
+        "componentErrorError": {
+          "type": "object",
+          "properties": {
+            "errorMsg": {
+              "type": "string",
+              "description": "Error message"
+            },
+            "createdTs": {
+              "type": "string",
+              "description": "Created Timestamp"
+            }
+          },
+          "description": "To store each component's list of error messages and its timestamp."
+        },
+        "ErrorMaintenance": {
+          "type": "object",
+          "description": "Represents a single error occurring in the computation and preventing its evaluation."
+        },
+        "ErrorUninitialized": {
+          "type": "object",
+          "description": "Presents a result error due to some initial unavailability of (sufficient) expression input data."
+        },
+        "HPElemParam": {
+          "type": "object",
+          "description": "HPElem Param",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name of this parameter. Examples: DEVICE, IFNAME, IFENTRY, VPN."
+            },
+            "description": {
+              "type": "string",
+              "description": "Description of HPElemParam"
+            },
+            "type": {
+              "$ref": "#/components/schemas/HPElemParamType"
+            }
+          }
+        },
+        "HPElemParamType": {
+          "type": "string",
+          "description": "ParamType allows HPMgr to interpret the nature of the argument values passed while instantiating Heuristic Package elements like Rule, Subservice etc.",
+          "default": "PARAM_TYPE_NON_LIST",
+          "enum": [
+            "PARAM_TYPE_NON_LIST",
+            "PARAM_TYPE_LIST"
+          ]
+        },
+        "HealthStatus": {
+          "type": "string",
+          "description": "Service Health Statuses: \n - UNKNOWN: Default state that CNC-ISTP displays when monitoring is not enabled for a given service.\n  - MONITORING_INITIATED: When Service Health receives a monitoring request for a given service, the service gets initialized to this state.\n  - MONITORING_FAILED: State reflecting that Service Health ran into some internal error or failure. Sample failures: collection job failure, unexpected feed coming in from device etc.\n  - MONITORING_PAUSED: State reflecting that monitoring is in the 'pause' state; that is, monitoring is not active but historical data is available for inspection via the timeline.\n - SERVICE_UP: All the different subservices of the Service that are being monitored are healthy, with no issues to report.\n - SERVICE_DOWN: All the different subservices of the Service that are being monitored are reporting issues. Corresponding symptoms should provide more details about the issues being encountered.\n - SERVICE_DEGRADED: Some of the subservices of that Service that are being monitored are reporting issues. Corresponding symptoms should provide more details about the issues being encountered.",
+          "default": "UNKNOWN",
+          "enum": [
+            "UNKNOWN",
+            "MONITORING_INITIATED",
+            "MONITORING_FAILED",
+            "MONITORING_PAUSED",
+            "SERVICE_UP",
+            "SERVICE_DOWN",
+            "SERVICE_DEGRADED"
+          ]
+        },
+        "liveMetricFeed": {
+          "type": "object",
+          "description": "Live metric feed",
+          "properties": {
+            "metricLabel": {
+              "type": "string",
+              "description": "Metric identifier. SubserviceClass definition provides this label value."
+            },
+            "description": {
+              "description": "Reflects 'description' field in SSC",
+              "type": "string"
+            },
+            "threshold": {
+              "description": "Reflects 'threshold' field in SSC",
+              "type": "string"
+            },
+            "unitType": {
+              "description": "Unit type for the given metric",
+              "type": "string"
+            },
+            "feedVal": {
+              "$ref": "#/components/schemas/OutputMetricValue"
+            },
+            "updateTimestamp": {
+              "description": "Time when the feed was last updated",
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        },
+        "MonitoringStatus": {
+          "type": "string",
+          "description": "Monitoring statuses: \n - MONITORING_UNKNOWN: default status when the monitoring status is unknown.\n - MONITORING_SUCCESS: Success state when there are no errors in monitoring.\n - ENCOUNTERED_ERRORS: State reflects the monitoring errors.",
+          "default": "MONITORING_UNKNOWN",
+          "enum": [
+            "MONITORING_UNKNOWN",
+            "MONITORING_SUCCESS",
+            "ENCOUNTERED_ERRORS"
+          ]
+        },
+        "OutputCalculations": {
+          "type": "object",
+          "description": "Output Calculations",
+          "properties": {
+            "expLabel": {
+              "type": "string",
+              "description": "Exp Label of OutputCalculations"
+            },
+            "evalExpressionString": {
+              "type": "string",
+              "description": "Eval Expression String of OutputCalculations"
+            },
+            "observedValue": {
+              "type": "string",
+              "description": "Observed value of OutputCalculations"
+            },
+            "symptomMetrics": {
+              "type": "array",
+              "description": "Symptom metrics of OutputCalculations",
+              "items": {
+                "$ref": "#/components/schemas/OutputCalculationsSymptomMetric"
+              }
+            },
+            "subExps": {
+              "type": "array",
+              "description": "SubExps of OutputCalculations",
+              "items": {
+                "$ref": "#/components/schemas/OutputCalculations"
+              }
+            },
+            "profileConstants": {
+              "title": "map<key, value>\n   key:    Constant name\n   value:  Value defined for this constant in the respective Config Profile\nExample:\n  \"profileConstants\": {\n       \"CPU_THRESHOLD_MAX\": \"80\"\n  }",
+              "type": "object",
+              "description": "Profile Constants of OutputCalculations",
+              "additionalProperties": {
+                "type": "string",
+                "description": "Additional Properties of Profile Constants"
+              }
+            }
+          }
+        },
+        "OutputCalculationsSymptomMetric": {
+          "type": "object",
+          "description": "Output Calculations Symptom Metric",
+          "properties": {
+            "metricInstance": {
+              "type": "string",
+              "description": "MetricInstance of OutputCalculationsSymptomMetric"
+            },
+            "value": {
+              "type": "string",
+              "description": "Value of OutputCalculationsSymptomMetric"
+            },
+            "displayLabel": {
+              "type": "string",
+              "description": "Display label of OutputCalculationsSymptomMetric"
+            }
+          }
+        },
+        "OutputConditionals": {
+          "type": "object",
+          "description": "Output Conditionals",
+          "properties": {
+            "level": {
+              "$ref": "#/components/schemas/ExptrackerHealth"
+            },
+            "treeID": {
+              "type": "string",
+              "description": "TreeID of OutputConditionals"
+            },
+            "value": {
+              "$ref": "#/components/schemas/OutputValues"
+            },
+            "labels": {
+              "type": "object",
+              "description": "Labels of OutputConditionals",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/OutputValues"
+              }
+            },
+            "nodeID": {
+              "type": "string",
+              "description": "Node id of OutputConditionals"
+            },
+            "treeType": {
+              "$ref": "#/components/schemas/OutputTreeType"
+            },
+            "calculations": {
+              "$ref": "#/components/schemas/OutputCalculations"
+            },
+            "send": {
+              "type": "boolean",
+              "description": "Boolean value of OutputConditionals"
+            }
+          }
+        },
+        "OutputMetricValue": {
+          "type": "object",
+          "description": "Output Metric Value",
+          "properties": {
+            "s": {
+              "type": "string",
+              "description": "String value of OutputMetricValue"
+            },
+            "f": {
+              "type": "number",
+              "format": "float",
+              "description": "Float value of OutputMetricValue"
+            },
+            "d": {
+              "type": "number",
+              "format": "double",
+              "description": "Double value of OutputMetricValue"
+            },
+            "i": {
+              "type": "string",
+              "format": "int64",
+              "description": "Int64 value of OutputMetricValue"
+            },
+            "u": {
+              "type": "string",
+              "format": "uint64",
+              "description": "Uint64 value of OutputMetricValue"
+            },
+            "b": {
+              "type": "boolean",
+              "description": "Boolean value of OutputMetricValue"
+            },
+            "updateTimestamp": {
+              "type": "string",
+              "format": "int64",
+              "description": "Update Timestamp of OutputMetricValue"
+            }
+          }
+        },
+        "outputSimpleValue": {
+          "type": "object",
+          "description": "Output Simple Value",
+          "properties": {
+            "str": {
+              "type": "string",
+              "description": "String value of outputSimpleValue"
+            },
+            "fl": {
+              "type": "number",
+              "description": "Float value of outputSimpleValue",
+              "format": "float"
+            },
+            "d": {
+              "type": "number",
+              "description": "Double value of outputSimpleValue",
+              "format": "double"
+            },
+            "int": {
+              "type": "string",
+              "description": "Int64 value of outputSimpleValue",
+              "format": "int64"
+            },
+            "u": {
+              "type": "string",
+              "description": "Uint64 value of outputSimpleValue",
+              "format": "uint64"
+            },
+            "b": {
+              "type": "boolean",
+              "description": "Boolean value of outputSimpleValue"
+            },
+            "strList": {
+              "$ref": "#/components/schemas/OutputSimpleValueStringList"
+            },
+            "flList": {
+              "$ref": "#/components/schemas/OutputSimpleValueFloatList"
+            },
+            "intList": {
+              "$ref": "#/components/schemas/OutputSimpleValueIntList"
+            },
+            "uintList": {
+              "$ref": "#/components/schemas/OutputSimpleValueUintList"
+            },
+            "bList": {
+              "$ref": "#/components/schemas/OutputSimpleValueBoolList"
+            },
+            "status": {
+              "$ref": "#/components/schemas/OutputSimpleValueStatus"
+            },
+            "alert": {
+              "$ref": "#/components/schemas/SimpleValueAlert"
+            },
+            "dList": {
+              "$ref": "#/components/schemas/OutputSimpleValueDoubleList"
+            },
+            "nodeID": {
+              "type": "string",
+              "description": "Node-id of outputSimpleValue"
+            },
+            "calculations": {
+              "$ref": "#/components/schemas/OutputCalculations"
+            },
+            "subserviceName": {
+              "type": "string",
+              "description": "SubserviceName of outputSimpleValue"
+            },
+            "symptoms": {
+              "type": "array",
+              "description": "Symptoms of outputSimpleValue",
+              "items": {
+                "$ref": "#/components/schemas/ExptrackerOutputSymptom"
+              }
+            },
+            "level": {
+              "$ref": "#/components/schemas/ExptrackerHealth"
+            },
+            "send": {
+              "type": "boolean",
+              "description": "Send of outputSimpleValue"
+            },
+            "errors": {
+              "type": "array",
+              "description": "Errors of outputSimpleValue",
+              "items": {
+                "$ref": "#/components/schemas/ExptrackerOutputSymptom"
+              }
+            }
+          }
+        },
+        "OutputSimpleValueBoolList": {
+          "type": "object",
+          "description": "Output SimpleValue Boolean List",
+          "properties": {
+            "list": {
+              "type": "array",
+              "description": "List of OutputSimpleValueBoolList",
+              "items": {
+                "type": "boolean",
+                "description": "Boolean"
+              }
+            }
+          }
+        },
+        "OutputSimpleValueDoubleList": {
+          "type": "object",
+          "description": "Output SimpleValue Double List",
+          "properties": {
+            "list": {
+              "type": "array",
+              "description": "List of OutputSimpleValueDoubleList",
+              "items": {
+                "type": "number",
+                "description": "Double",
+                "format": "double"
+              }
+            }
+          }
+        },
+        "OutputSimpleValueFloatList": {
+          "type": "object",
+          "description": "Output SimpleValue Float List",
+          "properties": {
+            "list": {
+              "type": "array",
+              "description": "List of OutputSimpleValueFloatList",
+              "items": {
+                "type": "number",
+                "description": "Float",
+                "format": "float"
+              }
+            }
+          }
+        },
+        "OutputSimpleValueIntList": {
+          "type": "object",
+          "description": "Output SimpleValue Int List",
+          "properties": {
+            "list": {
+              "type": "array",
+              "description": "List of OutputSimpleValueIntList",
+              "items": {
+                "type": "string",
+                "description": "Int64",
+                "format": "int64"
+              }
+            }
+          }
+        },
+        "OutputSimpleValueStatus": {
+          "type": "object",
+          "properties": {
+            "level": {
+              "$ref": "#/components/schemas/ExptrackerHealth"
+            },
+            "symptoms": {
+              "type": "array",
+              "description": "Symptoms of OutputSimpleValueStatus",
+              "items": {
+                "$ref": "#/components/schemas/ExptrackerOutputSymptom"
+              }
+            }
+          },
+          "description": "Status which represents the health and symptoms."
+        },
+        "OutputSimpleValueStringList": {
+          "type": "object",
+          "description": "List of Output SimpleValue String List",
+          "properties": {
+            "list": {
+              "type": "array",
+              "description": "List of OutputSimpleValueStringList",
+              "items": {
+                "type": "string",
+                "description": "string"
+              }
+            }
+          }
+        },
+        "OutputSimpleValueUintList": {
+          "type": "object",
+          "description": "List of Output SimpleValue Uint List",
+          "properties": {
+            "list": {
+              "type": "array",
+              "description": "List of OutputSimpleValueUintList",
+              "items": {
+                "type": "string",
+                "description": "unit64",
+                "format": "uint64"
+              }
+            }
+          }
+        },
+        "OutputTreeType": {
+          "type": "string",
+          "description": "Output Tree Type",
+          "default": "HEALTH",
+          "enum": [
+            "HEALTH",
+            "CONDITIONAL_ACTIVATE",
+            "CONDITIONAL_DEACTIVATE",
+            "CONDITIONAL_UPDATE",
+            "DYNAMIC"
+          ]
+        },
+        "OutputValues": {
+          "type": "object",
+          "description": "Output Values",
+          "properties": {
+            "str": {
+              "type": "string",
+              "description": "string"
+            },
+            "fl": {
+              "type": "number",
+              "description": "float",
+              "format": "float"
+            },
+            "d": {
+              "type": "number",
+              "description": "double",
+              "format": "double"
+            },
+            "int": {
+              "type": "string",
+              "description": "int64",
+              "format": "int64"
+            },
+            "u": {
+              "type": "string",
+              "description": "uint64",
+              "format": "uint64"
+            },
+            "b": {
+              "type": "boolean",
+              "description": "boolean"
+            },
+            "strList": {
+              "$ref": "#/components/schemas/ExptrackerOutputStringList"
+            },
+            "flList": {
+              "$ref": "#/components/schemas/ExptrackerOutputFloatList"
+            },
+            "intList": {
+              "$ref": "#/components/schemas/ExptrackerOutputIntList"
+            },
+            "uintList": {
+              "$ref": "#/components/schemas/ExptrackerOutputUintList"
+            },
+            "bList": {
+              "$ref": "#/components/schemas/ExptrackerOutputBoolList"
+            },
+            "dList": {
+              "$ref": "#/components/schemas/ExptrackerOutputDoubleList"
+            }
+          }
+        },
+        "RequestImpactedServices": {
+          "type": "object",
+          "description": "Request Impacted Services.",
+          "properties": {
+            "subserviced": {
+              "type": "string",
+              "description": "Request the services for a given subservice-id."
+            }
+          }
+        },
+        "RequestSubservices": {
+          "type": "object",
+          "description": "Request Subservices.",
+          "properties": {
+            "type": {
+              "$ref": "#/components/schemas/RequestSubservicesType"
+            },
+            "service_id": {
+              "type": "string",
+              "description": "Request the subservices for a given subservice-id."
+            },
+            "tags": {
+              "description": "To be used when Type is TAGGED_SUBSERVICES",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "RequestSubservicesType": {
+          "type": "string",
+          "description": "Request for getting the list of Policy/Device subservices for a given service. (Supported types for MVP-1: TransportSubservices, DeviceSubservices)",
+          "default": "UNKNOWN",
+          "enum": [
+            "UNKNOWN",
+            "TRANSPORT_SUBSERVICES",
+            "DEVICE_SUBSERVICES",
+            "TAGGED_SUBSERVICES"
+          ]
+        },
+        "ResponseImpactedServices": {
+          "type": "object",
+          "description": "Response Impacted services.",
+          "properties": {
+            "status": {
+              "$ref": "#/components/schemas/ResponseImpactedServicesStatus"
+            },
+            "services": {
+              "type": "array",
+              "description": "There can be multiple services referring to a given subservice.",
+              "items": {
+                "$ref": "#/components/schemas/ResponseImpactedServicesServiceDetails"
+              }
+            },
+            "error": {
+              "type": "string",
+              "description": "Error details in case of any error condition."
+            }
+          }
+        },
+        "ResponseImpactedServicesServiceDetails": {
+          "type": "object",
+          "properties": {
+            "serviceId": {
+              "type": "string",
+              "description": "Service id"
+            },
+            "serviceType": {
+              "type": "string",
+              "description": "Service type"
+            },
+            "serviceName": {
+              "type": "string",
+              "description": "Service name"
+            }
+          },
+          "description": "Providing the service details like service type and name along with ID."
+        },
+        "ResponseImpactedServicesStatus": {
+          "type": "string",
+          "description": "Response services details for a given subservice.",
+          "default": "UNKNOWN_STATUS",
+          "enum": [
+            "UNKNOWN_STATUS",
+            "SUCCESS",
+            "SUBSERVICE_DOESNT_EXIST",
+            "BAD_REQUEST_SCHEMA",
+            "ERROR"
+          ]
+        },
+        "ResponseSubservices": {
+          "type": "object",
+          "description": "Response subservices",
+          "properties": {
+            "status": {
+              "$ref": "#/components/schemas/ResponseSubservicesSsStatus"
+            },
+            "subservices": {
+              "description": "List of policy subservices",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SubserviceNode"
+              }
+            },
+            "error": {
+              "description": "Error detail on hitting error",
+              "type": "string"
+            }
+          }
+        },
+        "ResponseSubservicesSsStatus": {
+          "type": "string",
+          "description": "Response subservices status details for a given subservice.",
+          "default": "UNKNOWN",
+          "enum": [
+            "UNKNOWN",
+            "SUCCESS",
+            "INVALID_REQUEST_TYPE",
+            "SERVICE_DOESNT_EXIST",
+            "BAD_REQUEST_SCHEMA",
+            "ERROR"
+          ]
+        },
+        "serviceGraph": {
+          "type": "object",
+          "description": "Service Graph",
+          "properties": {
+            "SubserviceDependencies": {
+              "type": "array",
+              "description": "Subservice Dependencies",
+              "items": {
+                "$ref": "#/components/schemas/SubserviceSGNode"
+              }
+            },
+            "SoftRootSubserviceNodes": {
+              "type": "array",
+              "description": "List of Subservice-ids that have a soft relationship with the service node.",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "ServiceHealthReport": {
+          "type": "object",
+          "description": "Service Health Report",
+          "properties": {
+            "healthStatus": {
+              "$ref": "#/components/schemas/HealthStatus"
+            },
+            "monitoringStatus": {
+              "$ref": "#/components/schemas/MonitoringStatus"
+            },
+            "liveMetricFeeds": {
+              "type": "object",
+              "description": "Live Metric Feeds",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/liveMetricFeed"
+              }
+            },
+            "subserviceHealthReports": {
+              "type": "object",
+              "description": "Subservice Health Reports",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/SubserviceOperState"
+              }
+            }
+          }
+        },
+        "SimpleValueAlert": {
+          "type": "object",
+          "description": "Simple Value Alert",
+          "properties": {
+            "level": {
+              "type": "string",
+              "description": "Level of SimpleValueAlert"
+            },
+            "message": {
+              "type": "string",
+              "description": "Message of SimpleValueAlert"
+            }
+          }
+        },
+        "subserviceConfig": {
+          "description": "Subservice Config",
+          "type": "object",
+          "properties": {
+            "args": {
+              "type": "array",
+              "description": "List of arguments passed to this subservice.",
+              "items": {
+                "$ref": "#/components/schemas/SubserviceConfigArg"
+              }
+            }
+          }
+        },
+        "SubserviceConfigArg": {
+          "type": "object",
+          "description": "Subservice Config Arg",
+          "properties": {
+            "parameter": {
+              "$ref": "#/components/schemas/HPElemParam"
+            },
+            "values": {
+              "description": "Given argument could be a list of values like [Tor-A, Tor-B] for given key-name 'Devices'",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "String"
+              }
+            }
+          }
+        },
+        "SubserviceNode": {
+          "type": "object",
+          "description": "Subservice node",
+          "properties": {
+            "id": {
+              "description": "subservice id - uuid",
+              "type": "string"
+            },
+            "subservice_class": {
+              "type": "string",
+              "description": "Subservice class"
+            },
+            "namespace": {
+              "type": "string",
+              "description": "Namespace"
+            },
+            "static_id": {
+              "type": "string",
+              "description": "Static id"
+            },
+            "config": {
+              "$ref": "#/components/schemas/subserviceConfig"
+            },
+            "oper": {
+              "$ref": "#/components/schemas/SubserviceOperState"
+            },
+            "create_timestamp": {
+              "type": "string",
+              "description": "Create timestamp",
+              "format": "int64"
+            },
+            "update_timestamp": {
+              "type": "string",
+              "description": "Update timestamp",
+              "format": "int64"
+            }
+          }
+        },
+        "SubserviceOperState": {
+          "type": "object",
+          "description": "Subservice Oper State",
+          "properties": {
+            "healthScore": {
+              "type": "integer",
+              "description": "Health score",
+              "format": "int64"
+            },
+            "healthStatus": {
+              "$ref": "#/components/schemas/HealthStatus"
+            },
+            "liveMetricFeeds": {
+              "type": "object",
+              "description": "Live metric feeds",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/liveMetricFeed"
+              }
+            },
+            "rootExpressionStatus": {
+              "$ref": "#/components/schemas/outputSimpleValue"
+            },
+            "ruleTriggerConditions": {
+              "$ref": "#/components/schemas/subserviceOperStateRuleTriggerConditions"
+            },
+            "componentErrors": {
+              "type": "object",
+              "description": "Component errors",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/componentError"
+              }
+            },
+            "healthTs": {
+              "description": "The last time the subservice health got updated",
+              "type": "string",
+              "format": "int64"
+            },
+            "trackerTs": {
+              "type": "string",
+              "description": "The last time the subservice health was updated due to health updates sent by the tracker.",
+              "format": "int64"
+            },
+            "subGraph": {
+              "$ref": "#/components/schemas/serviceGraph"
+            },
+            "monitoringStatus": {
+              "$ref": "#/components/schemas/MonitoringStatus"
+            }
+          }
+        },
+        "subserviceOperStateRuleTriggerConditions": {
+          "type": "object",
+          "description": "SubserviceOperState Rule Trigger Conditions.",
+          "properties": {
+            "activate": {
+              "$ref": "#/components/schemas/OutputConditionals"
+            },
+            "deactivate": {
+              "$ref": "#/components/schemas/OutputConditionals"
+            },
+            "update": {
+              "$ref": "#/components/schemas/OutputConditionals"
+            },
+            "ruleTriggerParamMap": {
+              "description": "Map to store the received conditionals parameters with their values.",
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/OutputValues"
+              }
+            },
+            "paramMapWithTimestamp": {
+              "description": "Map with key as parameter name and value as timestamp.",
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "format": "int64"
+              }
+            }
+          }
+        },
+        "SubserviceSGNode": {
+          "type": "object",
+          "description": "Subservice SG Node",
+          "properties": {
+            "id": {
+              "description": "subservice-id - UUID",
+              "type": "string"
+            },
+            "subserviceClass": {
+              "description": "SubserviceClass Name",
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string",
+              "description": "Subservice namespace"
+            },
+            "description": {
+              "type": "string",
+              "description": "SubserviceClass Description"
+            },
+            "staticId": {
+              "description": "Combination of subservice_class, namespace and config",
+              "type": "string"
+            },
+            "config": {
+              "$ref": "#/components/schemas/subserviceConfig"
+            },
+            "dynamicSS": {
+              "description": "Flag indicating if the given subservice is dynamic",
+              "type": "boolean"
+            },
+            "subDeps": {
+              "type": "array",
+              "description": "Hard Dependencies: List of Subservice-ids which are of string type.",
+              "items": {
+                "type": "string",
+                "description": "String"
+              }
+            },
+            "softSubDeps": {
+              "type": "array",
+              "description": "Soft Dependencies: List of Subservice-ids which are of string type.",
+              "items": {
+                "type": "string",
+                "description": "String"
+              }
+            },
+            "dynamicSubDeps": {
+              "type": "array",
+              "description": "List of hard and soft dynamic subservice dependencies. These lists can change dynamically independent of the rest of the service graph.",
+              "items": {
+                "type": "string",
+                "description": "String"
+              }
+            },
+            "dynamicSoftSubDeps": {
+              "type": "array",
+              "description": "Dynamic Soft Dependencies: List of Subservice-ids which are of string type.",
+              "items": {
+                "type": "string",
+                "description": "String"
+              }
+            }
+          }
+        },
+        "ExptrackerHealth": {
+          "type": "string",
+          "description": "Exptracker Health",
+          "default": "ERROR",
+          "enum": [
+            "ERROR",
+            "BROKEN",
+            "DEGRADED",
+            "HEALTHY",
+            "UNKNOWN"
+          ]
+        },
+        "ExptrackerOutputBoolList": {
+          "type": "object",
+          "description": "Exptracker Output Bool List",
+          "properties": {
+            "list": {
+              "type": "array",
+              "description": "list",
+              "items": {
+                "type": "boolean",
+                "description": "Boolean"
+              }
+            }
+          }
+        },
+        "ExptrackerOutputDoubleList": {
+          "type": "object",
+          "description": "Exptracker Output Double List",
+          "properties": {
+            "list": {
+              "type": "array",
+              "description": "list",
+              "items": {
+                "type": "number",
+                "description": "Double",
+                "format": "double"
+              }
+            }
+          }
+        },
+        "exptrackerOutputError": {
+          "type": "object",
+          "description": "Exptracker Output Error",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "Represents a single error occurring in the computation and preventing its evaluation."
+            },
+            "location": {
+              "type": "string",
+              "description": "Location of exptrackerOutputError"
+            },
+            "maintenance": {
+              "$ref": "#/components/schemas/ErrorMaintenance"
+            },
+            "uninitialized": {
+              "$ref": "#/components/schemas/ErrorUninitialized"
+            },
+            "start": {
+              "type": "string",
+              "description": "Start of exptrackerOutputError",
+              "format": "int64"
+            },
+            "end": {
+              "type": "string",
+              "description": "End of exptrackerOutputError",
+              "format": "int64"
+            }
+          }
+        },
+        "ExptrackerOutputFloatList": {
+          "type": "object",
+          "description": "Exptracker Output Float List",
+          "properties": {
+            "list": {
+              "type": "array",
+              "description": "List of float",
+              "items": {
+                "type": "number",
+                "description": "Float",
+                "format": "float"
+              }
+            }
+          }
+        },
+        "ExptrackerOutputIntList": {
+          "type": "object",
+          "description": "Exptracker Output Int List",
+          "properties": {
+            "list": {
+              "type": "array",
+              "description": "List of int64",
+              "items": {
+                "type": "string",
+                "description": "int64",
+                "format": "int64"
+              }
+            }
+          }
+        },
+        "ExptrackerOutputStringList": {
+          "type": "object",
+          "description": "Exptracker Output String List",
+          "properties": {
+            "list": {
+              "type": "array",
+              "description": "List of String",
+              "items": {
+                "type": "string",
+                "description": "String"
+              }
+            }
+          }
+        },
+        "ExptrackerOutputSymptom": {
+          "type": "object",
+          "description": "Exptracker Output Symptom",
+          "properties": {
+            "level": {
+              "$ref": "#/components/schemas/ExptrackerHealth"
+            },
+            "label": {
+              "type": "string",
+              "description": "Label of ExptrackerOutputSymptom"
+            },
+            "start": {
+              "type": "string",
+              "description": "Start of ExptrackerOutputSymptom",
+              "format": "int64"
+            },
+            "end": {
+              "type": "string",
+              "description": "End of ExptrackerOutputSymptom",
+              "format": "int64"
+            },
+            "calculations": {
+              "$ref": "#/components/schemas/OutputCalculations"
+            },
+            "symptoms": {
+              "type": "array",
+              "description": "Symptoms of ExptrackerOutputSymptom",
+              "items": {
+                "$ref": "#/components/schemas/OutputCalculations"
+              }
+            },
+            "priority": {
+              "type": "integer",
+              "description": "Priority of ExptrackerOutputSymptom",
+              "format": "int64"
+            },
+            "nodeID": {
+              "type": "string",
+              "description": "nodeId of ExptrackerOutputSymptom"
+            },
+            "cdgID": {
+              "type": "string",
+              "description": "cdgId of ExptrackerOutputSymptom"
+            }
+          }
+        },
+        "ExptrackerOutputUintList": {
+          "type": "object",
+          "description": "Exptracker Output Uint List",
+          "properties": {
+            "list": {
+              "type": "array",
+              "description": "List of Uint64",
+              "items": {
+                "type": "string",
+                "description": "List of Uint64",
+                "format": "uint64"
+              }
+            }
+          }
+        },
+        "GatewayruntimeError": {
+          "type": "object",
+          "description": "GatewayruntimeError",
+          "properties": {
+            "error": {
+              "type": "string",
+              "description": "Error of GatewayruntimeError"
+            },
+            "code": {
+              "type": "integer",
+              "description": "Code of GatewayruntimeError",
+              "format": "int32"
+            },
+            "message": {
+              "type": "string",
+              "description": "Message of GatewayruntimeError"
+            },
+            "details": {
+              "type": "array",
+              "description": "Details of GatewayruntimeError",
+              "items": {
+                "$ref": "#/components/schemas/protobufAny"
+              }
+            }
+          }
+        },
+        "protobufAny": {
+          "type": "object",
+          "description": "ProtobufAny",
+          "properties": {
+            "typeUrl": {
+              "type": "string",
+              "description": "typeUrl of protobufAny"
+            },
+            "value": {
+              "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+              "type": "string",
+              "description": "Value of protobufAny",
+              "format": "byte"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "apiKey",
+          "description": "Security token for authorizing requests for these APIs.",
+          "name": "Authorization",
+          "in": "header"
+        }
+      }
+    },
+    "x-original-swagger-version": "2.0"
+  }

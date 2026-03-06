@@ -1,0 +1,578 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "NPM Service APIs",
+        "description": "APIs exposed by NPM Service",
+        "contact": {
+            "name": "Crosswork Team, Cisco",
+            "email": "support@cisco.com"
+        },
+        "license": {
+            "name": "Cisco Software License Agreement",
+            "url": "http://www.cisco.com/public/sw-license-agreement.html"
+        },
+        "version": "7.1.0"
+    },
+    "servers": [{
+            "url": "https://{cnc-server}:30603/crosswork/optima-analytics/",
+            "description": "Generated server url"
+        }
+    ],  
+    "tags": [{
+            "name": "Analytics APIs",
+            "description": "Analytics APIs"
+        }
+    ],
+    "paths": {
+        "/api/v1/lsp/utilizations": {
+            "post": {
+                "tags": ["Analytics APIs"],
+                "summary": "Get LSP Utilizations",
+                "description": "Get LSP Utilizations",
+                "operationId": "getLspUtilizations",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "examples": {
+                                "Get SR Utilizations": {
+                                    "description": "Get SR Utilizations",
+                                    "value": {
+                                        "lspType": "SR",
+                                        "peerAddress": "192.168.0.2",
+                                        "destAddress": "192.168.0.5",
+                                        "color": "777",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                },
+                                "Get RSVP Utilizations": {
+                                    "description": "Get RSVP Utilizations",
+                                    "value": {
+                                        "lspType": "RSVP",
+                                        "peerAddress": "192.168.0.7",
+                                        "destAddress": "192.168.0.6",
+                                        "tunnelId": "11",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Get LSP Utilization": {
+                                        "description": "Get LSP Utilization",
+                                        "value": [{
+                                                "util": 51.07207,
+                                                "tst": "2022-02-01T12:07:42.584842"
+                                            }, {
+                                                "util": 65.46175,
+                                                "tst": "2022-02-01T12:07:42.584842"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/lsp/max/utilization": {
+            "post": {
+                "tags": ["Analytics APIs"],
+                "summary": "Get Max LSP Utilization",
+                "description": "Get Maximum LSP Utilization",
+                "operationId": "getMaxLspUtilization",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "examples": {
+                                "Get Max SR Utilization": {
+                                    "description": "Get Max SR Utilization",
+                                    "value": {
+                                        "lspType": "SR",
+                                        "peerAddress": "192.168.0.2",
+                                        "destAddress": "192.168.0.5",
+                                        "color": "777",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                },
+                                "Get Max RSVP Utilization": {
+                                    "description": "Get Max RSVP Utilization",
+                                    "value": {
+                                        "lspType": "RSVP",
+                                        "peerAddress": "192.168.0.7",
+                                        "destAddress": "192.168.0.6",
+                                        "tunnelId": "11",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Get Max LSP Utilization": {
+                                        "description": "Get Max LSP Utilization",
+                                        "value": {
+                                            "maxUtilization": 90.351326,
+                                            "success": true,
+                                            "message": "Successfully found Maximum Utilization"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/lsp/max/delay": {
+            "post": {
+                "tags": ["Analytics APIs"],
+                "summary": "Get Max LSP Delay",
+                "description": "Get Maximum LSP Average Delay",
+                "operationId": "getMaxLspDelay",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "examples": {
+                                "Get Max SR Delay": {
+                                    "description": "Get Max SR Delay",
+                                    "value": {
+                                        "lspType": "SR",
+                                        "peerAddress": "192.168.0.2",
+                                        "destAddress": "192.168.0.5",
+                                        "color": "777",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                },
+                                "Get Max RSVP Delay": {
+                                    "description": "Get Max RSVP Delay",
+                                    "value": {
+                                        "lspType": "RSVP",
+                                        "peerAddress": "192.168.0.7",
+                                        "destAddress": "192.168.0.6",
+                                        "tunnelId": "11",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Get Maximum LSP Average Delay": {
+                                        "description": "Get Maximum LSP Average Delay",
+                                        "value": {
+                                            "maxDelay": 5,
+                                            "success": true,
+                                            "message": "Successfully found Maximum Average Delay"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/lsp/loss": {
+            "post": {
+                "tags": ["Analytics APIs"],
+                "summary": "Get LSP Loss",
+                "description": "Get LSP Loss",
+                "operationId": "getLSPLoss",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "examples": {
+                                "Get SR Loss": {
+                                    "description": "Get SR Loss",
+                                    "value": {
+                                        "lspType": "SR",
+                                        "peerAddress": "192.168.0.2",
+                                        "destAddress": "192.168.0.5",
+                                        "color": "777",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                },
+                                "Get RSVP Loss": {
+                                    "description": "Get RSVP Loss",
+                                    "value": {
+                                        "lspType": "RSVP",
+                                        "peerAddress": "192.168.0.7",
+                                        "destAddress": "192.168.0.6",
+                                        "tunnelId": "11",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Get LSP Loss": {
+                                        "description": "Get LSP Loss",
+                                        "value": [{
+                                                "delayVariance": 6,
+                                                "tst": "2022-02-01T12:07:42.584842"
+                                            }, {
+                                                "delayVariance": 6,
+                                                "tst": "2022-02-01T12:07:42.584842"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/lsp/delay": {
+            "post": {
+                "tags": ["Analytics APIs"],
+                "summary": "Get LSP Delays",
+                "description": "Get LSP Delays",
+                "operationId": "getLspDelays",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "examples": {
+                                "Get SR Delay": {
+                                    "description": "Get SR Delay",
+                                    "value": {
+                                        "lspType": "SR",
+                                        "peerAddress": "192.168.0.2",
+                                        "destAddress": "192.168.0.5",
+                                        "color": "777",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                },
+                                "Get RSVP Delay": {
+                                    "description": "Get RSVP Delay",
+                                    "value": {
+                                        "lspType": "RSVP",
+                                        "peerAddress": "192.168.0.7",
+                                        "destAddress": "192.168.0.6",
+                                        "tunnelId": "11",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Get LSP Delay": {
+                                        "description": "Get LSP Delay",
+                                        "value": [{
+                                                "preferenceId": 25,
+                                                "minimumDelay": 2,
+                                                "maximumDelay": 8,
+                                                "averageDelay": 5,
+                                                "delayVariance": 6,
+                                                "tst": "2022-02-01T12:07:42.584842"
+                                            }, {
+                                                "preferenceId": 65,
+                                                "minimumDelay": 3,
+                                                "maximumDelay": 9,
+                                                "averageDelay": 6,
+                                                "delayVariance": 6,
+                                                "tst": "2022-02-01T12:07:42.584842"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/lsp/delayVariance": {
+            "post": {
+                "tags": ["Analytics APIs"],
+                "summary": "Get LSP Delay Variance",
+                "description": "Get LSP Delay Variance",
+                "operationId": "getLSPDelayVariance",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "examples": {
+                                "Get SR Delay": {
+                                    "description": "Get SR Delay",
+                                    "value": {
+                                        "lspType": "SR",
+                                        "peerAddress": "192.168.0.2",
+                                        "destAddress": "192.168.0.5",
+                                        "color": "777",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                },
+                                "Get RSVP Delay": {
+                                    "description": "Get RSVP Delay",
+                                    "value": {
+                                        "lspType": "RSVP",
+                                        "peerAddress": "192.168.0.7",
+                                        "destAddress": "192.168.0.6",
+                                        "tunnelId": "11",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Get LSP Delay Variance": {
+                                        "description": "Get LSP Delay Variance",
+                                        "value": [{
+                                                "delayVariance": 6,
+                                                "tst": "2022-02-01T12:07:42.584842"
+                                            }, {
+                                                "delayVariance": 6,
+                                                "tst": "2022-02-01T12:07:42.584842"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/interface/max/delay": {
+            "post": {
+                "tags": ["Analytics APIs"],
+                "summary": "Get Max Interface Delay",
+                "description": "Get Maximum Interface Average Delay",
+                "operationId": "getMaxInterfaceDelay",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "examples": {
+                                "Get MAX Interface Delay": {
+                                    "description": "Get MAX Interface Delay",
+                                    "value": {
+                                        "device_uuid": "6ad32312-a17b-43c7-b4d4-95771dcb9e98",
+                                        "int_name": "GigabitEthernet0/0/0/0",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Get Maximum Interface Average Delay": {
+                                        "description": "Get Maximum Interface Average Delay",
+                                        "value": {
+                                            "maxDelay": 5,
+                                            "success": true,
+                                            "message": "Successfully found Maximum Average Delay"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/interface/loss": {
+            "post": {
+                "tags": ["Analytics APIs"],
+                "summary": "Get Interface Loss",
+                "description": "Get Interface Loss",
+                "operationId": "getInterfaceLoss",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "examples": {
+                                "Get Interface Loss": {
+                                    "description": "Get Interface Loss",
+                                    "value": {
+                                        "device_uuid": "6ad32312-a17b-43c7-b4d4-95771dcb9e98",
+                                        "int_name": "GigabitEthernet0/0/0/0",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Get Interface Loss": {
+                                        "description": "Get Interface Loss",
+                                        "value": "[\n    {\n        \"minimumDelay\": 2,\n        \"maximumDelay\": 8,\n        \"averageDelay\": 5,\n        \"delayVariance\": 6,\n        \"tst\": \"2022-02-01T12:07:42.584842\"\n    },\n]"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/interface/delays": {
+            "post": {
+                "tags": ["Analytics APIs"],
+                "summary": "Get Interface Delays",
+                "description": "Get Interface Delays",
+                "operationId": "getInterfaceDelays",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "examples": {
+                                "Get Interface Delay": {
+                                    "description": "Get Interface Delay",
+                                    "value": {
+                                        "device_uuid": "6ad32312-a17b-43c7-b4d4-95771dcb9e98",
+                                        "int_name": "GigabitEthernet0/0/0/0",
+                                        "from": "2021-10-13T15:55:07.000Z",
+                                        "to": "2021-10-15T15:55:08.000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Get Interface Delay": {
+                                        "description": "Get Interface Delay",
+                                        "value": "[\n    {\n        \"minimumDelay\": 2,\n        \"maximumDelay\": 8,\n        \"averageDelay\": 5,\n        \"delayVariance\": 6,\n        \"tst\": \"2022-02-01T12:07:42.584842\"\n    },\n]"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {}
+}

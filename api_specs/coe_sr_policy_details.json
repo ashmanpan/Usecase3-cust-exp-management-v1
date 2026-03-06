@@ -1,0 +1,1304 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Segment Routing Policy Details",
+    "description": "This module defines a Data Model for reporting operational state of Segment Routing Policies.",
+    "version": "7.1.0",
+    "contact": {
+      "name": "Crosswork Team, Cisco",
+      "email": "support@cisco.com"
+    },
+    "license": {
+      "name": "Cisco Software License Agreement",
+      "url": "http://www.cisco.com/public/sw-license-agreement.html"
+    }
+  },
+  "tags": [{
+      "name" : "Operational data",
+      "description" : "Operational data resources"
+  }],
+  "servers": [
+    {
+      "url": "https://{cnc-host}:{cnc-port}/crosswork/nbi/topology/v3/restconf",
+      "variables": {
+        "cnc-host": {
+          "default": "127.0.0.1",
+          "description": "host name or ip address of the target CNC Cluster"
+        },
+        "cnc-port": {
+          "default": "30603",
+          "description": "port number of the target CNC Cluster"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/data/cisco-crosswork-segment-routing-policy:sr-policies": {
+      "get": {
+        "tags": [
+          "Operational data", "Since 3.0"
+        ],
+        "summary": "Retrieve SR policies operational data",
+        "description": "Retrieve all SR Policies for the network.",
+        "operationId": "data_cisco_crosswork_segment_routing_policy_sr_policies_get",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Used by the client to specify the number of list elements to skip before returning the requested set of list entries.  The value is an integer greater than or equal to 0.",
+            "schema": {
+              "type": "integer",
+              "format": "uint32"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Used by the client to specify a limited set of list entries to retrieve. The value is an integer greater than or equal to 1",
+            "schema": {
+              "type": "integer",
+              "format": "uint16"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container of MPLS Segment Routing Policies",
+            "content": {
+              "application/yang-data+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies"
+                }
+              }
+            }
+          },
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "405": {
+            "$ref": "#/components/responses/405"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          }
+        }
+      }
+    },
+    "/data/cisco-crosswork-segment-routing-policy:sr-policies/policy={policy-headend},{policy-endpoint},{policy-color}": {
+      "get": {
+        "tags": [
+          "Operational data", "Since 3.0"
+        ],
+        "summary": "Retrieve an SR policy operational data",
+        "description": "Retrieve the SR Policy that matches the given Headend, Endpoint, and Color values. The headend and endpoint values are IP addresses.",
+        "operationId": "data_cisco_crosswork_segment_routing_policy_sr_policies_policy_policy_headend_policy_endpoint_policy_color_get",
+        "parameters": [{
+          "name": "policy-headend",
+          "in": "path",
+          "description": "Policy headend Router ID",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "policy-endpoint",
+          "in": "path",
+          "description": "Policy endpoint IP address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "policy-color",
+          "in": "path",
+          "description": "Color associated with the policy",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/yang-data+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color"
+                }
+              }
+            }
+          },
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "405": {
+            "$ref": "#/components/responses/405"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "200": {
+        "description": "OK"
+      },
+      "201": {
+        "description": "Created"
+      },
+      "204": {
+        "description": "No Content"
+      },
+      "400": {
+        "description": "Bad Request"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "404": {
+        "description": "Not Found"
+      },
+      "405": {
+        "description": "Method Not Allowed"
+      },
+      "409": {
+        "description": "Conflict"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "description": "authentication",
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color": {
+        "description": "SR policy key",
+        "type": "object",
+        "properties": {
+          "cisco-crosswork-segment-routing-policy:policy": {
+            "type": "array",
+            "description": "(list)",
+            "items": {
+              "type": "object",
+              "properties": {
+                "headend": {
+                  "description": "Policy head end IP address (leaf)",
+                  "type": "string",
+                  "format": "union"
+                },
+                "endpoint": {
+                  "description": "Policy end point IP address (leaf)",
+                  "type": "string",
+                  "format": "union"
+                },
+                "color": {
+                  "description": "Color associated with the policy (leaf)",
+                  "type": "integer",
+                  "format": "uint32"
+                },
+                "description": {
+                  "description": "Policy description (leaf)",
+                  "type": "string",
+                  "format": "string"
+                },
+                "admin-state": {
+                  "description": "Administrative state of the policy (leaf)",
+                  "type": "string",
+                  "format": "enumeration",
+                  "default": "UP",
+                  "enum": [
+                    "UP",
+                    "DOWN"
+                  ]
+                },
+                "oper-state": {
+                  "description": "Operational state of the policy (leaf)",
+                  "type": "string",
+                  "format": "enumeration",
+                  "default": "UP",
+                  "enum": [
+                    "UP",
+                    "DOWN"
+                  ]
+                },
+                "sr-policy-type": {
+                  "description": "The Crosswork SR Policy type for this policy (leaf)",
+                  "type": "string",
+                  "format": "enumeration",
+                  "default": "REGULAR",
+                  "enum": [
+                    "REGULAR",
+                    "CIRCUIT-STYLE",
+                    "BANDWIDTH-ON-DEMAND",
+                    "LOCAL-CONGESTION-MITIGATION"
+                  ]
+                },
+                "policy-protection-status": {
+                  "description": "SR policy protection status for Circuit-Style SR Policy (non-presence)",
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "description": "SR policy protection status: OFF, PROTECTED and UNPROTECTED. (leaf)",
+                      "type": "string",
+                      "format": "enumeration",
+                      "default": "OFF",
+                      "enum": [
+                        "OFF",
+                        "PROTECTED",
+                        "UNPROTECTED"
+                      ]
+                    },
+                    "is-protected": {
+                      "description": "Path is protected. (leaf)",
+                      "type": "string",
+                      "format": "boolean"
+                    }
+                  }
+                },
+                "policy-details": {
+                  "description": "SR Policy details (non-presence)",
+                  "type": "object",
+                  "properties": {
+                    "binding-sid": {
+                      "description": "Binding SID assigned to the policy\n*** Or is BSID associated with a path? (leaf)",
+                      "type": "integer",
+                      "format": "uint32"
+                    },
+                    "srv6-binding-sid": {
+                      "description": "SRv6 binding sid (non-presence)",
+                      "type": "object",
+                      "properties": {
+                        "endpoint-behavior": {
+                          "description": "The endpoint function. (leaf)",
+                          "type": "string",
+                          "format": "string"
+                        },
+                        "sid": {
+                          "description": "SRV6 sid value. (leaf)",
+                          "type": "string",
+                          "format": "string"
+                        },
+                        "srv6-sid-structure": {
+                          "description": "SRv6 SID Structure is used to advertise\nthe length of each individual part of the SRv6 SID (non-presence)",
+                          "type": "object",
+                          "properties": {
+                            "lb-length": {
+                              "description": "SRv6 SID Locator Block length in bits. (leaf)",
+                              "type": "integer",
+                              "format": "uint32"
+                            },
+                            "ln-length": {
+                              "description": "SRv6 SID Locator Node length in bits. (leaf)",
+                              "type": "integer",
+                              "format": "uint32"
+                            },
+                            "func-length": {
+                              "description": "SRv6 SID Function length in bits. (leaf)",
+                              "type": "integer",
+                              "format": "uint32"
+                            },
+                            "arg-length": {
+                              "description": "SRv6 SID Argument length in bits. (leaf)",
+                              "type": "integer",
+                              "format": "uint32"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "msd": {
+                      "description": "Maximum SID Depth\n*** Should this be associated with a path or is it more of a\nheadend property? (leaf)",
+                      "type": "integer",
+                      "format": "uint32"
+                    },
+                    "pce-controlled": {
+                      "description": "If true, policy can be re-optimized by PCE (leaf)",
+                      "type": "string",
+                      "format": "boolean"
+                    },
+                    "delegated-pce": {
+                      "description": "IPv4 or IPv6 address of the delegated PCE (leaf)",
+                      "type": "string",
+                      "format": "union"
+                    },
+                    "sub-delegated-pce": {
+                      "description": "IPv4 or IPv6 address of the sub-delegated PCE (leaf)",
+                      "type": "string",
+                      "format": "union"
+                    },
+                    "pcc-address": {
+                      "description": "IPv4 or IPv6 address of PCC (Path Compute Client) (leaf)",
+                      "type": "string",
+                      "format": "union"
+                    },
+                    "non-delegated-pces": {
+                      "description": "non delegated pces",
+                      "type": "array",
+                      "items": {
+                        "description": "IPv4 or IPv6 address of one of the non-delegated PCE (leaf-list)",
+                        "type": "string",
+                        "format": "union"
+                      }
+                    },
+                    "pcep-info": {
+                      "description": "PCEP connection details (non-presence)",
+                      "type": "object",
+                      "properties": {
+                        "pcep-id": {
+                          "description": "PCE protocol identifier (leaf)",
+                          "type": "integer",
+                          "format": "uint32"
+                        },
+                        "pcep-flag-d": {
+                          "description": "PCEP LSP delegation flag (leaf)",
+                          "type": "string",
+                          "format": "boolean"
+                        },
+                        "pcep-flag-s": {
+                          "description": "PCEP LSP state-sync flag (leaf)",
+                          "type": "string",
+                          "format": "boolean"
+                        },
+                        "pcep-flag-r": {
+                          "description": "PCEP LSP remove flag (leaf)",
+                          "type": "string",
+                          "format": "boolean"
+                        },
+                        "pcep-flag-a": {
+                          "description": "PCEP LSP admin flag (leaf)",
+                          "type": "string",
+                          "format": "boolean"
+                        },
+                        "pcep-flag-o": {
+                          "description": "PCEP LSP operation flag (leaf)",
+                          "type": "integer",
+                          "format": "byte"
+                        },
+                        "pcep-flag-c": {
+                          "description": "PCEP LSP initiated flag (leaf)",
+                          "type": "integer",
+                          "format": "byte"
+                        }
+                      }
+                    },
+                    "update-time": {
+                      "description": "The time stamp of the most recent update to the SR Policy in the Crosswork database. (leaf)",
+                      "type": "integer",
+                      "format": "uint64"
+                    },
+                    "path": {
+                      "type": "array",
+                      "description": "List of paths associated with the policy (list)",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path-name": {
+                            "description": "Path Name\n*** Is there also an ID (equivalent of LSP ID) to identify a path? (leaf)",
+                            "type": "string",
+                            "format": "string"
+                          },
+                          "path-type": {
+                            "description": "Path type (explicit or dynamic) (leaf)",
+                            "type": "string",
+                            "format": "enumeration",
+                            "default": "PT-UNKNOWN",
+                            "enum": [
+                              "PT-UNKNOWN",
+                              "PT-EXPLICIT",
+                              "PT-DYNAMIC"
+                            ]
+                          },
+                          "preference": {
+                            "description": "Configured Preference for this path (leaf)",
+                            "type": "integer",
+                            "format": "uint16"
+                          },
+                          "oper-state": {
+                            "description": "Operational state of the policy (leaf)",
+                            "type": "string",
+                            "format": "enumeration",
+                            "default": "UP",
+                            "enum": [
+                              "UP",
+                              "DOWN"
+                            ]
+                          },
+                          "optimization-metric": {
+                            "description": "(non-presence)",
+                            "type": "object",
+                            "properties": {
+                              "metric-type": {
+                                "description": "Metric type to optimize for this path (leaf)",
+                                "type": "string",
+                                "format": "enumeration",
+                                "default": "IGP-METRIC",
+                                "enum": [
+                                  "IGP-METRIC",
+                                  "TE-METRIC",
+                                  "DELAY",
+                                  "HOP-COUNT"
+                                ]
+                              },
+                              "metric-value": {
+                                "description": "Cumulative metric value for the path (leaf)",
+                                "type": "integer",
+                                "format": "uint32"
+                              }
+                            }
+                          },
+                          "constraints": {
+                            "description": "(non-presence)",
+                            "type": "object",
+                            "properties": {
+                              "affinity": {
+                                "description": "Affinity information (non-presence)",
+                                "type": "object",
+                                "properties": {
+                                  "exclude-any": {
+                                    "description": "Exclude-any attribute flags (leaf)",
+                                    "type": "integer",
+                                    "format": "uint32"
+                                  },
+                                  "include-any": {
+                                    "description": "Include-any attribute flags (leaf)",
+                                    "type": "integer",
+                                    "format": "uint32"
+                                  },
+                                  "include-all": {
+                                    "description": "Include-all attribute flags (leaf)",
+                                    "type": "integer",
+                                    "format": "uint32"
+                                  }
+                                }
+                              },
+                              "association-info": {
+                                "description": "Association (Disjoint Group) information (non-presence)",
+                                "type": "object",
+                                "properties": {
+                                  "assoc-source": {
+                                    "description": "Association Source (leaf)",
+                                    "type": "string",
+                                    "format": "union"
+                                  },
+                                  "assoc-type": {
+                                    "description": "Association Type (leaf)",
+                                    "type": "string",
+                                    "format": "enumeration",
+                                    "default": "LINK-DISJOINTNESS",
+                                    "enum": [
+                                      "LINK-DISJOINTNESS",
+                                      "NODE-DISJOINTNESS",
+                                      "SRLG-DISJOINTNESS",
+                                      "SRLG-NODE-DISJOINTNESS"
+                                    ]
+                                  },
+                                  "assoc-id": {
+                                    "description": "Association ID (Disjoint Group ID) (leaf)",
+                                    "type": "integer",
+                                    "format": "uint32"
+                                  }
+                                }
+                              },
+                              "bandwidth-mbps": {
+                                "description": "Requested bandwidth in mega-bits-per-sec (leaf)",
+                                "type": "integer",
+                                "format": "uint64"
+                              },
+                              "unprotected-only-flag": {
+                                "description": "If true, path must include unprotected SIDs only, else\nprotected SIDs should be preferred (leaf)",
+                                "type": "string",
+                                "format": "boolean"
+                              },
+                              "sid-algorithm": {
+                                "description": "The Flex Algo of SIDs in path computation. (leaf)",
+                                "type": "integer",
+                                "format": "byte"
+                              }
+                            }
+                          },
+                          "computed-time": {
+                            "description": "Time stamp when the path was computed (leaf)",
+                            "type": "integer",
+                            "format": "uint64"
+                          },
+                          "profile-id": {
+                            "description": "Associates this path with a forwarding profile on the router/ device (leaf)",
+                            "type": "integer",
+                            "format": "uint32"
+                          },
+                          "hop": {
+                            "type": "array",
+                            "description": "Segment/ Hop list for this path (list)",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "description": "SID type (leaf)",
+                                  "type": "string",
+                                  "format": "enumeration",
+                                  "default": "IPV4-NODE-SID",
+                                  "enum": [
+                                    "IPV4-NODE-SID",
+                                    "IPV4-ADJ-SID",
+                                    "IPV4-UNNUMBERED-ADJ-SID",
+                                    "IPV4-BINDING-SID",
+                                    "IPV6-NODE-SID",
+                                    "IPV6-ADJ-SID",
+                                    "IPV6-BINDING-SID",
+                                    "IPV6-LINK-LOCAL-ADJ-SID"
+                                  ]
+                                },
+                                "sid-value": {
+                                  "description": "sid value",
+                                  "type": "object",
+                                  "oneOf": [
+                                    {
+                                      "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__label"
+                                    },
+                                    {
+                                      "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__srv6-adjacency-sid"
+                                    },
+                                    {
+                                      "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__srv6-node-sid"
+                                    }
+                                  ]
+                                },
+                                "local-address": {
+                                  "description": "local address",
+                                  "type": "object",
+                                  "oneOf": [
+                                    {
+                                      "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__local-ip-addr"
+                                    },
+                                    {
+                                      "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__local-link-local-id"
+                                    }
+                                  ]
+                                },
+                                "remote-address": {
+                                  "type": "object",
+                                  "description": "Remote address of the link adjacency. Not applicable in case of Node SID.",
+                                  "oneOf": [
+                                    {
+                                      "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__remote-ip-addr"
+                                    },
+                                    {
+                                      "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__remote-link-local-id"
+                                    }
+                                  ]
+                                },
+                                "protected-flag": {
+                                  "description": "If true, the SID is protected (leaf)",
+                                  "type": "string",
+                                  "format": "boolean"
+                                }
+                              }
+                            }
+                          },
+                          "bidirectional-association-id": {
+                            "description": "Bidirectional association ID for Circuit Style SR-TE path (leaf)",
+                            "type": "integer",
+                            "format": "uint32"
+                          },
+                          "requested-bandwidth-mbps": {
+                            "description": "Requested bandwidth in mega-bits-per-sec (leaf)",
+                            "type": "integer",
+                            "format": "uint64"
+                          },
+                          "reserved-bandwidth-mbps": {
+                            "description": "Reserved bandwidth in mega-bits-per-sec (leaf)",
+                            "type": "integer",
+                            "format": "uint64"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "data_cisco-crosswork-segment-routing-policy_sr-policies": {
+        "description": "sr policies",
+        "type": "object",
+        "properties": {
+          "cisco-crosswork-segment-routing-policy:sr-policies": {
+            "description": "Container of MPLS Segment Routing Policies (non-presence)",
+            "type": "object",
+            "properties": {
+              "policy": {
+                "type": "array",
+                "description": "(list)",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "headend": {
+                      "description": "Policy head end IP address (leaf)",
+                      "type": "string",
+                      "format": "union"
+                    },
+                    "endpoint": {
+                      "description": "Policy end point IP address (leaf)",
+                      "type": "string",
+                      "format": "union"
+                    },
+                    "color": {
+                      "description": "Color associated with the policy (leaf)",
+                      "type": "integer",
+                      "format": "uint32"
+                    },
+                    "description": {
+                      "description": "Policy description (leaf)",
+                      "type": "string",
+                      "format": "string"
+                    },
+                    "admin-state": {
+                      "description": "Administrative state of the policy (leaf)",
+                      "type": "string",
+                      "format": "enumeration",
+                      "default": "UP",
+                      "enum": [
+                        "UP",
+                        "DOWN"
+                      ]
+                    },
+                    "oper-state": {
+                      "description": "Operational state of the policy (leaf)",
+                      "type": "string",
+                      "format": "enumeration",
+                      "default": "UP",
+                      "enum": [
+                        "UP",
+                        "DOWN"
+                      ]
+                    },
+                    "sr-policy-type": {
+                      "description": "The Crosswork SR Policy type for this policy (leaf)",
+                      "type": "string",
+                      "format": "enumeration",
+                      "default": "REGULAR",
+                      "enum": [
+                        "REGULAR",
+                        "CIRCUIT-STYLE",
+                        "BANDWIDTH-ON-DEMAND",
+                        "LOCAL-CONGESTION-MITIGATION"
+                      ]
+                    },
+                    "policy-protection-status": {
+                      "description": "SR policy protection status for Circuit-Style SR Policy (non-presence)",
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "description": "SR policy protection status: OFF, PROTECTED and UNPROTECTED. (leaf)",
+                          "type": "string",
+                          "format": "enumeration",
+                          "default": "OFF",
+                          "enum": [
+                            "OFF",
+                            "PROTECTED",
+                            "UNPROTECTED"
+                          ]
+                        },
+                        "is-protected": {
+                          "description": "Path is protected. (leaf)",
+                          "type": "string",
+                          "format": "boolean"
+                        }
+                      }
+                    },
+                    "policy-details": {
+                      "description": "SR Policy details (non-presence)",
+                      "type": "object",
+                      "properties": {
+                        "binding-sid": {
+                          "description": "Binding SID assigned to the policy\n*** Or is BSID associated with a path? (leaf)",
+                          "type": "integer",
+                          "format": "uint32"
+                        },
+                        "srv6-binding-sid": {
+                          "description": "SRv6 binding sid (non-presence)",
+                          "type": "object",
+                          "properties": {
+                            "endpoint-behavior": {
+                              "description": "The endpoint function. (leaf)",
+                              "type": "string",
+                              "format": "string"
+                            },
+                            "sid": {
+                              "description": "SRV6 sid value. (leaf)",
+                              "type": "string",
+                              "format": "string"
+                            },
+                            "srv6-sid-structure": {
+                              "description": "SRv6 SID Structure is used to advertise\nthe length of each individual part of the SRv6 SID (non-presence)",
+                              "type": "object",
+                              "properties": {
+                                "lb-length": {
+                                  "description": "SRv6 SID Locator Block length in bits. (leaf)",
+                                  "type": "integer",
+                                  "format": "uint32"
+                                },
+                                "ln-length": {
+                                  "description": "SRv6 SID Locator Node length in bits. (leaf)",
+                                  "type": "integer",
+                                  "format": "uint32"
+                                },
+                                "func-length": {
+                                  "description": "SRv6 SID Function length in bits. (leaf)",
+                                  "type": "integer",
+                                  "format": "uint32"
+                                },
+                                "arg-length": {
+                                  "description": "SRv6 SID Argument length in bits. (leaf)",
+                                  "type": "integer",
+                                  "format": "uint32"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "msd": {
+                          "description": "Maximum SID Depth\n*** Should this be associated with a path or is it more of a\nheadend property? (leaf)",
+                          "type": "integer",
+                          "format": "uint32"
+                        },
+                        "pce-controlled": {
+                          "description": "If true, policy can be re-optimized by PCE (leaf)",
+                          "type": "string",
+                          "format": "boolean"
+                        },
+                        "delegated-pce": {
+                          "description": "IPv4 or IPv6 address of the delegated PCE (leaf)",
+                          "type": "string",
+                          "format": "union"
+                        },
+                        "sub-delegated-pce": {
+                          "description": "IPv4 or IPv6 address of the sub-delegated PCE (leaf)",
+                          "type": "string",
+                          "format": "union"
+                        },
+                        "pcc-address": {
+                          "description": "IPv4 or IPv6 address of PCC (Path Compute Client) (leaf)",
+                          "type": "string",
+                          "format": "union"
+                        },
+                        "non-delegated-pces": {
+                          "description": "non delegated pces",
+                          "type": "array",
+                          "items": {
+                            "description": "IPv4 or IPv6 address of one of the non-delegated PCE (leaf-list)",
+                            "type": "string",
+                            "format": "union"
+                          }
+                        },
+                        "pcep-info": {
+                          "description": "PCEP connection details (non-presence)",
+                          "type": "object",
+                          "properties": {
+                            "pcep-id": {
+                              "description": "PCE protocol identifier (leaf)",
+                              "type": "integer",
+                              "format": "uint32"
+                            },
+                            "pcep-flag-d": {
+                              "description": "PCEP LSP delegation flag (leaf)",
+                              "type": "string",
+                              "format": "boolean"
+                            },
+                            "pcep-flag-s": {
+                              "description": "PCEP LSP state-sync flag (leaf)",
+                              "type": "string",
+                              "format": "boolean"
+                            },
+                            "pcep-flag-r": {
+                              "description": "PCEP LSP remove flag (leaf)",
+                              "type": "string",
+                              "format": "boolean"
+                            },
+                            "pcep-flag-a": {
+                              "description": "PCEP LSP admin flag (leaf)",
+                              "type": "string",
+                              "format": "boolean"
+                            },
+                            "pcep-flag-o": {
+                              "description": "PCEP LSP operation flag (leaf)",
+                              "type": "integer",
+                              "format": "byte"
+                            },
+                            "pcep-flag-c": {
+                              "description": "PCEP LSP initiated flag (leaf)",
+                              "type": "integer",
+                              "format": "byte"
+                            }
+                          }
+                        },
+                        "update-time": {
+                          "description": "The time stamp of the most recent update to the SR Policy in the Crosswork database. (leaf)",
+                          "type": "integer",
+                          "format": "uint64"
+                        },
+                        "path": {
+                          "type": "array",
+                          "description": "List of paths associated with the policy (list)",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "path-name": {
+                                "description": "Path Name\n*** Is there also an ID (equivalent of LSP ID) to identify a path? (leaf)",
+                                "type": "string",
+                                "format": "string"
+                              },
+                              "path-type": {
+                                "description": "Path type (explicit or dynamic) (leaf)",
+                                "type": "string",
+                                "format": "enumeration",
+                                "default": "PT-UNKNOWN",
+                                "enum": [
+                                  "PT-UNKNOWN",
+                                  "PT-EXPLICIT",
+                                  "PT-DYNAMIC"
+                                ]
+                              },
+                              "preference": {
+                                "description": "Configured Preference for this path (leaf)",
+                                "type": "integer",
+                                "format": "uint16"
+                              },
+                              "oper-state": {
+                                "description": "Operational state of the policy (leaf)",
+                                "type": "string",
+                                "format": "enumeration",
+                                "default": "UP",
+                                "enum": [
+                                  "UP",
+                                  "DOWN"
+                                ]
+                              },
+                              "optimization-metric": {
+                                "description": "(non-presence)",
+                                "type": "object",
+                                "properties": {
+                                  "metric-type": {
+                                    "description": "Metric type to optimize for this path (leaf)",
+                                    "type": "string",
+                                    "format": "enumeration",
+                                    "default": "IGP-METRIC",
+                                    "enum": [
+                                      "IGP-METRIC",
+                                      "TE-METRIC",
+                                      "DELAY",
+                                      "HOP-COUNT"
+                                    ]
+                                  },
+                                  "metric-value": {
+                                    "description": "Cumulative metric value for the path (leaf)",
+                                    "type": "integer",
+                                    "format": "uint32"
+                                  }
+                                }
+                              },
+                              "constraints": {
+                                "description": "(non-presence)",
+                                "type": "object",
+                                "properties": {
+                                  "affinity": {
+                                    "description": "Affinity information (non-presence)",
+                                    "type": "object",
+                                    "properties": {
+                                      "exclude-any": {
+                                        "description": "Exclude-any attribute flags (leaf)",
+                                        "type": "integer",
+                                        "format": "uint32"
+                                      },
+                                      "include-any": {
+                                        "description": "Include-any attribute flags (leaf)",
+                                        "type": "integer",
+                                        "format": "uint32"
+                                      },
+                                      "include-all": {
+                                        "description": "Include-all attribute flags (leaf)",
+                                        "type": "integer",
+                                        "format": "uint32"
+                                      }
+                                    }
+                                  },
+                                  "association-info": {
+                                    "description": "Association (Disjoint Group) information (non-presence)",
+                                    "type": "object",
+                                    "properties": {
+                                      "assoc-source": {
+                                        "description": "Association Source (leaf)",
+                                        "type": "string",
+                                        "format": "union"
+                                      },
+                                      "assoc-type": {
+                                        "description": "Association Type (leaf)",
+                                        "type": "string",
+                                        "format": "enumeration",
+                                        "default": "LINK-DISJOINTNESS",
+                                        "enum": [
+                                          "LINK-DISJOINTNESS",
+                                          "NODE-DISJOINTNESS",
+                                          "SRLG-DISJOINTNESS",
+                                          "SRLG-NODE-DISJOINTNESS"
+                                        ]
+                                      },
+                                      "assoc-id": {
+                                        "description": "Association ID (Disjoint Group ID) (leaf)",
+                                        "type": "integer",
+                                        "format": "uint32"
+                                      }
+                                    }
+                                  },
+                                  "bandwidth-mbps": {
+                                    "description": "Requested bandwidth in mega-bits-per-sec (leaf)",
+                                    "type": "integer",
+                                    "format": "uint64"
+                                  },
+                                  "unprotected-only-flag": {
+                                    "description": "If true, path must include unprotected SIDs only, else\nprotected SIDs should be preferred (leaf)",
+                                    "type": "string",
+                                    "format": "boolean"
+                                  },
+                                  "sid-algorithm": {
+                                    "description": "The Flex Algo of SIDs in path computation. (leaf)",
+                                    "type": "integer",
+                                    "format": "byte"
+                                  }
+                                }
+                              },
+                              "computed-time": {
+                                "description": "Time stamp when the path was computed (leaf)",
+                                "type": "integer",
+                                "format": "uint64"
+                              },
+                              "profile-id": {
+                                "description": "Associates this path with a forwarding profile on the router/ device (leaf)",
+                                "type": "integer",
+                                "format": "uint32"
+                              },
+                              "hop": {
+                                "type": "array",
+                                "description": "Segment/ Hop list for this path (list)",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "description": "SID type (leaf)",
+                                      "type": "string",
+                                      "format": "enumeration",
+                                      "default": "IPV4-NODE-SID",
+                                      "enum": [
+                                        "IPV4-NODE-SID",
+                                        "IPV4-ADJ-SID",
+                                        "IPV4-UNNUMBERED-ADJ-SID",
+                                        "IPV4-BINDING-SID",
+                                        "IPV6-NODE-SID",
+                                        "IPV6-ADJ-SID",
+                                        "IPV6-BINDING-SID",
+                                        "IPV6-LINK-LOCAL-ADJ-SID"
+                                      ]
+                                    },
+                                    "sid-value": {
+                                      "description": "sid value",
+                                      "type": "object",
+                                      "oneOf": [
+                                        {
+                                          "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__label"
+                                        },
+                                        {
+                                          "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__srv6-adjacency-sid"
+                                        },
+                                        {
+                                          "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__srv6-node-sid"
+                                        }
+                                      ]
+                                    },
+                                    "local-address": {
+                                      "description": "local address",
+                                      "type": "object",
+                                      "oneOf": [
+                                        {
+                                          "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__local-ip-addr"
+                                        },
+                                        {
+                                          "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__local-link-local-id"
+                                        }
+                                      ]
+                                    },
+                                    "remote-address": {
+                                      "type": "object",
+                                      "description": "Remote address of the link adjacency. Not applicable in case of Node SID.",
+                                      "oneOf": [
+                                        {
+                                          "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__remote-ip-addr"
+                                        },
+                                        {
+                                          "$ref": "#/components/schemas/data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__remote-link-local-id"
+                                        }
+                                      ]
+                                    },
+                                    "protected-flag": {
+                                      "description": "If true, the SID is protected (leaf)",
+                                      "type": "string",
+                                      "format": "boolean"
+                                    }
+                                  }
+                                }
+                              },
+                              "bidirectional-association-id": {
+                                "description": "Bidirectional association ID for Circuit Style SR-TE path (leaf)",
+                                "type": "integer",
+                                "format": "uint32"
+                              },
+                              "requested-bandwidth-mbps": {
+                                "description": "Requested bandwidth in mega-bits-per-sec (leaf)",
+                                "type": "integer",
+                                "format": "uint64"
+                              },
+                              "reserved-bandwidth-mbps": {
+                                "description": "Reserved bandwidth in mega-bits-per-sec (leaf)",
+                                "type": "integer",
+                                "format": "uint64"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__label": {
+        "description": "path hop label",
+        "type": "object",
+        "properties": {
+          "label": {
+            "description": "MPLS label (20 bits) (leaf)",
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__srv6-adjacency-sid": {
+        "description": "path hop srv6 adjacency sid",
+        "type": "object",
+        "properties": {
+          "cisco-crosswork-segment-routing-policy:srv6-adjacency-sid": {
+            "description": "SRv6 Adjacency SID (non-presence)",
+            "type": "object",
+            "properties": {
+              "sid": {
+                "description": "SRV6 sid value. (leaf)",
+                "type": "string",
+                "format": "string"
+              },
+              "endpoint-behavior": {
+                "description": "The endpoint function. (leaf)",
+                "type": "string",
+                "format": "string"
+              },
+              "protected": {
+                "description": "Is Adj-SID protected? (leaf)",
+                "type": "string",
+                "format": "boolean"
+              },
+              "flags": {
+                "description": "Flags for srv6 end x sid. (leaf)",
+                "type": "integer",
+                "format": "uint32"
+              },
+              "algorithm": {
+                "description": "Associated algorithm. (leaf)",
+                "type": "integer",
+                "format": "uint32"
+              },
+              "weight": {
+                "description": "The value represents the weight of the End.X sid\nfor the purpose of load balancing. (leaf)",
+                "type": "integer",
+                "format": "uint32"
+              },
+              "srv6-sid-structure": {
+                "description": "SRv6 SID Structure is used to advertise\nthe length of each individual part of the SRv6 SID (non-presence)",
+                "type": "object",
+                "properties": {
+                  "lb-length": {
+                    "description": "SRv6 SID Locator Block length in bits. (leaf)",
+                    "type": "integer",
+                    "format": "uint32"
+                  },
+                  "ln-length": {
+                    "description": "SRv6 SID Locator Node length in bits. (leaf)",
+                    "type": "integer",
+                    "format": "uint32"
+                  },
+                  "func-length": {
+                    "description": "SRv6 SID Function length in bits. (leaf)",
+                    "type": "integer",
+                    "format": "uint32"
+                  },
+                  "arg-length": {
+                    "description": "SRv6 SID Argument length in bits. (leaf)",
+                    "type": "integer",
+                    "format": "uint32"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__srv6-node-sid": {
+        "description": "path hop srv6 node sid",
+        "type": "object",
+        "properties": {
+          "cisco-crosswork-segment-routing-policy:srv6-node-sid": {
+            "description": "SRv6 Node SID (non-presence)",
+            "type": "object",
+            "properties": {
+              "sid": {
+                "description": "SRV6 sid value. (leaf)",
+                "type": "string",
+                "format": "string"
+              },
+              "endpoint-behavior": {
+                "description": "The endpoint function. (leaf)",
+                "type": "string",
+                "format": "string"
+              },
+              "algorithm": {
+                "description": "Associated algorithm. (leaf)",
+                "type": "integer",
+                "format": "uint32"
+              },
+              "srv6-sid-structure": {
+                "description": "SRv6 SID Structure is used to advertise\nthe length of each individual part of the SRv6 SID (non-presence)",
+                "type": "object",
+                "properties": {
+                  "lb-length": {
+                    "description": "SRv6 SID Locator Block length in bits. (leaf)",
+                    "type": "integer",
+                    "format": "uint32"
+                  },
+                  "ln-length": {
+                    "description": "SRv6 SID Locator Node length in bits. (leaf)",
+                    "type": "integer",
+                    "format": "uint32"
+                  },
+                  "func-length": {
+                    "description": "SRv6 SID Function length in bits. (leaf)",
+                    "type": "integer",
+                    "format": "uint32"
+                  },
+                  "arg-length": {
+                    "description": "SRv6 SID Argument length in bits. (leaf)",
+                    "type": "integer",
+                    "format": "uint32"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__local-ip-addr": {
+        "description": "local ip address",
+        "type": "object",
+        "properties": {
+          "local-ip-addr": {
+            "description": "Local IPv4 or IPv6 address. If type is a Node SID, this will be\nthe node's IP address, usually associated with a loopback interface (leaf)",
+            "type": "string",
+            "format": "union"
+          }
+        }
+      },
+      "data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__local-link-local-id": {
+        "description": "path hop link local id",
+        "type": "object",
+        "properties": {
+          "local-ipv6-router-id": {
+            "description": "IPv6 Router-id for the node (leaf)",
+            "type": "string",
+            "format": "string"
+          },
+          "local-ipv4-router-id": {
+            "description": "IPv4 Router-id for the node (leaf)",
+            "type": "string",
+            "format": "string"
+          },
+          "local-unnumbered-id": {
+            "description": "The link local identifier will correspond to the ifIndex value\nof the interface, i.e., the ifIndex value of the\nifEntry that represents the interface in\nimplementations where the Interfaces Group MIB\n(RFC 2863) is supported.\nIt's only for adjacency SID (leaf)",
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__remote-ip-addr": {
+        "description": "ip address",
+        "type": "object",
+        "properties": {
+          "remote-ip-addr": {
+            "description": "Remote IPv4 or IPv6 address. If type is a Node SID, this will be\nthe node's IP address, usually associated with a loopback interface (leaf)",
+            "type": "string",
+            "format": "union"
+          }
+        }
+      },
+      "data_cisco-crosswork-segment-routing-policy_sr-policies_policy_policy-headend_policy-endpoint_policy-color_policy-details_path__hop__remote-link-local-id": {
+        "description": "link local id",
+        "type": "object",
+        "properties": {
+          "remote-ipv6-router-id": {
+            "description": "IPv6 Router-id for the node (leaf)",
+            "type": "string",
+            "format": "string"
+          },
+          "remote-ipv4-router-id": {
+            "description": "IPv4 Router-id for the node (leaf)",
+            "type": "string",
+            "format": "string"
+          },
+          "remote-unnumbered-id": {
+            "description": "The link remote identifier will correspond to the ifIndex value\nof the interface, i.e., the ifIndex value of the\nifEntry that represents the interface in\nimplementations where the Interfaces Group MIB\n(RFC 2863) is supported.\nIt's only for adjacency SID (leaf)",
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      }
+    }
+  }
+}
